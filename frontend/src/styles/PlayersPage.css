@@ -1,0 +1,15 @@
+.players-page {
+    margin-left: 300px;
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+}
+
+.button-add {
+    padding: 8px;
+    background-color: #602EE1; 
+    border-radius: 20px;
+    border: 0px;
+}
