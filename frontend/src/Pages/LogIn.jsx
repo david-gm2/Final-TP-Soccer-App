@@ -41,7 +41,25 @@ export default function Login() {
           Connect players. Create matches. <br />
           Keep the game alive.
         </p>
-        <form onSubmit={handleSubmit}></form>
+        <form onSubmit={handleSubmit}>
+          <label>Email*</label>
+          <input
+            type="email"
+            placeholder="example@gmail.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <label>Password*</label>
+          <input
+            type="password"
+            placeholder="*******"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button type="submit">"Log In"</button>
+        </form>
       </div>
     </div>
   );
