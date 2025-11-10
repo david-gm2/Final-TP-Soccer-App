@@ -1,17 +1,51 @@
 import "../styles/PlayersPage.css";
+import { useState, useEffect } from "react";
+import PlayerModal from "../components/PlayerModal";
 
 function PlayersPage() {
-  return (
-    <main className="players-page">
-      <div>
-        <h1>Player</h1>
-        <h3>Manage your team of players</h3>
-      </div>
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [listOfPlayers, setListOfPlayers] = useState([]);
 
-      <div>
-        <button className="button-add"> + Add players</button>
-      </div>
-    </main>
+  const handleToggleModal = () => setIsModalOpen((prev) => !prev);
+
+  const handleSubmitPlayer = (playerData) => {
+    setListOfPlayers((prev) => [playerData, ...prev]);
+  };
+  useEffect(() => {
+    console.log("Jugadores:", listOfPlayers);
+  }, [listOfPlayers]);
+
+  return (
+    <>
+      <main className="players-page">
+        <article className="players-header">
+          <div>
+            <h1>Player</h1>
+            <h3>Manage your team of players</h3>
+          </div>
+
+          <div>
+            <button className="button-add" onClick={handleToggleModal}>
+              + Add players
+            </button>
+          </div>
+        </article>
+
+        {listOfPlayers.map((player, index) => (
+          <div key={index} className="player-card">
+            <h4>{player.name}</h4>
+            <p>{player.position}</p>
+            <p>#{player.number}</p>
+          </div>
+        ))}
+      </main>
+
+      <PlayerModal
+        isOpen={isModalOpen}
+        onClose={handleToggleModal}
+        onSubmit={handleSubmitPlayer}
+      />
+    </>
   );
 }
 

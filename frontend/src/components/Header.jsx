@@ -1,85 +1,62 @@
-import { NavLink } from "react-router-dom";
+import { IconClose } from "../../public/icons/IconsHeader";
 import { useState } from "react";
+import MobileHeader from "./MobileHeader";
+import Overlay from "./Overlay";
+import RoleBadge from "./RoleBadge";
+import Navigation from "./Navigation";
+import UserInfo from "./UserInfo";
 import "../styles/Header.css";
 
-function Header() {
-  const [roleShow, setRoleShow] = useState({
-    dot: "violet",
-    name: "user",
-  });
+function Header({
+  // TODO sincronizar con la base de datos
+  role = { dot: "violet", name: "ADMIN" },
+  user = { name: "Doye", email: "doyel.gusmerotti@gm", avatar: "avatar.jpg" },
+  logo = "imagen-logo.png",
+  onSignOut,
+}) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
+
+  const handleSignOut = () => {
+    if (onSignOut) {
+      console.info("Te deslogueaste hehe");
+      onSignOut();
+    }
+  };
 
   return (
-    <header className="header">
-      <div className="header-top">
-        <div className="header-logo">
-          <img src="icons/icon-logo.svg" alt="Kickhub logo" />
-        </div>
+    <>
+      <MobileHeader logo={logo} onOpenMenu={toggleMenu} />
 
-        <div className="header-role">
-          <span className="role-dot" style={{ color: roleShow.dot }}>
-            ●
-          </span>
-          <span className="role-label">{roleShow.name}</span>
-        </div>
+      <Overlay
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen((prev) => !prev)}
+      />
 
-        <nav className="header-nav">
-          <NavLink
-            to="/"
-            end
-            className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
-          >
-            <img src="icons/icon-home.svg" alt="" />
-            <span>Home</span>
-          </NavLink>
-
-          <NavLink
-            to="/stats"
-            className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
-          >
-            <img src="icons/icon-stats.svg" alt="" />
-            <span>Stats</span>
-          </NavLink>
-
-          <NavLink
-            to="/matches"
-            className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
-          >
-            <img src="icons/icon-ball.svg" alt="" />
-            <span>Matches</span>
-          </NavLink>
-
-          <NavLink
-            to="/players"
-            className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
-          >
-            <img src="icons/icon-player.svg" alt="" />
-            <span>Players</span>
-          </NavLink>
-
-          <NavLink
-            to="/history"
-            className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
-          >
-            <img src="icons/icon-history.svg" alt="" />
-            <span>History</span>
-          </NavLink>
-        </nav>
-      </div>
-
-      <div className="header-bottom">
-        <div className="user-info">
-          <img className="user-avatar" src="avatar.jpg" alt="User avatar" />
-          <div className="user-text">
-            <p className="user-name">Doye</p>
-            <p className="user-email">doyel.gusmerotti@gm</p>
+      <header className={`header ${isMenuOpen ? "header-open" : ""}`}>
+        <div className="header-top">
+          <div className="header-logo">
+            <img src={logo} alt="Kickhub logo" />
           </div>
+
+          <button
+            type="button"
+            className="header-close-btn"
+            onClick={toggleMenu}
+            aria-label="Cerrar menú"
+          >
+            <IconClose />
+          </button>
+
+          <RoleBadge role={role} />
+
+          <Navigation onItemClick={toggleMenu} />
         </div>
 
-        <button type="button" className="user-switch-btn">
-          <img src="icons/icon-external.svg" alt="Switch" />
-        </button>
-      </div>
-    </header>
+        <UserInfo user={user} onSignOut={handleSignOut} />
+      </header>
+    </>
   );
 }
 
