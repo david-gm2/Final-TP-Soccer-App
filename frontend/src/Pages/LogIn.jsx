@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import "../styles/LogIn.css";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -36,7 +36,7 @@ export default function Login() {
   return (
     <div className="loginContainer">
       <div className="loginCard">
-        <h2>"Log In</h2>
+        <h2>Log In</h2>
         <p className="subtitle">
           Connect players. Create matches. <br />
           Keep the game alive.
@@ -58,8 +58,10 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button type="submit">"Log In"</button>
+          <button type="submit">Log In</button>
         </form>
+        {/* agregar forgot your password? link
+        agregar dont have an account Sign Up link */}
       </div>
     </div>
   );
