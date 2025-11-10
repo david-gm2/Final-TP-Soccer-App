@@ -32,4 +32,15 @@ if (!email || !password) {
 } catch (error){
     setMesagge(`${error.mesagge}`)
 }
-}}
+}
+return (
+    <div className="loginContainer">
+        <div className="loginCard">
+            <h2>"Log In</h2>
+            <p className="subtitle">
+                Connect players. Create matches. <br />
+                    Keep the game alive.</p>
+        </div>
+    </div>
+)
+}
