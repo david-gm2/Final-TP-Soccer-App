@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useId, useState } from "react";
+
 import "../styles/LogIn.css";
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -6,7 +7,7 @@ export default function Login() {
   const [message, setMessage] = useState("");
 
   const handleSubmit = async (e) => {
-    e.preventdDefault();
+    e.preventDefault();
 
     if (!email || !password) {
       setMessage("Faltan campos obligatorios.");
@@ -21,12 +22,23 @@ export default function Login() {
           body: JSON.stringify({ email, password }),
         }
       );
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "esta mal xd");
+
+      const text = await response.text();
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new Error("El servidor no devolvió JSON válido");
+      }
+
+      if (!response.ok) throw new Error(data.message || "Error en el login");
+
       localStorage.setItem("accessToken", data.accessToken);
       setMessage("Login exitoso, redirigiendo a la pagina...");
+
       setTimeout(() => {
-        window.location.href = "/visitante";
+        window.location.href = "/homepage";
       }, 1500);
     } catch (error) {
       setMessage(`${error.message}`);
@@ -45,23 +57,28 @@ export default function Login() {
           <label>Email*</label>
           <input
             type="email"
-            placeholder="example@gmail.com"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
             required
           />
           <label>Password*</label>
           <input
             type="password"
-            placeholder="*******"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
           <button type="submit">Log In</button>
+          <p>{message}</p>
         </form>
-        {/* agregar forgot your password? link
-        agregar dont have an account Sign Up link */}
+        <div className="linksSignIn">
+          <a href="#">Forgot you password?</a>
+          <p>
+            Don't have an account? <a href="sign-up">Sign Up</a>
+          </p>
+        </div>
       </div>
     </div>
   );
