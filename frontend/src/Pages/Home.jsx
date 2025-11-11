@@ -12,8 +12,12 @@ function Home() {
         </div>
 
         <div className="action-buttons">
-          <button id="new-match-button">New Match</button>
-          <button id="add-player-button">Add Player</button>
+          <button id="new-match-button">
+            <img src="../public/icons/Vector.svg" alt="" /> New Match
+          </button>
+          <button id="add-player-button">
+            <img src="../public/icons/Plus.svg" alt="" /> Add Player
+          </button>
         </div>
       </div>
 
@@ -50,6 +54,10 @@ function Home() {
 
           <img src="../public/icons/person.svg" alt="" />
         </div>
+      </div>
+
+      <div className="upcoming-matches-section">
+        <h2>Upcoming Matches</h2>
       </div>
     </main>
   );
