@@ -1,0 +1,71 @@
+.home-page {
+  background-color: #ffffff;
+  border: #eeeeee 1px solid;
+  padding: 24px;
+}
+
+.welcome-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.stats-overview {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 24px;
+  width: auto;
+}
+
+.stats-card {
+  display: flex;
+  padding: 24px;
+  gap: 4px;
+  flex: 1;
+  border-radius: 12px;
+  justify-content: space-between;
+  border-width: 1px;
+  border: 1px solid #eeeeee;
+}
+
+.stats-card img {
+  margin-right: 16px;
+}
+
+@media (max-width: 768px) {
+  .stats-overview {
+    flex-direction: column;
+  }
+  .welcome-section {
+    padding: 12px;
+    flex-direction: column;
+    display: flex;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 16px;
+    margin: 16px 0;
+  }
+
+  .stats-card {
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+  }
+
+  .stats-card img {
+    margin-right: 16px;
+  }
+
+  .stats-card img {
+    margin-right: 16px;
+  }
+}
