@@ -1,18 +1,18 @@
-import { IconMenu } from "../../public/icons/IconsHeader";
+import { IconMenu } from "../../public/icons/IconSidebar";
 
-function MobileHeader({
+function MobileSidebar({
   onOpenMenu,
   logo = "imagen-logo.png",
   logoAlt = "Kickhub logo",
 }) {
   return (
-    <div className="main-header">
+    <div className="main-sidebar">
       <img src={logo} alt={logoAlt} />
       <button
         type="button"
         className="mobile-menu-toggle"
         onClick={onOpenMenu}
-        aria-label="Abrir menú"
+        aria-label="Open menu"
       >
         <IconMenu />
       </button>
@@ -20,4 +20,4 @@ function MobileHeader({
   );
 }
 
-export default MobileHeader;
+export default MobileSidebar;

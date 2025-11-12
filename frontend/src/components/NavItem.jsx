@@ -15,4 +15,3 @@ function NavItem({ path, label, icon: Icon, end, onClick }) {
 }
 
 export default NavItem;
-

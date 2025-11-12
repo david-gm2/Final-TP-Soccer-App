@@ -3,7 +3,7 @@ function Overlay({ isOpen, onClose }) {
 
   return (
     <div
-      className="header-overlay"
+      className="sidebar-overlay"
       onClick={onClose}
       aria-hidden="true"
       role="button"

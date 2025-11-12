@@ -1,6 +1,6 @@
 function RoleBadge({ role = { dot: "violet", name: "ADMIN" } }) {
   return (
-    <div className="header-role">
+    <div className="sidebar-role">
       <span className="role-dot" style={{ color: role.dot }}>
         ●
       </span>

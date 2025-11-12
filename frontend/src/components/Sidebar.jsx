@@ -1,15 +1,15 @@
-import { IconClose } from "../../public/icons/IconsHeader";
+import { IconClose } from "../../public/icons/IconSidebar";
 import { useState } from "react";
-import MobileHeader from "./MobileHeader";
+import MobileSidebar from "./MobileSidebar";
 import Overlay from "./Overlay";
 import RoleBadge from "./RoleBadge";
 import Navigation from "./Navigation";
 import UserInfo from "./UserInfo";
-import "../styles/Header.css";
+import "../styles/Sidebar.css";
 
-function Header({
+function Sidebar({
   // TODO sincronizar con la base de datos
-  role = { dot: "violet", name: "ADMIN" },
+  role = { dot: "violet", name: "view" },
   user = { name: "Doye", email: "doyel.gusmerotti@gm", avatar: "avatar.jpg" },
   logo = "imagen-logo.png",
   onSignOut,
@@ -27,22 +27,22 @@ function Header({
 
   return (
     <>
-      <MobileHeader logo={logo} onOpenMenu={toggleMenu} />
+      <MobileSidebar logo={logo} onOpenMenu={toggleMenu} />
 
       <Overlay
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen((prev) => !prev)}
       />
 
-      <header className={`header ${isMenuOpen ? "header-open" : ""}`}>
-        <div className="header-top">
-          <div className="header-logo">
+      <aside className={`sidebar ${isMenuOpen ? "sidebar-open" : ""}`}>
+        <div className="sidebar-top">
+          <div className="sidebar-logo">
             <img src={logo} alt="Kickhub logo" />
           </div>
 
           <button
             type="button"
-            className="header-close-btn"
+            className="sidebar-close-btn"
             onClick={toggleMenu}
             aria-label="Cerrar menú"
           >
@@ -54,10 +54,10 @@ function Header({
           <Navigation onItemClick={toggleMenu} />
         </div>
 
-        <UserInfo user={user} onSignOut={handleSignOut} />
-      </header>
+        <UserInfo user={user} roleUser={role} onSignOut={handleSignOut} />
+      </aside>
     </>
   );
 }
 
-export default Header;
+export default Sidebar;

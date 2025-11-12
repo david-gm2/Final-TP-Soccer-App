@@ -3,7 +3,7 @@ import { navigationItems } from "../constants/navigation";
 
 function Navigation({ onItemClick }) {
   return (
-    <nav className="header-nav">
+    <nav className="sidebar-nav">
       {navigationItems.map((item) => (
         <NavItem
           key={item.path}
