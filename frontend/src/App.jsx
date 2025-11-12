@@ -1,13 +1,18 @@
-import { Routes, Route } from "react-router-dom";
-import Login from "./Pages/LogIn.jsx";
-import SignUp from "./Pages/SignUp.jsx";
+import Header from "./components/Header.jsx";
+import PlayersPage from "./Pages/PayersPage.jsx";
+import { Route, Routes } from "react-router-dom";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Login />} />
+    <>
+      <Header />
+
+      <Routes>
+        <Route path="/players" element={<PlayersPage />} />
+         <Route path="/log-in" element={<Login />} />
       <Route path="/sign-up" element={<SignUp />} />
-    </Routes>
+      </Routes>
+    </>
   );
 }
 

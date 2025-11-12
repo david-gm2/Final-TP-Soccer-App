@@ -1,15 +1,82 @@
 .players-page {
-    margin-left: 300px;
-    display: flex;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 
-    justify-content: space-between;
-    align-items: center;
-    align-content: center;
+.players-header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.players-header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.players-header h3 {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #6b7280;
+  margin: 4px 0 0 0;
 }
 
 .button-add {
-    padding: 8px;
-    background-color: #602EE1; 
-    border-radius: 20px;
-    border: 0px;
+  padding: 16px 16px;
+  background-color: #602ee1;
+  border-radius: 12px;
+  border: 0;
+  color: white;
+  height: 48px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  width: 100%;
+}
+
+.button-add:hover {
+  background-color: #4c1d95;
+}
+
+.button-add:active {
+  transform: scale(0.98);
+}
+
+.player-card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+@media (min-width: 769px) {
+  .players-page {
+    margin-left: 300px;
+    padding: 24px;
+    padding-top: 24px;
+  }
+
+  .players-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0;
+  }
+
+  .button-add {
+    padding: 8px 16px;
+    width: auto;
+  }
+
+  .players-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .players-header h3 {
+    font-size: 1.125rem;
+  }
 }
