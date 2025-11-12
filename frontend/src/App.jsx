@@ -9,6 +9,8 @@ function App() {
 
       <Routes>
         <Route path="/players" element={<PlayersPage />} />
+         <Route path="/log-in" element={<Login />} />
+      <Route path="/sign-up" element={<SignUp />} />
       </Routes>
     </>
   );
