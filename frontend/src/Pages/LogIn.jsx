@@ -57,8 +57,9 @@ export default function Login() {
           Keep the game alive.
         </p>
         <form onSubmit={handleSubmit}>
-          <label id="emailField">Email*</label>
+          <label html="email">Email*</label>
           <input
+            name="email"
             type="email"
             value={email}
             onChange={(e) => {
@@ -66,8 +67,9 @@ export default function Login() {
             }}
             required
           />
-          <label id="passwordField">Password*</label>
+          <label htmlFor="password">Password*</label>
           <input
+            name="password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}

@@ -20,11 +20,11 @@ export default function SignUp() {
     }
     try {
       const response = await fetch(
-        "https://backend-exercises-production.up.railway.app/auth/login",
+        "https://backend-exercises-production.up.railway.app/auth/register",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email, password }),
+          body: JSON.stringify({ user_name: name, email, password }),
         }
       );
 
@@ -37,13 +37,18 @@ export default function SignUp() {
         throw new Error("El servidor no devolvió JSON válido");
       }
 
-      if (!response.ok) throw new Error(data.message || "Error en el login");
-
       sessionStorage.setItem("accessToken", data.accessToken);
-      setMessage("Login exitoso, redirigiendo a la pagina...");
+      setMessage(
+        "Usuario creado exitosamente. Redirigiendo a la pagina principal..."
+      );
+
+      if (!response.ok) {
+        console.log(response);
+        throw new Error(data.message || "Error en registro");
+      }
 
       setTimeout(() => {
-        navigate("/homepage");
+        navigate("/");
       }, 1500);
     } catch (error) {
       setMessage(`${error.message}`);
@@ -60,10 +65,16 @@ export default function SignUp() {
           Keep the game alive.
         </p>
         <form onSubmit={handleSubmit}>
-          <label>Name*</label>
-          <input type="text" onChange={(e) => setName(e.target.value)} />
-          <label>Email*</label>
+          <label htmlFor="name">Name*</label>
           <input
+            name="name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <label htmlFor="email">Email*</label>
+          <input
+            name="email"
             type="email"
             value={email}
             onChange={(e) => {
@@ -71,8 +82,9 @@ export default function SignUp() {
             }}
             required
           />
-          <label>Password*</label>
+          <label htmlFor="password">Password*</label>
           <input
+            name="password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -83,7 +95,7 @@ export default function SignUp() {
         </form>
         <div className="linksSignUp">
           <p>
-            Already have an account? <Link to="/log-in">Log In</Link>
+            Already have an account? <Link to="/">Log In</Link>
           </p>
         </div>
       </div>
