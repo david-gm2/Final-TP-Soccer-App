@@ -1,4 +1,5 @@
 import "../styles/home.css";
+import UpcomingMatches from "../components/UpcomingMatches";
 
 function Home() {
   let user = "user";
@@ -6,6 +7,10 @@ function Home() {
   let totalGoals = 44;
   let totalAssists = 13;
   let activePlayers = 20;
+  let upcomingMatches = [
+    { local: "Team A", visitor: "Team C", date: "2023-10-01", time: "15:00" },
+    { local: "Team B", visitor: "Team D", date: "2023-10-02", time: "17:00" },
+  ];
 
   return (
     <main className="home-page">
@@ -64,6 +69,7 @@ function Home() {
 
       <div className="upcoming-matches-section">
         <h2>Upcoming Matches</h2>
+        <UpcomingMatches matches={upcomingMatches} />
       </div>
     </main>
   );

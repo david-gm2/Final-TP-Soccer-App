@@ -71,19 +71,15 @@ h2 {
   flex: 1;
   border-radius: 12px;
   justify-content: space-between;
+  align-items: center;
   border-width: 1px;
   border: 1px solid #eeeeee;
 }
 
 .stats-card img {
+  height: 32px;
+  width: 32px;
   margin-right: 16px;
-}
-
-.upcoming-matches-section {
-  margin-top: 24px;
-  padding: 12px;
-  border-radius: 12px;
-  border: #eeeeee 1px solid;
 }
 
 @media (max-width: 768px) {
