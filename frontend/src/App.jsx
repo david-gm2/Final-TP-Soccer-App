@@ -1,16 +1,13 @@
-import Header from "./components/Header.jsx";
 import { Routes, Route } from "react-router-dom";
 import Login from "./Pages/LogIn.jsx";
+import SignUp from "./Pages/SignUp.jsx";
 
 function App() {
   return (
-    <>
-      <Login></Login>
-    </>
-    // <Routes>
-    //   <Route path="/register" element={<Login />} />
-    //   <Route path="/contact" element={<Contact />} />
-    // </Routes>
+    <Routes>
+      <Route path="/log-in" element={<Login />} />
+      <Route path="/sign-up" element={<SignUp />} />
+    </Routes>
   );
 }
 

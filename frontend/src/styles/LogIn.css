@@ -3,7 +3,7 @@
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  background-image: url("/public/images/Image\ placeholdert.svg");
+  background-image: url("/public/images/Image\ placeholder.svg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -14,7 +14,7 @@
   padding: 48px 20px 30px;
   border-radius: 40px 40px 0px 0px;
   width: 100%;
-  height: 60%;
+  height: 73%;
   max-width: 480px;
   text-align: center;
 }
@@ -84,10 +84,10 @@ form button {
   margin-right: 42.5px;
 }
 
-.linksSignIn a {
+.linksSignIn link {
   color: #000;
 }
 
-.linksSignIn a:hover {
+.linksSignIn link:hover {
   text-decoration: underline;
 }

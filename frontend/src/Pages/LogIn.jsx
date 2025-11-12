@@ -1,7 +1,10 @@
-import { useId, useState } from "react";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 import "../styles/LogIn.css";
+
 export default function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -38,7 +41,7 @@ export default function Login() {
       setMessage("Login exitoso, redirigiendo a la pagina...");
 
       setTimeout(() => {
-        window.location.href = "/homepage";
+        navigate("/homepage");
       }, 1500);
     } catch (error) {
       setMessage(`${error.message}`);
@@ -54,7 +57,7 @@ export default function Login() {
           Keep the game alive.
         </p>
         <form onSubmit={handleSubmit}>
-          <label>Email*</label>
+          <label id="emailField">Email*</label>
           <input
             type="email"
             value={email}
@@ -63,7 +66,7 @@ export default function Login() {
             }}
             required
           />
-          <label>Password*</label>
+          <label id="passwordField">Password*</label>
           <input
             type="password"
             value={password}
@@ -73,10 +76,10 @@ export default function Login() {
           <button type="submit">Log In</button>
           <p>{message}</p>
         </form>
-        <div className="linksSignIn">
+        <div className="linksLogIn">
           <a href="#">Forgot you password?</a>
           <p>
-            Don't have an account? <a href="sign-up">Sign Up</a>
+            Don't have an account? <Link to="/sign-up">Sign Up</Link>
           </p>
         </div>
       </div>
