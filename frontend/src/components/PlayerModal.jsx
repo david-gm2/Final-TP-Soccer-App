@@ -1,4 +1,4 @@
-import { IconClose } from "../../public/icons/IconsHeader";
+import { IconClose } from "../../public/icons/IconSidebar";
 import "../styles/PlayerModal.css";
 
 function PlayerModal({ isOpen, onClose, onSubmit }) {
@@ -89,37 +89,39 @@ function PlayerModal({ isOpen, onClose, onSubmit }) {
             </select>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="number" className="form-label">
-              Number
-            </label>
-            <input
-              type="number"
-              id="number"
-              name="number"
-              className="form-input"
-              placeholder="Enter jersey number"
-              min="1"
-              max="99"
-              required
-            />
-          </div>
+          <div className="form-number-rating">
+            <div className="form-group">
+              <label htmlFor="number" className="form-label">
+                Number
+              </label>
+              <input
+                type="number"
+                id="number"
+                name="number"
+                className="form-input"
+                placeholder="Enter jersey number"
+                min="1"
+                max="99"
+                required
+              />
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="rating" className="form-label">
-              Rating
-            </label>
-            <input
-              type="number"
-              id="rating"
-              name="rating"
-              className="form-input"
-              placeholder="Enter rating"
-              min="0"
-              max="100"
-              step="0.1"
-              required
-            />
+            <div className="form-group">
+              <label htmlFor="rating" className="form-label">
+                Rating
+              </label>
+              <input
+                type="number"
+                id="rating"
+                name="rating"
+                className="form-input"
+                placeholder="Enter rating"
+                min="0"
+                max="100"
+                step="0.1"
+                required
+              />
+            </div>
           </div>
 
           <div className="modal-actions">

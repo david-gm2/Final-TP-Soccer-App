@@ -1,6 +1,5 @@
 .players-page {
   padding: 16px;
-  padding-top: 80px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -27,11 +26,12 @@
 }
 
 .button-add {
-  padding: 10px 16px;
+  padding: 16px 16px;
   background-color: #602ee1;
-  border-radius: 20px;
+  border-radius: 12px;
   border: 0;
   color: white;
+  height: 48px;
   cursor: pointer;
   font-size: 0.9rem;
   font-weight: 500;
@@ -47,9 +47,15 @@
   transform: scale(0.98);
 }
 
+.player-card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
 @media (min-width: 769px) {
   .players-page {
-    margin-left: 348px;
+    margin-left: 300px;
     padding: 24px;
     padding-top: 24px;
   }
