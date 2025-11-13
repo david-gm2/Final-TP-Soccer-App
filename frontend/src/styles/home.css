@@ -5,10 +5,11 @@ h1 {
   letter-spacing: 0%;
 }
 h2 {
-  font-weight: 400;
-  font-style: normal;
+  font-weight: 400px;
+  font-style: Normal;
+  font-size: 150%;
   line-height: 150%;
-  letter-spacing: 0;
+  letter-spacing: 0%;
 }
 
 .home-page {
@@ -80,6 +81,13 @@ h2 {
   height: 32px;
   width: 32px;
   margin-right: 16px;
+}
+
+.cards-section {
+  margin-top: 24px;
+  padding: 16px;
+  border-radius: 12px;
+  border: #eeeeee 1px solid;
 }
 
 @media (max-width: 768px) {

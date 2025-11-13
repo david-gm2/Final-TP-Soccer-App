@@ -1,5 +1,6 @@
 import "../styles/home.css";
 import UpcomingMatches from "../components/UpcomingMatches";
+import TopPlayers from "../components/TopPlayers";
 
 function Home() {
   let user = "user";
@@ -10,6 +11,14 @@ function Home() {
   let upcomingMatches = [
     { local: "Team A", visitor: "Team C", date: "2023-10-01", time: "15:00" },
     { local: "Team B", visitor: "Team D", date: "2023-10-02", time: "17:00" },
+    { local: "Team E", visitor: "Team F", date: "2023-10-03", time: "19:00" },
+    { local: "Team G", visitor: "Team H", date: "2023-10-04", time: "16:00" },
+  ];
+  let topPlayers = [
+    { name: "Player 1", position: "Forward", img: true },
+    { name: "Player 2", position: "Midfielder", img: true },
+    { name: "Player 3", position: "Defender", img: true },
+    { name: "Player 4", position: "Goalkeeper", img: false },
   ];
 
   return (
@@ -67,9 +76,15 @@ function Home() {
         </div>
       </div>
 
-      <div className="upcoming-matches-section">
-        <h2>Upcoming Matches</h2>
-        <UpcomingMatches matches={upcomingMatches} />
+      <div className="cards-container">
+        <div className="cards-section">
+          <UpcomingMatches matches={upcomingMatches} />
+        </div>
+
+        <div className="cards-section">
+          <h2>Top Players</h2>
+          <TopPlayers players={topPlayers} />
+        </div>
       </div>
     </main>
   );

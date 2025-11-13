@@ -3,7 +3,8 @@ import "../styles/upcomingMatches.css";
 function UpcomingMatches({ matches }) {
   return (
     <div className="upcoming-matches-list">
-      {matches.map((match, index) => (
+      <h2>Upcoming Matches</h2>
+      {matches.slice(0, 3).map((match, index) => (
         <div className="match-card" key={index}>
           <div>
             <p>
