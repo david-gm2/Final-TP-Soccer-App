@@ -3,7 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 
 import "../styles/LogIn.css";
 
-export default function Login() {
+const API_URL = 'https://backend-exercises-production.up.railway.app';
+
+export function LogIn() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -11,6 +13,7 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+ 
 
     if (!email || !password) {
       setMessage("Faltan campos obligatorios.");
@@ -18,13 +21,14 @@ export default function Login() {
     }
     try {
       const response = await fetch(
-        "https://backend-exercises-production.up.railway.app/auth/login",
+        `${API_URL}/auth/login`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
         }
       );
+
 
       const text = await response.text();
 
@@ -88,3 +92,5 @@ export default function Login() {
     </div>
   );
 }
+
+export default LogIn;

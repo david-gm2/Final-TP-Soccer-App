@@ -4,7 +4,7 @@ import "../styles/SignUp.css";
 
 // * preventivo
 
-export default function SignUp() {
+export function SignUp() {
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -14,6 +14,8 @@ export default function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    console.log("Request body:", JSON.stringify({user_name: name, email, password }));
+    
     if (!name || !email || !password) {
       setMessage("Faltan campos obligatorios.");
       return;
@@ -24,9 +26,11 @@ export default function SignUp() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ user_name: name, email, password }),
+          body: JSON.stringify({ user_name: name, email, password  }),
         }
       );
+
+      console.log(response)
 
       const text = await response.text();
 
@@ -95,10 +99,12 @@ export default function SignUp() {
         </form>
         <div className="linksSignUp">
           <p>
-            Already have an account? <Link to="/">Log In</Link>
+            Already have an account? <Link to="/log-in">Log In</Link>
           </p>
         </div>
       </div>
     </div>
   );
 }
+
+export default SignUp;
