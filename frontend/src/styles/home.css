@@ -5,10 +5,16 @@ h1 {
   letter-spacing: 0%;
 }
 h2 {
-  font-weight: 400px;
-  font-style: Normal;
+  font-weight: normal;
   font-size: 150%;
   line-height: 150%;
+  letter-spacing: 0%;
+}
+.stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  font-style: Bold;
+  line-height: 140%;
   letter-spacing: 0%;
 }
 

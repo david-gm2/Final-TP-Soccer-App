@@ -23,7 +23,7 @@ const StatsCard = ({
         <div className="stats-card" key={index}>
           <div>
             <h2>{stat.title}</h2>
-            <p>{stat.value}</p>
+            <p className="stat-value">{stat.value}</p>
           </div>
           <img src={stat.icon} alt={stat.title} />
         </div>
