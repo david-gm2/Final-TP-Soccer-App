@@ -96,6 +96,8 @@ function App() {
         <Route path="/players" element={<PlayersPage />} />
         <Route path="/players/:id" element={<PlayersPage />} />
         <Route path="/history" element={<HistoryPage />} />
+        <Route path="/log-in" element={<Login />} />
+        <Route path="/sign-up" element={<SignUp />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
