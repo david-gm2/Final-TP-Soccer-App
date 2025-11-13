@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "a": "^4.0.0",
+    "package": "^1.0.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.9.5"

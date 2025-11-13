@@ -1,6 +1,7 @@
 import "../styles/home.css";
 import UpcomingMatches from "../components/UpcomingMatches";
 import TopPlayers from "../components/TopPlayers";
+import StatsCard from "../components/StatsCard.jsx";
 
 function Home() {
   let user = "user";
@@ -41,40 +42,12 @@ function Home() {
         </div>
       </div>
 
-      <div className="stats-overview">
-        <div className="stats-card">
-          <div>
-            <h2>Total Matches</h2>
-            <p>{totalMatches}</p>
-          </div>
-
-          <img src="../public/icons/scoreboard.svg" alt="" />
-        </div>
-        <div className="stats-card">
-          <div>
-            <h2>Total Goals</h2>
-            <p>{totalGoals}</p>
-          </div>
-
-          <img src="../public/icons/sports_soccer.svg" alt="" />
-        </div>
-        <div className="stats-card">
-          <div>
-            <h2>Total assists</h2>
-            <p>{totalAssists}</p>
-          </div>
-
-          <img src="../public/icons/star.svg" alt="" />
-        </div>
-        <div className="stats-card">
-          <div>
-            <h2>Active Players</h2>
-            <p>{activePlayers}</p>
-          </div>
-
-          <img src="../public/icons/person.svg" alt="" />
-        </div>
-      </div>
+      <StatsCard
+        totalMatches={totalMatches}
+        totalGoals={totalGoals}
+        totalAssists={totalAssists}
+        activePlayers={activePlayers}
+      />
 
       <div className="cards-container">
         <div className="cards-section">
