@@ -4,7 +4,7 @@ import {
     IconMatches,
     IconPlayer,
     IconHistory,
-} from "../../public/icons/IconsHeader";
+} from "../../public/icons/IconSidebar.jsx";
 
 export const navigationItems = [
     {
