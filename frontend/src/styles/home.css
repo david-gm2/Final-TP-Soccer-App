@@ -14,7 +14,6 @@ h2 {
 
 .home-page {
   background-color: #ffffff;
-  border: #eeeeee 1px solid;
   padding: 24px;
 }
 
@@ -89,6 +88,22 @@ h2 {
   border-radius: 12px;
   border: #eeeeee 1px solid;
 }
+.cards-overview {
+  display: flex;
+  gap: 24px;
+}
+
+.cards-upcoming-matches {
+  width: 60%;
+  height: -webkit-fill-available;
+  box-sizing: content-box;
+  width: -webkit-fill-available;
+}
+
+.card-top-players {
+  width: 4%0;
+  box-sizing: content-box;
+}
 
 @media (max-width: 768px) {
   .stats-overview {
@@ -133,5 +148,16 @@ h2 {
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .cards-overview {
+    flex-direction: column;
+    width: 100%;
+  }
+  .card-top-players {
+    width: 100%;
+  }
+  .card-upcoming-matches {
+    width: 100%;
   }
 }

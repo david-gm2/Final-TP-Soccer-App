@@ -48,15 +48,17 @@ function Home() {
         totalAssists={totalAssists}
         activePlayers={activePlayers}
       />
-
-      <div className="cards-container">
-        <div className="cards-section">
-          <UpcomingMatches matches={upcomingMatches} />
+      <div className="cards-overview">
+        <div className="cards-upcoming-matches">
+          <div className="cards-section">
+            <UpcomingMatches matches={upcomingMatches} />
+          </div>
         </div>
-
-        <div className="cards-section">
-          <h2>Top Players</h2>
-          <TopPlayers players={topPlayers} />
+        <div className="cards-top-players">
+          <div className="cards-section">
+            <h2>Top Players</h2>
+            <TopPlayers players={topPlayers} />
+          </div>
         </div>
       </div>
     </main>
