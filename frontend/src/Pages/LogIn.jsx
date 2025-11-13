@@ -57,7 +57,7 @@ export default function Login() {
           Keep the game alive.
         </p>
         <form onSubmit={handleSubmit}>
-          <label html="email">Email*</label>
+          <label htmlFor="email">Email*</label>
           <input
             name="email"
             type="email"

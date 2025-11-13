@@ -5,11 +5,11 @@ import "../styles/SignUp.css";
 // * preventivo
 
 export default function SignUp() {
-  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,15 +37,14 @@ export default function SignUp() {
         throw new Error("El servidor no devolvió JSON válido");
       }
 
-      sessionStorage.setItem("accessToken", data.accessToken);
-      setMessage(
-        "Usuario creado exitosamente. Redirigiendo a la pagina principal..."
-      );
-
       if (!response.ok) {
         console.log(response);
         throw new Error(data.message || "Error en registro");
       }
+      sessionStorage.setItem("accessToken", data.accessToken);
+      setMessage(
+        "Usuario creado exitosamente. Redirigiendo a la pagina principal..."
+      );
 
       setTimeout(() => {
         navigate("/");
@@ -95,7 +94,7 @@ export default function SignUp() {
         </form>
         <div className="linksSignUp">
           <p>
-            Already have an account? <Link to="/">Log In</Link>
+            Already have an account? <Link to="/log-in">Log In</Link>
           </p>
         </div>
       </div>
