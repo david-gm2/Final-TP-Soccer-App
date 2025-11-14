@@ -111,7 +111,7 @@ h2 {
   box-sizing: content-box;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 769px) {
   .stats-overview {
     flex-direction: column;
   }
