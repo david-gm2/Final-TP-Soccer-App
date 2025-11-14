@@ -6,6 +6,7 @@ import "../styles/SignUp.css";
 
 export function SignUp() {
   const navigate = useNavigate();
+  const API_URL = "https://backend-exercises-production.up.railway.app";
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,23 +15,21 @@ export function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("Request body:", JSON.stringify({user_name: name, email, password }));
-    
+    console.log(
+      "Request body:",
+      JSON.stringify({ user_name: name, email, password })
+    );
+
     if (!name || !email || !password) {
       setMessage("Faltan campos obligatorios.");
       return;
     }
     try {
-      const response = await fetch(
-        "https://backend-exercises-production.up.railway.app/auth/register",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ user_name: name, email, password  }),
-        }
-      );
-
-      console.log(response)
+      const response = await fetch(`${API_URL}/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_name: name, email, password }),
+      });
 
       const text = await response.text();
 

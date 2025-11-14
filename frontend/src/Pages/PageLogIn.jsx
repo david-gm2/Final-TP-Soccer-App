@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import "../styles/LogIn.css";
 
-const API_URL = 'https://backend-exercises-production.up.railway.app';
+const API_URL = "https://backend-exercises-production.up.railway.app";
 
 export function LogIn() {
   const navigate = useNavigate();
@@ -18,19 +18,15 @@ export function LogIn() {
 
     if (!email || !password) {
       setMessage("Faltan campos obligatorios.");
-      setIsCharging(false); 
+      setIsCharging(false);
       return;
     }
     try {
-      const response = await fetch(
-        `${API_URL}/auth/login`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        }
-      );
-
+      const response = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
       const text = await response.text();
 
@@ -43,11 +39,10 @@ export function LogIn() {
 
       if (!response.ok) throw new Error(data.message || "Error en el login");
 
-      localStorage.setItem("accessToken", data.accessToken);
+      sessionStorage.setItem("accessToken", data.accessToken);
       setMessage("Login exitoso, redirigiendo a la pagina...");
 
       navigate("/");
-      
     } catch (error) {
       setMessage(`${error.message}`);
     }

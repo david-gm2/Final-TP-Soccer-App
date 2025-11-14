@@ -8,6 +8,7 @@ import MatchesPage from "./Pages/PageMatches.jsx";
 import PlayersPage from "./Pages/PagePlayers.jsx";
 import HistoryPage from "./Pages/PageHistory.jsx";
 import LogIn from "./Pages/PageLogIn.jsx";
+import ProtectedRoutes from "./components/ProtectedRoutes.jsx";
 import "./App.css";
 
 const dummyPlayer = {
@@ -28,7 +29,14 @@ function App() {
       <Route path="/log-in" element={<LogIn />} />
 
       <Route path="/" element={<Sidebar />}>
-        <Route index element={<Home />} />
+        <Route
+          index
+          element={
+            <ProtectedRoutes>
+              <Home />
+            </ProtectedRoutes>
+          }
+        />
         <Route path="stats" element={<StatsPage player={dummyPlayer} />} />
         <Route path="matches" element={<MatchesPage />} />
         <Route path="players" element={<PlayersPage />} />
