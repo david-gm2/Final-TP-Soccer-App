@@ -1,5 +1,4 @@
 .player-filter {
-    margin-top: 24px;
     padding: 16px;
     background: #FFFFFF;
     border-radius: 12px;
@@ -98,4 +97,10 @@
   background: linear-gradient(270deg, #E968FE, #602EE1);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+@media (max-width: 769px) {
+    .player-filter {
+        gap: 24px;
+    }
 }
