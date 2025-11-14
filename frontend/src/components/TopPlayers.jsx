@@ -1,0 +1,25 @@
+import "../styles/topPlayers.css";
+
+function TopPlayers({ players }) {
+  return (
+    <div className="top-players">
+      <div className="players-list">
+        {players.slice(0, 3).map((player) => (
+          <div className="player-card" key={player.id}>
+            <div className="player-info">
+              <img src="../public/icons/Player1.svg" alt={player.name} />
+              <div className="player-details">
+                <p className="player-index"> {player.index}# </p>
+                <h3> {player.name}</h3>
+                <p>{player.position}</p>
+              </div>
+            </div>
+            <img src="../public/icons/arrow.svg" alt="" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default TopPlayers;

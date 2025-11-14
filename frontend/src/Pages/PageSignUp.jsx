@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import "../styles/SignUp.css";
 
-import "../styles/LogIn.css";
+// * preventivo
 
-export default function Login() {
+export function SignUp() {
   const navigate = useNavigate();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -12,19 +14,23 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!email || !password) {
+    console.log("Request body:", JSON.stringify({user_name: name, email, password }));
+    
+    if (!name || !email || !password) {
       setMessage("Faltan campos obligatorios.");
       return;
     }
     try {
       const response = await fetch(
-        "https://backend-exercises-production.up.railway.app/auth/login",
+        "https://backend-exercises-production.up.railway.app/auth/register",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
+          body: JSON.stringify({ user_name: name, email, password  }),
         }
       );
+
+      console.log(response)
 
       const text = await response.text();
 
@@ -35,29 +41,42 @@ export default function Login() {
         throw new Error("El servidor no devolvió JSON válido");
       }
 
-      if (!response.ok) throw new Error(data.message || "Error en el login");
+      sessionStorage.setItem("accessToken", data.accessToken);
+      setMessage(
+        "Usuario creado exitosamente. Redirigiendo a la pagina principal..."
+      );
 
-      localStorage.setItem("accessToken", data.accessToken);
-      setMessage("Login exitoso, redirigiendo a la pagina...");
+      if (!response.ok) {
+        console.log(response);
+        throw new Error(data.message || "Error en registro");
+      }
 
       setTimeout(() => {
-        navigate("/homepage");
+        navigate("/");
       }, 1500);
     } catch (error) {
       setMessage(`${error.message}`);
     }
   };
+  // * preventivo hasta aca
 
   return (
-    <div className="loginContainer">
-      <div className="loginCard">
-        <h2>Log In</h2>
+    <div className="signupContainer">
+      <div className="signupCard">
+        <h2>Sign Up</h2>
         <p className="subtitle">
           Connect players. Create matches. <br />
           Keep the game alive.
         </p>
         <form onSubmit={handleSubmit}>
-          <label html="email">Email*</label>
+          <label htmlFor="name">Name*</label>
+          <input
+            name="name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <label htmlFor="email">Email*</label>
           <input
             name="email"
             type="email"
@@ -75,16 +94,17 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button type="submit">Log In</button>
+          <button type="submit">Sign Up</button>
           <p>{message}</p>
         </form>
-        <div className="linksLogIn">
-          <a href="#">Forgot you password?</a>
+        <div className="linksSignUp">
           <p>
-            Don't have an account? <Link to="/sign-up">Sign Up</Link>
+            Already have an account? <Link to="/log-in">Log In</Link>
           </p>
         </div>
       </div>
     </div>
   );
 }
+
+export default SignUp;

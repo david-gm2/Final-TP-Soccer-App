@@ -1,0 +1,49 @@
+.player-card {
+    width: 338px;
+    border-radius: 12px;
+    padding: 16px;
+    gap: 16px;
+    border: 1px #EEEEEE solid;
+    background: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+} 
+
+.player-card-profile {
+    height: 51px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.player-card-profile-text {
+    width: 170px;
+}
+
+.player-card-profile .button-view{
+    height: 40px;
+    width: 40px;
+    padding: 8px;
+    background: white;
+    border: none;
+}
+
+.player-card-profile svg:active{
+    transform: scale(0.9);
+    color:  #602EE1;
+}
+
+.player-card-button{
+    color:  #602EE1;
+    height: 40px;
+    border-radius: 6px;
+    background: white;
+    border: 1px #602EE1 solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+}
+
+.player-card-button:active{
+    transform: scale(0.985);
+}

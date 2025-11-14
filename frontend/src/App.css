@@ -23,3 +23,12 @@ p {
   line-height: 150%;
   letter-spacing: 0%;
 }
+
+@media (min-width: 769px) {
+  main {
+    margin-left: 300px;
+    padding: 24px;
+    padding-top: 24px;
+  }
+}
+
