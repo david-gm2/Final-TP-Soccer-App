@@ -5,10 +5,9 @@
   flex-direction: column;
 }
 
-.player-card {
+.players-card {
   display: flex;
   justify-content: space-between;
-
   background-color: #f9f9f9;
   border-radius: 8px;
   padding: 15px;
@@ -27,4 +26,10 @@
 .player-info {
   display: flex;
   align-items: center;
+}
+.arrow-icon {
+  display: flex;
+  width: 20px;
+  height: 20px;
+  align-self: center;
 }
