@@ -1,4 +1,4 @@
-export function MatchesPage() {
+function MatchesPage() {
   return (
     <>
       <main>

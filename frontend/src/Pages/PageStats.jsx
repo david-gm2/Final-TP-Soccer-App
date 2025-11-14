@@ -1,4 +1,4 @@
-
+import { Radar } from "react-chartjs-2";
 
 export function StatsPage({ player }) {
   if (!player) {
@@ -6,7 +6,7 @@ export function StatsPage({ player }) {
   }
 
   const data = {
-    labels: ["Velocidad", "Fuerza", "Pases", "Defensa", "Tiro", "Resistencia"],
+    labels: ["Velocidad", "Fuerza", "Pases", "Defensa", "Tiro", "Resistencia", 'Azul'],
     datasets: [
       {
         label: `Estadísticas de ${player.name}`,
@@ -17,6 +17,7 @@ export function StatsPage({ player }) {
           player.defense,
           player.shooting,
           player.stamina,
+          player.azul,
         ],
         backgroundColor: "rgba(54, 162, 235, 0.2)",
         borderColor: "rgba(54, 162, 235, 1)",

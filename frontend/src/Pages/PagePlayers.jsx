@@ -1,22 +1,23 @@
-// src/pages/PlayersPage.jsx
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { usePlayers } from "../hooks/usePlayer.js";
 import { useURLFilters } from "../hooks/useURLFilters.js";
 
-import { HeaderPlayerPage } from "../components/HeaderPlayerPage.jsx";
+import { HeaderPlayerPage } from "../components/PlayerPageHeader.jsx";
 import { PlayerFilter } from "../components/PlayerFilter.jsx";
 import { PlayerGrid } from "../components/PlayerGrid.jsx";
 import PlayerModal from "../components/PlayerModal.jsx";
+import DeletePlayerModal from "../components/DeletePlayerModal.jsx";
 
 import "../styles/PlayersPage.css";
 import "../styles/PlayerFiltrer.css";
-import "../styles/PlayersCard.css";
 import "../styles/PlayerModal.css";
 
 function PlayersPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedPlayer, setSelectedPlayer] = useState(null);
 
   const { players, add, remove } = usePlayers();
   const { active } = useURLFilters("position");
@@ -37,7 +38,23 @@ function PlayersPage() {
 
   const navigate = useNavigate();
   const handleView = (p) => navigate(`/players/${p.id}`);
-  const handleDelete = (id) => remove(id);
+
+  const openDeleteModal = (player) => {
+    setSelectedPlayer(player);
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setSelectedPlayer(null);
+  };
+
+  const confirmDelete = () => {
+    if (selectedPlayer) {
+      remove(selectedPlayer.id);
+      closeDeleteModal();
+    }
+  };
 
   return (
     <>
@@ -47,7 +64,7 @@ function PlayersPage() {
         <PlayerGrid
           players={filtered}
           onView={handleView}
-          onDelete={handleDelete}
+          onOpenDeleteModal={openDeleteModal}
         />
       </main>
 
@@ -55,6 +72,13 @@ function PlayersPage() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={add}
+      />
+
+      <DeletePlayerModal
+        isOpen={isDeleteModalOpen}
+        onClose={closeDeleteModal}
+        onConfirm={confirmDelete}
+        player={selectedPlayer}
       />
     </>
   );

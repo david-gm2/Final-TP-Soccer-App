@@ -10,13 +10,15 @@ export function LogIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isCharging, setIsCharging] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
- 
+    setIsCharging(true);
 
     if (!email || !password) {
       setMessage("Faltan campos obligatorios.");
+      setIsCharging(false); 
       return;
     }
     try {
@@ -44,9 +46,8 @@ export function LogIn() {
       localStorage.setItem("accessToken", data.accessToken);
       setMessage("Login exitoso, redirigiendo a la pagina...");
 
-      setTimeout(() => {
-        navigate("/homepage");
-      }, 1500);
+      navigate("/");
+      
     } catch (error) {
       setMessage(`${error.message}`);
     }
@@ -79,7 +80,9 @@ export function LogIn() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button type="submit">Log In</button>
+          <button type="submit" disabled={isCharging}>
+            {isCharging ? "Cargando..." : "Log In"}
+          </button>
           <p>{message}</p>
         </form>
         <div className="linksLogIn">

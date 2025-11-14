@@ -19,10 +19,12 @@
     width: 170px;
 }
 
-.player-card-profile.button-view{
+.player-card-profile .button-view{
     height: 40px;
     width: 40px;
     padding: 8px;
+    background: white;
+    border: none;
 }
 
 .player-card-profile svg:active{

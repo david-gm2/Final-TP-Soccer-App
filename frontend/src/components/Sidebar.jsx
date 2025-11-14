@@ -1,5 +1,6 @@
 import { IconClose } from "../../public/icons/IconSidebar";
 import { useState } from "react";
+import { Outlet } from "react-router-dom";
 import MobileSidebar from "./MobileSidebar";
 import Overlay from "./Overlay";
 import RoleBadge from "./RoleBadge";
@@ -56,6 +57,7 @@ function Sidebar({
 
         <UserInfo user={user} roleUser={role} onSignOut={handleSignOut} />
       </aside>
+        <Outlet />
     </>
   );
 }

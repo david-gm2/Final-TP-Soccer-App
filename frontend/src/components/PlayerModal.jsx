@@ -117,8 +117,7 @@ function PlayerModal({ isOpen, onClose, onSubmit }) {
                 className="form-input"
                 placeholder="Enter rating"
                 min="0"
-                max="100"
-                step="0.1"
+                max="10"
                 required
               />
             </div>

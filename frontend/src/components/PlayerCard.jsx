@@ -3,8 +3,9 @@ import {
   IconDefaultUser,
   IconDelete,
 } from "../../public/icons/IconsPlayer.jsx";
+import "../styles/PlayersCard.css";
 
-export function PlayerCard({ player, onView, onDelete }) {
+export function PlayerCard({ player, onView, onOpenDeleteModal }) {
   return (
     <div className="player-card">
       <div className="player-card-profile">
@@ -31,9 +32,8 @@ export function PlayerCard({ player, onView, onDelete }) {
       {player.bio && <p>{player.bio}</p>}
 
       <button
-        type="button"
-        onClick={() => onDelete(player.id)}
         className="player-card-button"
+        onClick={() => onOpenDeleteModal(player)}
       >
         <IconDelete /> Delete
       </button>
