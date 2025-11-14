@@ -1,4 +1,5 @@
 import { useURLFilters } from "../hooks/useURLFilters.js";
+import { useURLSearch } from "../hooks/useURLSearch.js";
 import { IconLupa } from "../../public/icons/IconsPlayer.jsx";
 
 const FILTERS = [
@@ -12,6 +13,7 @@ const FILTERS = [
 
 export function PlayerFilter() {
   const { active, toggle } = useURLFilters("position");
+  const { value: search, setValue: setSearch } = useURLSearch("q");
 
   return (
     <div className="player-filter">
@@ -19,14 +21,22 @@ export function PlayerFilter() {
         <label htmlFor="search">
           <IconLupa width={16} height={16} />
         </label>
-        <input type="search" id="search" />
+        <input
+          type="search"
+          id="search"
+          placeholder="Search player..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
       </div>
+
       <div className="filtrering">
         {FILTERS.map((f) => {
           const isAll = f.value === "all";
           const isChecked = isAll
             ? active.length === 0
             : active.includes(f.value);
+
           return (
             <label
               key={f.value}
