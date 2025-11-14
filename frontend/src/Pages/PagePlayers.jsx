@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import { usePlayers } from "../hooks/usePlayer.js";
 import { useURLFilters } from "../hooks/useURLFilters.js";
@@ -21,8 +21,15 @@ function PlayersPage() {
 
   const { players, add, remove } = usePlayers();
   const { active } = useURLFilters("position");
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const filtered = useMemo(() => {
+  const searchTerm = useMemo(() => {
+    const params = new URLSearchParams(location.search);
+    return (params.get("q") ?? "").toLowerCase();
+  }, [location.search]);
+
+  const filteredByPosition = useMemo(() => {
     if (!active || active.length === 0) return players;
 
     const useBest = active.includes("best-performance");
@@ -36,7 +43,14 @@ function PlayersPage() {
     });
   }, [players, active]);
 
-  const navigate = useNavigate();
+  const filtered = useMemo(() => {
+    if (!searchTerm) return filteredByPosition;
+
+    return filteredByPosition.filter((p) =>
+      (p.name || "").toLowerCase().includes(searchTerm)
+    );
+  }, [filteredByPosition, searchTerm]);
+
   const handleView = (p) => navigate(`/players/${p.id}`);
 
   const openDeleteModal = (player) => {
