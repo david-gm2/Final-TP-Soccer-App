@@ -21,6 +21,7 @@ h2 {
 .home-page {
   background-color: #ffffff;
   padding: 24px;
+  width: fit-content;
 }
 
 .welcome-section {
@@ -114,6 +115,10 @@ h2 {
 @media (max-width: 768px) {
   .stats-overview {
     flex-direction: column;
+  }
+  .home-page {
+    padding: 16px;
+    width: 100%;
   }
   .welcome-section {
     margin: 1rem;
