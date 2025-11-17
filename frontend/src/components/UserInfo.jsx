@@ -1,7 +1,10 @@
 import { IconSesionOut } from "../../public/icons/IconSidebar";
 import { IconDefaultUser } from "../../public/icons/IconsPlayer";
+import { useAuth } from "../context/AuthContext";
 
-function UserInfo({ user, roleUser, onSignOut }) {
+function UserInfo() {
+  const { user, logout } = useAuth();
+
   return (
     <div className="sidebar-bottom">
       <div className="user-info">
@@ -9,7 +12,7 @@ function UserInfo({ user, roleUser, onSignOut }) {
           <img
             className="user-avatar"
             src={user.avatar}
-            alt={`${user.name} avatar`}
+            alt={`${user} avatar`}
           />
         ) && <IconDefaultUser width="24" height="24" className="user-avatar" />}
         <div className="user-text">
@@ -19,7 +22,7 @@ function UserInfo({ user, roleUser, onSignOut }) {
 
         <button
           className="user-switch-btn"
-          onClick={onSignOut}
+          onClick={() => logout()}
           aria-label="Sign out"
         >
           <IconSesionOut />

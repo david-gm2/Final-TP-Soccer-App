@@ -7,23 +7,17 @@ import RoleBadge from "./RoleBadge";
 import Navigation from "./Navigation";
 import UserInfo from "./UserInfo";
 import "../styles/Sidebar.css";
+import { useAuth } from "../context/AuthContext";
 
-function Sidebar({
-  // TODO sincronizar con la base de datos
-  role = { dot: "violet", name: "view" },
-  user = { name: "Doye", email: "doyel.gusmerotti@gm", avatar: "avatar.jpg" },
-  logo = "imagen-logo.png",
-  onSignOut,
-}) {
+function Sidebar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
+  const { logout } = useAuth();
+
   const handleSignOut = () => {
-    if (onSignOut) {
-      console.info("Te deslogueaste hehe");
-      onSignOut();
-    }
+    logout();
   };
 
   return (
@@ -55,9 +49,9 @@ function Sidebar({
           <Navigation onItemClick={toggleMenu} />
         </div>
 
-        <UserInfo user={user} roleUser={role} onSignOut={handleSignOut} />
+        <UserInfo />
       </aside>
-        <Outlet />
+      <Outlet />
     </>
   );
 }

@@ -7,7 +7,7 @@ import Home from "./Pages/Home.jsx";
 import MatchesPage from "./Pages/PageMatches.jsx";
 import PlayersPage from "./Pages/PagePlayers.jsx";
 import HistoryPage from "./Pages/PageHistory.jsx";
-import LogIn from "./Pages/PageLogIn.jsx";
+import { LogInPage } from "./Pages/LogInPage.jsx";
 import ProtectedRoutes from "./components/ProtectedRoutes.jsx";
 import "./App.css";
 
@@ -25,8 +25,8 @@ const dummyPlayer = {
 function App() {
   return (
     <Routes>
-      <Route path="/sign-up" element={<SignUp />} />
-      <Route path="/log-in" element={<LogIn />} />
+      <Route path="/signup" element={<SignUp />} />
+      <Route path="/login" element={<LogInPage />} />
 
       <Route path="/" element={<Sidebar />}>
         <Route

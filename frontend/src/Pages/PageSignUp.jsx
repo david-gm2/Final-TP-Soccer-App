@@ -98,7 +98,7 @@ export function SignUp() {
         </form>
         <div className="linksSignUp">
           <p>
-            Already have an account? <Link to="/log-in">Log In</Link>
+            Already have an account? <Link to="/login">Log In</Link>
           </p>
         </div>
       </div>
