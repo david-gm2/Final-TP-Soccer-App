@@ -1,4 +1,4 @@
-import "../styles/topPlayers.css";
+import "../styles/TopPlayers.css";
 
 function TopPlayers({ players }) {
   return (

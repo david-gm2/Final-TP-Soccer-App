@@ -1,4 +1,4 @@
-import "../styles/upcomingMatches.css";
+import "../styles/UpcomingMatches.css";
 
 function UpcomingMatches({ matches }) {
   return (
