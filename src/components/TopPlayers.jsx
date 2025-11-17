@@ -1,8 +1,9 @@
-import "../styles/topPlayers.css";
+import "../styles/TopPlayers.css";
 
 function TopPlayers({ players }) {
   return (
     <div className="top-players">
+      <h2>Top Players</h2>
       <div className="players-list">
         {players.slice(0, 3).map((player) => (
           <div className="players-card" key={player.id}>
