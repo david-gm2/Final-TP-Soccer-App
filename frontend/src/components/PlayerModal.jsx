@@ -7,7 +7,7 @@ function PlayerModal({ isOpen, onClose, onSubmit }) {
     const formData = new FormData(e.target);
     const playerData = {
       profilePicture: formData.get("profilePicture"),
-      name: formData.get("name"),
+      nick: formData.get("name"),
       position: formData.get("position"),
       number: formData.get("number"),
       rating: formData.get("rating"),

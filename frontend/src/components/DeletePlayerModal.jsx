@@ -23,7 +23,7 @@ function DeletePlayerModal({ isOpen, onClose, onConfirm, player }) {
           <button className="btn btn-secondary" onClick={onClose}>
             Cancel
           </button>
-          <button className="btn btn-danger" onClick={onConfirm}>
+          <button className="btn btn-danger" onClick={() => onConfirm(player.player_id)}>
             Delete
           </button>
         </div>
