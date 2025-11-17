@@ -1,8 +1,9 @@
-import { useMemo, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { usePlayers } from "../hooks/usePlayer.js";
 import { useURLFilters } from "../hooks/useURLFilters.js";
+import { useListPlayer } from "../hooks/useListPlayer.js";
+import { usePlayerContext } from "../context/PlayerContext.jsx";
 
 import { HeaderPlayerPage } from "../components/PlayerPageHeader.jsx";
 import { PlayerFilter } from "../components/PlayerFilter.jsx";
@@ -19,17 +20,14 @@ function PlayersPage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
 
-  const { players, add, remove } = usePlayers();
+  // 1) players vienen del contexto
+  const { players, setPlayers } = usePlayerContext();
+
+  // 2) este hook hace el fetch y llena el contexto
+  useListPlayer();
   const { active } = useURLFilters("position");
-  const navigate = useNavigate();
-  const location = useLocation();
 
-  const searchTerm = useMemo(() => {
-    const params = new URLSearchParams(location.search);
-    return (params.get("q") ?? "").toLowerCase();
-  }, [location.search]);
-
-  const filteredByPosition = useMemo(() => {
+  const filtered = useMemo(() => {
     if (!active || active.length === 0) return players;
 
     const useBest = active.includes("best-performance");
@@ -43,15 +41,57 @@ function PlayersPage() {
     });
   }, [players, active]);
 
-  const filtered = useMemo(() => {
-    if (!searchTerm) return filteredByPosition;
-
-    return filteredByPosition.filter((p) =>
-      (p.name || "").toLowerCase().includes(searchTerm)
-    );
-  }, [filteredByPosition, searchTerm]);
-
+  const navigate = useNavigate();
   const handleView = (p) => navigate(`/players/${p.id}`);
+
+  // 3) funciones para agregar y eliminar en memoria (por ahora)
+  const addApiPLayers = async (newPlayer) => {
+    try {
+      const response = await fetch('https://backend-exercises-production.up.railway.app/players', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newPlayer),
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const createdPlayer = await response.json();
+      console.log('Player added successfully to API:', createdPlayer);
+      return createdPlayer;
+    } catch (error) {
+      console.error('There was a problem with the add operation:', error);
+      return null;
+    }
+  };
+
+  const add = async (newPlayer) => {
+    const createdPlayer = await addApiPLayers(newPlayer);
+    if (createdPlayer) {
+      setPlayers((prev) => [...prev, createdPlayer]);
+    }
+  };
+
+     const deletedAPIplayer = async (playerId) => {
+      try {
+        const response = await fetch(`https://backend-exercises-production.up.railway.app/players/${playerId}`, {
+          method: 'DELETE',
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        console.log(`Player with id ${playerId} deleted successfully from API.`);
+      } catch (error) {
+        console.error('There was a problem with the delete operation:', error);
+      }
+    }
+  const remove = (id) => {
+    deletedAPIplayer(id);
+    setPlayers((prev) => prev.filter((p) => p.player_id !== id));
+
+
+  };
 
   const openDeleteModal = (player) => {
     setSelectedPlayer(player);
@@ -65,9 +105,10 @@ function PlayersPage() {
 
   const confirmDelete = () => {
     if (selectedPlayer) {
-      remove(selectedPlayer.id);
+      remove(selectedPlayer.player_id);
       closeDeleteModal();
     }
+    console.log("Deleting player with id:", selectedPlayer.player_id);
   };
 
   return (
@@ -75,8 +116,9 @@ function PlayersPage() {
       <main className="players-page">
         <HeaderPlayerPage handleToggleModal={() => setIsModalOpen((v) => !v)} />
         <PlayerFilter />
+
         <PlayerGrid
-          players={filtered}
+          players={filtered}          
           onView={handleView}
           onOpenDeleteModal={openDeleteModal}
         />
@@ -85,7 +127,7 @@ function PlayersPage() {
       <PlayerModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSubmit={add}
+        onSubmit={add}              
       />
 
       <DeletePlayerModal
