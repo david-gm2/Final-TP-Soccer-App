@@ -224,6 +224,29 @@
   transform: scale(0.98);
 }
 
+.modal-player.delete {
+  align-items: center;
+}
+
+.modal-player.delete h3 {
+  display: block; 
+  align-items: unset;
+  text-align: center;
+}
+
+.modal-actions {
+  width: 100%;
+}
+
+.btn.btn-danger {
+  border: 1px #E20830 solid;
+  color: #E20830;
+  background: white;
+}
+
+  .modal-actions {
+  flex-direction: column-reverse;
+}
 
 @media (min-width: 769px) {
   .form-number-rating {
