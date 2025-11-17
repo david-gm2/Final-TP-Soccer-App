@@ -1,6 +1,6 @@
 import "../styles/home.css";
-import UpcomingMatches from "../components/UpcomingMatches";
-import TopPlayers from "../components/TopPlayers";
+import UpcomingMatches from "../components/UpcomingMatches.jsx";
+import TopPlayers from "../components/TopPlayers.jsx";
 import StatsCard from "../components/StatsCard.jsx";
 
 function Home() {
