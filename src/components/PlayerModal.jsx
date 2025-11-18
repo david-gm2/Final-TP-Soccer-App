@@ -82,10 +82,10 @@ function PlayerModal({ isOpen, onClose, onSubmit }) {
               required
             >
               <option value="">Select one...</option>
-              <option value="Goalkeeper">Goalkeeper</option>
-              <option value="Defender">Defender</option>
-              <option value="Midfielder">Midfielder</option>
-              <option value="Forward">Forward</option>
+              <option value="goalkeeper">Goalkeeper</option>
+              <option value="defender">Defender</option>
+              <option value="midfielder">Midfielder</option>
+              <option value="forward">Forward</option>
             </select>
           </div>
 

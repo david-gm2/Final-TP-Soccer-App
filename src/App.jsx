@@ -6,9 +6,11 @@ import StatsPage from "./Pages/PageStats.jsx";
 import Home from "./Pages/Home.jsx";
 import MatchesPage from "./Pages/PageMatches.jsx";
 import PlayersPage from "./Pages/PagePlayers.jsx";
+import PagePlayerDetails from "./Pages/PagePlayerDetails.jsx";
 import HistoryPage from "./Pages/PageHistory.jsx";
 import LogIn from "./Pages/PageLogIn.jsx";
 import "./App.css";
+import Header from "./components/header.jsx";
 
 const dummyPlayer = {
   name: "Martínez",
@@ -24,18 +26,24 @@ const dummyPlayer = {
 function App() {
   return (
     <Routes>
+      {/* Rutas públicas */}
       <Route path="/sign-up" element={<SignUp />} />
       <Route path="/log-in" element={<LogIn />} />
 
+      {/* Rutas con Sidebar */}
       <Route path="/" element={<Sidebar />}>
-        <Route index element={<Home />} />
-        <Route path="stats" element={<StatsPage player={dummyPlayer} />} />
-        <Route path="matches" element={<MatchesPage />} />
-        <Route path="players" element={<PlayersPage />} />
-        <Route path="players/:id" element={<PlayersPage />} />
-        <Route path="history" element={<HistoryPage />} />
+        {/* Rutas que usan Header + página */}
+        <Route element={<Header />}>
+          <Route index element={<Home />} />
+          <Route path="stats" element={<StatsPage player={dummyPlayer} />} />
+          <Route path="matches" element={<MatchesPage />} />
+          <Route path="players" element={<PlayersPage />} />
+          <Route path="playerstest" element={<PagePlayerDetails />} />
+          <Route path="history" element={<HistoryPage />} />
+        </Route>
       </Route>
 
+      {/* 404 */}
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
