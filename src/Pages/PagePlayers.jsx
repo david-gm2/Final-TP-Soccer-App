@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useURLFilters } from "../hooks/useURLFilters.js";
 import { useListPlayer } from "../hooks/useListPlayer.js";
-import { usePlayers } from "../hooks/usePlayers";
+import { usePlayers } from "../hooks/usePlayers.js";
 
 import { HeaderPlayerPage } from "../components/PlayerPageHeader.jsx";
 import { PlayerFilter } from "../components/PlayerFilter.jsx";

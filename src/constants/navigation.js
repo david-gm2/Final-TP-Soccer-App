@@ -21,7 +21,7 @@ export const navigationItems = [
     },
     {
         path: "/matches",
-        label: "Matches",
+        label: "New Match",
         icon: IconMatches,
         end: false,
     },

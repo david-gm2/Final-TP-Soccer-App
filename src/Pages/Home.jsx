@@ -4,6 +4,8 @@ import UpcomingMatches from "../components/UpcomingMatches.jsx";
 import TopPlayers from "../components/TopPlayers.jsx";
 import StatsCard from "../components/StatsCard.jsx";
 
+import PagePlayerDetails from "./PagePlayerDetails.jsx";
+
 function Home() {
   let user = "user";
   let totalMatches = 5;
@@ -25,6 +27,7 @@ function Home() {
 
   return (
     <main className="home-page">
+      <PagePlayerDetails />
       <div className="welcome-section">
         <div>
           <h1>Welcome {user}! </h1>

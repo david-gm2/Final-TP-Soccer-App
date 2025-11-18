@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { API_BACKEND_URL } from "../constants/API_CONSTANTS";
-import { usePlayers } from "./usePLayers.js";
+import { usePlayers } from "./usePlayers.js";
 
 export function useListPlayer() {
   const { players, setPlayers } = usePlayers();
