@@ -7,7 +7,7 @@ export function PlayerGrid({ players, onView, onOpenDeleteModal }) {
     <div className="player-card-container">
       {players.map((p) => (
         <PlayerCard
-          key={p.id}
+          key={p.player_id}
           player={p}
           onView={onView}
           onOpenDeleteModal={onOpenDeleteModal}

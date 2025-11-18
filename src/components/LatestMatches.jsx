@@ -1,0 +1,25 @@
+import "../styles/upcomingMatches.css";
+
+function LatestMatches({ matches }) {
+  return (
+    <div className="latest-matches-list">
+      <h2>Latest Matches</h2>
+      {matches.slice(0, 3).map((match, index) => (
+        <div className="match-card" key={index}>
+          <div>
+            <p>
+              {match.local} vs {match.visitor}
+            </p>
+            <div className="match-info">
+              Date: {match.date} | Time: {match.time}
+            </div>
+          </div>
+          <div className="match-actions">
+            <img src="../public/icons/arrow.svg" alt="" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+export default LatestMatches;

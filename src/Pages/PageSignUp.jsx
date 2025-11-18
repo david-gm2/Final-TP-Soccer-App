@@ -2,8 +2,6 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/SignUp.css";
 
-// * preventivo
-
 export function SignUp() {
   const navigate = useNavigate();
   const API_URL = "https://backend-exercises-production.up.railway.app";

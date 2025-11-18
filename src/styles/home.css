@@ -21,6 +21,7 @@ h2 {
 .home-page {
   background-color: #ffffff;
   padding: 24px;
+  width: fit-content;
 }
 
 .welcome-section {
@@ -100,20 +101,23 @@ h2 {
 }
 
 .cards-upcoming-matches {
-  width: 60%;
   height: -webkit-fill-available;
   box-sizing: content-box;
   width: -webkit-fill-available;
 }
 
-.card-top-players {
-  width: 40%;
+.cards-top-players {
+  width: 50%;
   box-sizing: content-box;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 769px) {
   .stats-overview {
     flex-direction: column;
+  }
+  .home-page {
+    padding: 16px;
+    width: 100%;
   }
   .welcome-section {
     margin: 1rem;
@@ -157,13 +161,18 @@ h2 {
   }
 
   .cards-overview {
+    display: flex;
     flex-direction: column;
     width: 100%;
   }
   .card-top-players {
+    display: flex;
+    flex: 1;
     width: 100%;
   }
   .card-upcoming-matches {
+    display: flex;
+    flex: 2;
     width: 100%;
   }
 }

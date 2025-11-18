@@ -1,6 +1,7 @@
 import "../styles/home.css";
-import UpcomingMatches from "../components/UpcomingMatches";
-import TopPlayers from "../components/TopPlayers";
+import LatestMatches from "../components/LatestMatches.jsx";
+import UpcomingMatches from "../components/UpcomingMatches.jsx";
+import TopPlayers from "../components/TopPlayers.jsx";
 import StatsCard from "../components/StatsCard.jsx";
 
 function Home() {
@@ -56,9 +57,13 @@ function Home() {
         </div>
         <div className="cards-top-players">
           <div className="cards-section">
-            <h2>Top Players</h2>
             <TopPlayers players={topPlayers} />
           </div>
+        </div>
+      </div>
+      <div className="latest-matches-section">
+        <div className="cards-section">
+          <LatestMatches matches={upcomingMatches} />
         </div>
       </div>
     </main>

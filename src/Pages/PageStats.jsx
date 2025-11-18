@@ -9,7 +9,7 @@ export function StatsPage({ player }) {
     labels: ["Velocidad", "Fuerza", "Pases", "Defensa", "Tiro", "Resistencia", 'Azul'],
     datasets: [
       {
-        label: `Estadísticas de ${player.name}`,
+        label: `Estadísticas de ${player.nick}`,
         data: [
           player.speed,
           player.strength,
@@ -33,7 +33,7 @@ export function StatsPage({ player }) {
     },
     plugins: {
       legend: { display: false },
-      title: { display: true, text: `Perfil de ${player.name}` },
+      title: { display: true, text: `Perfil de ${player.nick}` },
     },
   };
 
