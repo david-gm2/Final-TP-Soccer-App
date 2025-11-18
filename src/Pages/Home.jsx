@@ -6,10 +6,29 @@ import StatsCard from "../components/StatsCard.jsx";
 
 function Home() {
   let user = "user";
-  let totalMatches = 5;
-  let totalGoals = 44;
-  let totalAssists = 13;
-  let activePlayers = 20;
+  const stats = [
+    {
+      title: "Total Matches",
+      value: 5,
+      icon: "../public/icons/scoreboard.svg",
+    },
+    {
+      title: "Total Goals",
+      value: 44,
+      icon: "../public/icons/sports_soccer.svg",
+    },
+    {
+      title: "Total Assists",
+      value: 13,
+      icon: "../public/icons/star.svg",
+    },
+    {
+      title: "Active Players",
+      value: 20,
+      icon: "../public/icons/users.svg",
+    },
+  ];
+
   let upcomingMatches = [
     { local: "Team A", visitor: "Team C", date: "2023-10-01", time: "15:00" },
     { local: "Team B", visitor: "Team D", date: "2023-10-02", time: "17:00" },
@@ -43,12 +62,7 @@ function Home() {
         </div>
       </div>
 
-      <StatsCard
-        totalMatches={totalMatches}
-        totalGoals={totalGoals}
-        totalAssists={totalAssists}
-        activePlayers={activePlayers}
-      />
+      <StatsCard stats={stats} />
       <div className="cards-overview">
         <div className="cards-upcoming-matches">
           <div className="cards-section">
