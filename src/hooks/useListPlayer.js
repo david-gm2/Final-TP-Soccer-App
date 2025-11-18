@@ -1,16 +1,16 @@
 import { useEffect } from "react";
-import { API_BACKEND_URL } from "../constants/API_CONSTANTS.js";
-import { usePlayerContext } from "../context/PlayerContext.jsx";
+import { API_BACKEND_URL } from "../constants/API_CONSTANTS";
+import { usePlayers } from "./usePLayers.js";
 
 export function useListPlayer() {
-  const { players, setPlayers } = usePlayerContext();
+  const { players, setPlayers } = usePlayers();
 
   useEffect(() => {
     fetch(`${API_BACKEND_URL}/players`)
       .then((response) => response.json())
       .then((data) => setPlayers(data))
       .catch((error) => console.error("Error fetching players:", error));
-  }, []);
+  }, [setPlayers]);
 
   return players;
 }
