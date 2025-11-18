@@ -7,7 +7,7 @@ import RoleBadge from "./RoleBadge";
 import Navigation from "./Navigation";
 import UserInfo from "./UserInfo";
 import "../styles/Sidebar.css";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 
 function Sidebar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,6 +15,10 @@ function Sidebar() {
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
   const { logout } = useAuth();
+
+  // TODO: Remove hardcoded data, implement with useAuth()
+  const logo = "imagen-logo.png";
+  const role = { dot: "violet", name: "view" };
 
   const handleSignOut = () => {
     logout();

@@ -1,8 +1,7 @@
-import { createContext, use, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-
-const AuthContext = createContext();
+import { AuthContext } from "../context/AuthContext";
 
 const TOKEN_KEY = "accessToken";
 
@@ -31,8 +30,4 @@ export const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  return use(AuthContext);
 };

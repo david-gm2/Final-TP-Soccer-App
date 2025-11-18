@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { data, Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext.jsx";
+import { useAuth } from "../hooks/useAuth";
 
 import "../styles/LogInPage.css";
 
