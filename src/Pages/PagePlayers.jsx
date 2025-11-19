@@ -5,7 +5,7 @@ import { useURLFilters } from "../hooks/useURLFilters.js";
 import { useListPlayer } from "../hooks/useListPlayer.js";
 import { usePlayers } from "../hooks/usePlayers.js";
 
-import { HeaderPlayerPage } from "../components/PlayerPageHeader.jsx";
+import Header from "../components/Header.jsx";
 import { PlayerFilter } from "../components/PlayerFilter.jsx";
 import { PlayerGrid } from "../components/PlayerGrid.jsx";
 import PlayerModal from "../components/PlayerModal.jsx";
@@ -117,8 +117,8 @@ function PlayersPage() {
 
   return (
     <>
+      <Header handleToggleModal={() => setIsModalOpen((v) => !v)} />
       <main className="players-page">
-        <HeaderPlayerPage handleToggleModal={() => setIsModalOpen((v) => !v)} />
         <PlayerFilter />
 
         <PlayerGrid

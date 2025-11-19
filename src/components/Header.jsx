@@ -1,9 +1,11 @@
 import { useLocation, Outlet } from "react-router-dom";
 import "../styles/header.css";
 
-function Header() {
+function Header(...props) {
   const user = "Gm2dev";
   const player = "Lionel Messi";
+
+  const { handleToggleModal } = props;
 
   const headerContent = {
     home: {
@@ -40,8 +42,9 @@ function Header() {
       features: [],
       buttons: [
         {
-          text: "Add player",
+          text: "+ Add player",
           className: "btn btn-primary",
+          onClick: handleToggleModal,
         },
       ],
     },
@@ -103,7 +106,7 @@ function Header() {
         </div>
         <div>
           {content.buttons.map((button, index) => (
-            <button key={index} className={button.className}>
+            <button key={index} className={button.className} onClick={() => {}}>
               {button.text}
             </button>
           ))}
