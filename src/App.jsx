@@ -6,7 +6,7 @@ import StatsPage from "./Pages/PageStats.jsx";
 import Home from "./Pages/Home.jsx";
 import MatchesPage from "./Pages/PageMatches.jsx";
 import PlayersPage from "./Pages/PagePlayers.jsx";
-// import PagePlayerDetails from "./Pages/PagePlayerDetails.jsx";
+import PagePlayerDetails from "./Pages/PagePlayerDetails.jsx";
 import HistoryPage from "./Pages/PageHistory.jsx";
 import LogIn from "./Pages/PageLogIn.jsx";
 import "./App.css";
@@ -40,7 +40,7 @@ function App() {
           <Route path="stats" element={<StatsPage player={dummyPlayer} />} />
           <Route path="matches" element={<MatchesPage />} />
           <Route path="players" element={<PlayersPage />} />
-          {/* <Route path="playerstest" element={<PagePlayerDetails />} /> */}
+          <Route path="players/:id" element={<PagePlayerDetails />} />
           <Route path="history" element={<HistoryPage />} />
         </Route>
       </Route>
