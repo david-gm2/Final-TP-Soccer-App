@@ -12,8 +12,11 @@ export function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("Request body:", JSON.stringify({user_name: name, email, password }));
-    
+    console.log(
+      "Request body:",
+      JSON.stringify({ user_name: name, email, password })
+    );
+
     if (!name || !email || !password) {
       setMessage("Faltan campos obligatorios.");
       return;
@@ -24,11 +27,11 @@ export function SignUp() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ user_name: name, email, password  }),
+          body: JSON.stringify({ user_name: name, email, password }),
         }
       );
 
-      console.log(response)
+      console.log(response);
 
       const text = await response.text();
 
@@ -92,7 +95,9 @@ export function SignUp() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button type="submit">Sign Up</button>
+          <button type="submit" className="btn btn-primary">
+            Sign Up
+          </button>
           <p>{message}</p>
         </form>
         <div className="linksSignUp">

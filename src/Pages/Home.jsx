@@ -4,8 +4,6 @@ import UpcomingMatches from "../components/UpcomingMatches.jsx";
 import TopPlayers from "../components/TopPlayers.jsx";
 import StatsCard from "../components/StatsCard.jsx";
 
-import PagePlayerDetails from "./PagePlayerDetails.jsx";
-
 function Home() {
   let user = "user";
   let totalMatches = 5;
@@ -27,8 +25,7 @@ function Home() {
 
   return (
     <main className="home-page">
-      <PagePlayerDetails />
-      <div className="welcome-section">
+      {/* <div className="welcome-section">
         <div>
           <h1>Welcome {user}! </h1>
           <p>
@@ -37,14 +34,14 @@ function Home() {
         </div>
 
         <div className="action-buttons">
-          <button id="new-match-button">
+          <button className="btn btn-primary">
             <img src="../public/icons/Vector.svg" alt="" /> New Match
           </button>
-          <button id="add-player-button">
+          <button className="btn btn-secondary">
             <img src="../public/icons/Plus.svg" alt="" /> Add Player
           </button>
         </div>
-      </div>
+      </div> */}
 
       <StatsCard
         totalMatches={totalMatches}

@@ -1,11 +1,9 @@
-import React from "react";
-
-const StatsCard = ({
+function StatsCard ({
   totalMatches,
   totalGoals,
   totalAssists,
   activePlayers,
-}) => {
+}) {
   const scoreboardIcon = "../public/icons/scoreboard.svg";
   const soccerIcon = "../public/icons/sports_soccer.svg";
   const starIcon = "../public/icons/star.svg";

@@ -1,109 +1,47 @@
-import { useLocation } from "react-router-dom";
-import "../styles/header.css";
+// import { useLocation } from "react-router-dom";
+// import "../styles/header.css";
 
-function PagePlayerDetails() {
-  const user = "Gm2dev";
-  const player = "Lionel Messi";
+// function PagePlayerDetails() {
 
-  const headerContent = {
-    home: {
-      title: `Welcome ${user}`,
-      subtitle:
-        "Here’s your weekly summary with the key stats and upcoming matches.",
-      features: [],
-      buttons: [
-        {
-          text: "New Match",
-          className: "new-match-button",
-        },
-        {
-          text: "Add player",
-          className: "add-player-button",
-        },
-      ],
-    },
-    players: {
-      title: "Players",
-      subtitle: "Manage your team of players",
-      features: [],
-      buttons: [
-        {
-          text: "Add player",
-          className: "add-player-button",
-        },
-      ],
-    },
-    statistics: {
-      title: "Players",
-      subtitle: "Player rankings and performance",
-      features: [],
-      buttons: [],
-    },
-    history: {
-      title: "History",
-      subtitle: "Review the complete match history",
-      features: [],
-      buttons: [],
-    },
-    playersDetails: {
-      title: player, // acá después podés poner el nombre real desde props/context
-      subtitle: "Manage your user profile",
-      features: [],
-      buttons: [
-        {
-          text: "Delete player",
-          className: "btn deleted",
-        },
-        {
-          text: "Edit",
-          className: "btn solid",
-        },
-      ],
-    },
-  };
+//   let user = "user";
+//   let totalMatches = 5;
+//   let totalGoals = 44;
+//   let totalAssists = 13;
+//   let activePlayers = 20;
+//   let upcomingMatches = [
+//     { local: "Team A", visitor: "Team C", date: "2023-10-01", time: "15:00" },
+//     { local: "Team B", visitor: "Team D", date: "2023-10-02", time: "17:00" },
+//     { local: "Team E", visitor: "Team F", date: "2023-10-03", time: "19:00" },
+//     { local: "Team G", visitor: "Team H", date: "2023-10-04", time: "16:00" },
+//   ];
+//   let topPlayers = [
+//     { name: "Player 1", position: "Forward", img: true },
+//     { name: "Player 2", position: "Midfielder", img: true },
+//     { name: "Player 3", position: "Defender", img: true },
+//     { name: "Player 4", position: "Goalkeeper", img: false },
+//   ];
 
-  const { pathname } = useLocation();
-  console.log(pathname);
+//   const scoreboardIcon = "../public/icons/scoreboard.svg";
+//   const soccerIcon = "../public/icons/sports_soccer.svg";
+//   const starIcon = "../public/icons/star.svg";
+//   const personIcon = "../public/icons/person.svg";
+//   const stats = [
+//     { title: "Total Matches", value: totalMatches, icon: scoreboardIcon },
+//     { title: "Total Goals", value: totalGoals, icon: soccerIcon },
+//     { title: "Total Assists", value: totalAssists, icon: starIcon },
+//     { title: "Active Players", value: activePlayers, icon: personIcon },
+//   ];
 
-  // función para mapear la ruta a una "sección" del header
-  const getSectionKeyFromPath = (path) => {
-    const [, first, second] = path.split("/");
-    // path = "/"         → first = ""
-    // path = "/players"  → first = "players"
-    // path = "/players/3"→ first = "players", second = "3"
-    // path = "/stats"    → first = "stats"
-    // path = "/history"  → first = "history"
+//   return (
+//     <main>
+//        <StatsCard
+//         totalMatches={totalMatches}
+//         totalGoals={totalGoals}
+//         totalAssists={totalAssists}
+//         activePlayers={activePlayers}
+//       />
+//     </main>
+//   );
+// }
 
-    if (!first) return "home"; // "/"
-    if (first === "players" && second) return "playersDetails"; // "/players/:id"
-    if (first === "players") return "players"; // "/players"
-    if (first === "stats") return "statistics";
-    if (first === "history") return "history";
-
-    // por defecto
-    return "home";
-  };
-
-  const sectionKey = getSectionKeyFromPath(pathname);
-  const content = headerContent[sectionKey] ?? headerContent.home;
-
-  return (
-    <main>
-      <article className="header">
-        <div>
-          <h1>{content.title}</h1>
-          <h3>{content.subtitle}</h3>
-        </div>
-        <div>
-          {content.buttons.map((button, index) => (
-            <button key={index} className={button.className}>
-              {button.text}
-            </button>
-          ))}
-        </div>
-      </article>
-    </main>
-  );
-}
-
-export default PagePlayerDetails;
+// export default PagePlayerDetails;

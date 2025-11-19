@@ -7,7 +7,7 @@ export function HeaderPlayerPage({ handleToggleModal }) {
       </div>
       <div>
         <button
-          className="button-add"
+          className="btn btn-primary"
           onClick={handleToggleModal}
           type="button"
         >

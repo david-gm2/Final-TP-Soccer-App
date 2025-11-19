@@ -89,14 +89,13 @@
   flex: 1;
 }
 
-
 .modal-form::-webkit-scrollbar {
-  width: 4px;            /* width of the scrollbar */
+  width: 4px; /* width of the scrollbar */
 }
 
 .modal-form::-webkit-scrollbar-thumb {
-  background: #7c3aed76;   /* color of the scrollbar thumb */
-  border-radius: 10px;       /* roundness of the scrollbar thumb */
+  background: #7c3aed76; /* color of the scrollbar thumb */
+  border-radius: 10px; /* roundness of the scrollbar thumb */
 }
 
 .form-group {
@@ -127,7 +126,9 @@
   font-size: 0.9rem;
   color: #111827;
   background: white;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
   font-family: "Work Sans", sans-serif;
 }
 
@@ -184,52 +185,12 @@
   padding-top: 20px;
 }
 
-.btn {
-  flex: 1;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: none;
-  font-family: "Work Sans", sans-serif;
-}
-
-.btn-primary {
-  background-color: #7c3aed;
-  color: white;
-}
-
-.btn-primary:hover {
-  background-color: #6d28d9;
-}
-
-.btn-primary:active {
-  transform: scale(0.98);
-  background-color: #5b21b6;
-}
-
-.btn-secondary {
-  background-color: white;
-  color: #7c3aed;
-  border: 1px solid #7c3aed;
-}
-
-.btn-secondary:hover {
-  background-color: #f3e8ff;
-}
-
-.btn-secondary:active {
-  transform: scale(0.98);
-}
-
 .modal-player.delete {
   align-items: center;
 }
 
 .modal-player.delete h3 {
-  display: block; 
+  display: block;
   align-items: unset;
   text-align: center;
 }
@@ -238,23 +199,17 @@
   width: 100%;
 }
 
-.btn.btn-danger {
-  border: 1px #E20830 solid;
-  color: #E20830;
-  background: white;
-}
-
-  .modal-actions {
+.modal-actions {
   flex-direction: column-reverse;
 }
 
 @media (min-width: 769px) {
   .form-number-rating {
-  display: flex;
-  flex-direction: row;
-  
-  gap: 16px;
-  } 
+    display: flex;
+    flex-direction: row;
+
+    gap: 16px;
+  }
 
   .modal-player {
     max-width: 520px;
@@ -264,10 +219,5 @@
   .modal-actions {
     gap: 16px;
     flex-direction: row;
-  }
-
-  .btn {
-    padding: 14px 28px;
-    font-size: 1rem;
   }
 }

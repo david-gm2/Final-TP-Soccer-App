@@ -22,7 +22,7 @@ export function PlayerCard({ player, onView, onOpenDeleteModal }) {
         </div>
         <button
           type="button"
-          className="button-view"
+          className="btn-icon"
           onClick={() => onView(player)}
         >
           <IconEye />
@@ -32,7 +32,7 @@ export function PlayerCard({ player, onView, onOpenDeleteModal }) {
       {player.bio && <p>{player.bio}</p>}
 
       <button
-        className="player-card-button"
+        className="btn btn-danger"
         onClick={() => onOpenDeleteModal(player)}
       >
         <IconDelete /> Delete

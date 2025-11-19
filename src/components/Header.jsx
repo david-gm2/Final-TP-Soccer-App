@@ -95,7 +95,7 @@ function Header() {
   const content = headerContent[sectionKey] ?? headerContent.home;
 
   return (
-    <main>
+    <>
       <article className="header">
         <div>
           <h1>{content.title}</h1>
@@ -110,7 +110,7 @@ function Header() {
         </div>
       </article>
       <Outlet />
-    </main>
+    </>
   );
 }
 

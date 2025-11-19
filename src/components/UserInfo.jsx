@@ -46,7 +46,7 @@ function UserInfo(props) {
 
       {/* Botón de Request Admin Access solo si hay usuario y no es admin */}
       {isLoggedIn && roleUser?.name !== "admin" && (
-        <button className="request-admin-access">Request Admin Access</button>
+        <button className="btn btn-secondary">Request Admin Access</button>
       )}
     </div>
   );
