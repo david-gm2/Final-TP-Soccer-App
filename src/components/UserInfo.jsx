@@ -3,23 +3,22 @@ import { IconDefaultUser } from "../../public/icons/IconsPlayer";
 import { useAuth } from "../hooks/useAuth";
 
 function UserInfo() {
-  const { user, logout } = useAuth();
-
-  // TODO: Remove hardcoded data, implement with useAuth()
-  const roleUser = { name: "admin" };
+  const { user, isAdmin, logout } = useAuth();
 
   return (
     <div className="sidebar-bottom">
       <div className="user-info">
-        {(
+        {user ? (
           <img
             className="user-avatar"
             src={user.avatar}
             alt={`${user} avatar`}
           />
-        ) && <IconDefaultUser width="24" height="24" className="user-avatar" />}
+        ) : (
+          <IconDefaultUser width="24" height="24" className="user-avatar" />
+        )}
         <div className="user-text">
-          <p className="user-name">{user.name}</p>
+          <p className="user-name">{user.userName}</p>
           <p className="user-email">{user.email}</p>
         </div>
 
@@ -32,7 +31,7 @@ function UserInfo() {
         </button>
       </div>
 
-      {roleUser.name !== "admin" && (
+      {!isAdmin && (
         <button className="request-admin-access">Request Admin Access</button>
       )}
     </div>

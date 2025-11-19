@@ -28,7 +28,14 @@ function App() {
       <Route path="/signup" element={<SignUp />} />
       <Route path="/login" element={<LogInPage />} />
 
-      <Route path="/" element={<Sidebar />}>
+      <Route
+        path="/"
+        element={
+          <ProtectedRoutes>
+            <Sidebar />
+          </ProtectedRoutes>
+        }
+      >
         <Route
           index
           element={

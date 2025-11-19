@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/SignUp.css";
+import { useAuth } from "../hooks/useAuth";
 
 export function SignUp() {
   const navigate = useNavigate();
@@ -9,6 +10,9 @@ export function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,40 +26,47 @@ export function SignUp() {
       setMessage("Faltan campos obligatorios.");
       return;
     }
+
     try {
+      setIsLoading(true);
+
       const response = await fetch(`${API_URL}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_name: name, email, password }),
       });
 
-      const text = await response.text();
-
-      let data;
-      try {
-        data = JSON.parse(text);
-      } catch {
-        throw new Error("El servidor no devolvió JSON válido");
+      if (!response.ok) {
+        throw new Error(data.message || "Error en registro");
       }
 
-      sessionStorage.setItem("accessToken", data.accessToken);
+      await response.json();
+
+      const loginResponse = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error(data.message || "Error en registro");
+      }
+
+      const { accessToken } = await loginResponse.json();
+
+      login(accessToken);
+
       setMessage(
         "Usuario creado exitosamente. Redirigiendo a la pagina principal..."
       );
 
-      if (!response.ok) {
-        console.log(response);
-        throw new Error(data.message || "Error en registro");
-      }
-
-      setTimeout(() => {
-        navigate("/");
-      }, 1500);
+      navigate("/");
     } catch (error) {
       setMessage(`${error.message}`);
+    } finally {
+      setIsLoading(false);
     }
   };
-  // * preventivo hasta aca
 
   return (
     <div className="signupContainer">
@@ -91,7 +102,9 @@ export function SignUp() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button type="submit">Sign Up</button>
+          <button type="submit" disabled={isLoading}>
+            {isLoading ? "Registrando..." : "Sign Up"}
+          </button>
           <p>{message}</p>
         </form>
         <div className="linksSignUp">

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { AuthContext } from "../context/AuthContext";
@@ -10,23 +10,34 @@ export const AuthProvider = ({ children }) => {
 
   const initialState = localStorage.getItem(TOKEN_KEY);
 
-  const [user, setUser] = useState(initialState);
+  const [accessToken, setAccessToken] = useState(initialState);
 
   const login = (token) => {
-    sessionStorage.setItem(TOKEN_KEY, token);
-    const data = jwtDecode(token);
-    setUser(data);
+    localStorage.setItem(TOKEN_KEY, token);
+    setAccessToken(token);
     navigate("/");
   };
 
   const logout = () => {
-    sessionStorage.removeItem(TOKEN_KEY);
-    setUser(null);
+    localStorage.removeItem(TOKEN_KEY);
+    setAccessToken(null);
     navigate("/login", { replace: true });
   };
 
+  const user = useMemo(() => {
+    try {
+      return accessToken ? jwtDecode(accessToken) : null;
+    } catch (e) {
+      console.error(e);
+    }
+  }, [accessToken]);
+
+  const isAdmin = useMemo(() => {
+    return user?.roles.some((role) => role.roleName === "admin");
+  }, [user]);
+
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ accessToken, user, isAdmin, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
