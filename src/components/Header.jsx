@@ -102,17 +102,29 @@ function Header({ handleToggleModal }) {
           <h1>{content.title}</h1>
           <h3>{content.subtitle}</h3>
         </div>
-        <div>
-          {content.buttons.map((button, index) => (
-            <button
-              key={index}
-              className={button.className}
-              onClick={() => button.onClick()}
-            >
-              {button.text}
-            </button>
-          ))}
-        </div>
+        {content.features.length > 0 && (
+          <div className="header-features">
+            {content.features.map((feature, index) => (
+              <div key={index} className="header-feature">
+                {feature}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {content.buttons.length > 0 && (
+          <div>
+            {content.buttons.map((button, index) => (
+              <button
+                key={index}
+                className={button.className}
+                onClick={() => button.onClick()}
+              >
+                {button.text}
+              </button>
+            ))}
+          </div>
+        )}
       </header>
       <Outlet />
     </>

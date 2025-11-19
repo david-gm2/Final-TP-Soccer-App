@@ -10,7 +10,7 @@ import "../styles/Sidebar.css";
 
 function Sidebar({
   // TODO sincronizar con la base de datos
-  role = { dot: "violet", name: "view" },
+  role = { dot: "violet", name: "viewer" },
   user = { name: "Doye", email: "doyel.gusmerotti@gm", avatar: "avatar.jpg" },
   logo = "imagen-logo.png",
   onSignOut,
@@ -57,7 +57,7 @@ function Sidebar({
 
         <UserInfo user={user} roleUser={role} onSignOut={handleSignOut} />
       </aside>
-        <Outlet />
+      <Outlet />
     </>
   );
 }

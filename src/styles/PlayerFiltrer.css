@@ -40,7 +40,8 @@
     display: flex;
     gap: 16px;
     overflow-y: auto;
-    scrollbar-width: 10px;
+    scrollbar-width: none;
+    
 }
 
 .filtrering::-webkit-scrollbar { width: 20px; }
@@ -55,6 +56,12 @@
     cursor: pointer;
     display:  flex;
     height: 40px;
+    p{
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        width: max-content;
+    }
 }
 
 .filter-item.active {
@@ -78,10 +85,8 @@
         background-clip: text;
         color: transparent; 
         flex-wrap: wrap;
-            width: max-content;
-  padding-right: 16px;
-
-
+        width: max-content;
+        padding-right: 16px;
     }
 
 }

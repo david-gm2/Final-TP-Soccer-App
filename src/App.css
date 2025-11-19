@@ -24,6 +24,9 @@ p {
   letter-spacing: 0%;
 }
 
+  main {
+    padding: 0 16px 16px;
+  }
 @media (min-width: 769px) {
   main {
     margin-left: 300px;
