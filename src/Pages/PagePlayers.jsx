@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { API_BACKEND_URL } from "../constants/API_CONSTANTS.js";
 import { useURLFilters } from "../hooks/useURLFilters.js";
 import { useListPlayer } from "../hooks/useListPlayer.js";
 import { usePlayers } from "../hooks/usePlayers.js";
@@ -20,83 +21,95 @@ function PlayersPage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
 
-  // 1) players vienen del contexto
+  // Get players from context
   const { players, setPlayers } = usePlayers();
 
-  // 2) este hook hace el fetch y llena el contexto
+  // Fetch players on mount
   useListPlayer();
+
+  // Get position filters from URL
   const { active } = useURLFilters("position");
 
+  // Filter players based on selected positions
   const filtered = useMemo(() => {
     if (!active || active.length === 0) return players;
 
     const useBest = active.includes("best-performance");
-    const pos = active.filter((f) => f !== "best-performance" && f !== "all");
+    const positions = active.filter(
+      (f) => f !== "best-performance" && f !== "all"
+    );
 
     return players.filter((p) => {
       const playerPos = (p.position || "").toLowerCase();
-      if (pos.length && !pos.includes(playerPos)) return false;
+      if (positions.length && !positions.includes(playerPos)) return false;
       if (useBest && p.bestPerformance !== true) return false;
       return true;
     });
   }, [players, active]);
 
   const navigate = useNavigate();
-  const handleView = (p) => navigate(`/players/${p.id}`);
+  const handleView = (player) => navigate(`/players/${player.player_id}`);
 
-  // 3) funciones para agregar y eliminar en memoria (por ahora)
-  const addApiPLayers = async (newPlayer) => {
+  // API Functions
+  const createPlayer = async (newPlayer) => {
     try {
-      const response = await fetch(
-        "https://backend-exercises-production.up.railway.app/players",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newPlayer),
-        }
-      );
+      const response = await fetch(`${API_BACKEND_URL}/players`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newPlayer),
+      });
+
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error(`Failed to create player: ${response.statusText}`);
       }
+
       const createdPlayer = await response.json();
-      console.log("Player added successfully to API:", createdPlayer);
+      console.log("Player created successfully:", createdPlayer);
       return createdPlayer;
     } catch (error) {
-      console.error("There was a problem with the add operation:", error);
+      console.error("Error creating player:", error);
+      alert("Error creating player. Please try again.");
       return null;
     }
   };
 
-  const add = async (newPlayer) => {
-    const createdPlayer = await addApiPLayers(newPlayer);
+  const deletePlayer = async (playerId) => {
+    try {
+      const response = await fetch(`${API_BACKEND_URL}/players/${playerId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete player: ${response.statusText}`);
+      }
+
+      console.log(`Player ${playerId} deleted successfully`);
+      return true;
+    } catch (error) {
+      console.error("Error deleting player:", error);
+      alert("Error deleting player. Please try again.");
+      return false;
+    }
+  };
+
+  // State update handlers
+  const handleAddPlayer = async (newPlayer) => {
+    const createdPlayer = await createPlayer(newPlayer);
     if (createdPlayer) {
       setPlayers((prev) => [...prev, createdPlayer]);
     }
   };
 
-  const deletedAPIplayer = async (playerId) => {
-    try {
-      const response = await fetch(
-        `https://backend-exercises-production.up.railway.app/players/${playerId}`,
-        {
-          method: "DELETE",
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      console.log(`Player with id ${playerId} deleted successfully from API.`);
-    } catch (error) {
-      console.error("There was a problem with the delete operation:", error);
+  const handleRemovePlayer = async (playerId) => {
+    const success = await deletePlayer(playerId);
+    if (success) {
+      setPlayers((prev) => prev.filter((p) => p.player_id !== playerId));
     }
   };
-  const remove = (id) => {
-    deletedAPIplayer(id);
-    setPlayers((prev) => prev.filter((p) => p.player_id !== id));
-  };
 
+  // Modal handlers
   const openDeleteModal = (player) => {
     setSelectedPlayer(player);
     setIsDeleteModalOpen(true);
@@ -109,10 +122,9 @@ function PlayersPage() {
 
   const confirmDelete = () => {
     if (selectedPlayer) {
-      remove(selectedPlayer.player_id);
+      handleRemovePlayer(selectedPlayer.player_id);
       closeDeleteModal();
     }
-    console.log("Deleting player with id:", selectedPlayer.player_id);
   };
 
   return (
@@ -131,7 +143,7 @@ function PlayersPage() {
       <PlayerModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSubmit={add}
+        onSubmit={handleAddPlayer}
       />
 
       <DeletePlayerModal
