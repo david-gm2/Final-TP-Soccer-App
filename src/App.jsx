@@ -4,7 +4,7 @@ import SignUp from "./Pages/PageSignUp.jsx";
 import NotFoundPage from "./Pages/PageNotFound.jsx";
 import StatsPage from "./Pages/PageStats.jsx";
 import Home from "./Pages/Home.jsx";
-import MatchesPage from "./Pages/PageMatches.jsx";
+import PageMatch from "./Pages/PageMatch.jsx";
 import PlayersPage from "./Pages/PagePlayers.jsx";
 import PagePlayerDetails from "./Pages/PagePlayerDetails.jsx";
 import HistoryPage from "./Pages/PageHistory.jsx";
@@ -39,10 +39,10 @@ function App() {
         <Route element={<Header />}>
           <Route index element={<Home />} />
           <Route path="stats" element={<StatsPage player={dummyPlayer} />} />
-          <Route path="matches" element={<MatchesPage />} />
           <Route path="players/id/:id" element={<PagePlayerDetails />} />
           <Route path="history" element={<HistoryPage />} />
         </Route>
+        <Route path="matches" element={<PageMatch />} />
       </Route>
 
       {/* 404 */}

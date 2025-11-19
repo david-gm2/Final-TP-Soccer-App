@@ -1,0 +1,12 @@
+.match-page{
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+
+}
+
+.format-buttons {
+    display: flex;
+    gap: 16px;
+
+}
