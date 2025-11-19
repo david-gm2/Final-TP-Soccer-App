@@ -1,11 +1,9 @@
 import { useLocation, Outlet } from "react-router-dom";
 import "../styles/header.css";
 
-function Header(...props) {
+function Header({ handleToggleModal }) {
   const user = "Gm2dev";
   const player = "Lionel Messi";
-
-  const { handleToggleModal } = props;
 
   const headerContent = {
     home: {
@@ -99,19 +97,23 @@ function Header(...props) {
 
   return (
     <>
-      <article className="header">
+      <header className="header">
         <div>
           <h1>{content.title}</h1>
           <h3>{content.subtitle}</h3>
         </div>
         <div>
           {content.buttons.map((button, index) => (
-            <button key={index} className={button.className} onClick={() => {}}>
+            <button
+              key={index}
+              className={button.className}
+              onClick={() => button.onClick()}
+            >
               {button.text}
             </button>
           ))}
         </div>
-      </article>
+      </header>
       <Outlet />
     </>
   );

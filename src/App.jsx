@@ -10,7 +10,7 @@ import PagePlayerDetails from "./Pages/PagePlayerDetails.jsx";
 import HistoryPage from "./Pages/PageHistory.jsx";
 import LogIn from "./Pages/PageLogIn.jsx";
 import "./App.css";
-import Header from "./components/header.jsx";
+import Header from "./components/Header.jsx";
 
 import "./styles/button.css";
 
@@ -35,12 +35,12 @@ function App() {
       {/* Rutas con Sidebar */}
       <Route path="/" element={<Sidebar />}>
         {/* Rutas que usan Header + página */}
+        <Route path="players" element={<PlayersPage />} />
         <Route element={<Header />}>
           <Route index element={<Home />} />
           <Route path="stats" element={<StatsPage player={dummyPlayer} />} />
           <Route path="matches" element={<MatchesPage />} />
-          <Route path="players" element={<PlayersPage />} />
-          <Route path="players/:id" element={<PagePlayerDetails />} />
+          <Route path="players/id/:id" element={<PagePlayerDetails />} />
           <Route path="history" element={<HistoryPage />} />
         </Route>
       </Route>
