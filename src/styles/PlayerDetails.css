@@ -3,7 +3,6 @@
 .player-details {
   padding: 2rem;
   max-width: 1200px;
-  margin: 0 auto;
   background: #f8f8f8;
   min-height: 100vh;
 }
@@ -56,9 +55,8 @@
 /* Player Card */
 .player-card {
   background: white;
-  padding: 2rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  border-radius: 12px;
   text-align: center;
 }
 

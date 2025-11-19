@@ -14,7 +14,7 @@ function DeletePlayerModal({ isOpen, onClose, onConfirm, player }) {
         </div>
 
         <h3 className="modal-message">
-          Are you sure you want to delete{' '}
+          Are you sure you want to delete{" "}
           <strong>{player?.name ?? "this player"}</strong>? This action cannot
           be undone.
         </h3>
@@ -23,7 +23,13 @@ function DeletePlayerModal({ isOpen, onClose, onConfirm, player }) {
           <button className="btn btn-secondary" onClick={onClose}>
             Cancel
           </button>
-          <button className="btn btn-danger" onClick={() => onConfirm(player.player_id)}>
+          <button
+            className="btn btn-danger"
+            onClick={() => {
+              console.log("Deleting player with ID:", player.player_id);
+              onConfirm(player.player_id);
+            }}
+          >
             Delete
           </button>
         </div>

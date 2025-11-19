@@ -32,7 +32,7 @@ export function PlayerCard({ player, onView, onOpenDeleteModal }) {
       {player.bio && <p>{player.bio}</p>}
 
       <button
-        className="btn btn-danger"
+        className="btn btn-secondary"
         onClick={() => onOpenDeleteModal(player)}
       >
         <IconDelete /> Delete

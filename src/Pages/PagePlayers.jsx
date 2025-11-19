@@ -20,12 +20,13 @@ function PlayersPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Fetch players on mount (se pasa setIsLoading para activar indicador)
+  useListPlayer(setIsLoading);
 
   // Get players from context
   const { players, setPlayers } = usePlayers();
-
-  // Fetch players on mount
-  useListPlayer();
 
   // Get position filters from URL
   const { active } = useURLFilters("position");
@@ -48,10 +49,10 @@ function PlayersPage() {
   }, [players, active]);
 
   const navigate = useNavigate();
-  const handleView = (player) => navigate(`/players/${player.player_id}`);
+  const handleView = (player) => navigate(`/players/id/${player.player_id}`);
 
-  // API Functions
   const createPlayer = async (newPlayer) => {
+    setIsLoading(true);
     try {
       const response = await fetch(`${API_BACKEND_URL}/players`, {
         method: "POST",
@@ -72,10 +73,13 @@ function PlayersPage() {
       console.error("Error creating player:", error);
       alert("Error creating player. Please try again.");
       return null;
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const deletePlayer = async (playerId) => {
+    setIsLoading(true);
     try {
       const response = await fetch(`${API_BACKEND_URL}/players/${playerId}`, {
         method: "DELETE",
@@ -91,6 +95,8 @@ function PlayersPage() {
       console.error("Error deleting player:", error);
       alert("Error deleting player. Please try again.");
       return false;
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -130,6 +136,7 @@ function PlayersPage() {
   return (
     <>
       <Header handleToggleModal={() => setIsModalOpen((v) => !v)} />
+
       <main className="players-page">
         <PlayerFilter />
 
@@ -137,6 +144,7 @@ function PlayersPage() {
           players={filtered}
           onView={handleView}
           onOpenDeleteModal={openDeleteModal}
+          isLoading={isLoading}
         />
       </main>
 

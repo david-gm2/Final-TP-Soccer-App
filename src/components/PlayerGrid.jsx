@@ -1,6 +1,8 @@
 import { PlayerCard } from "./PlayerCard.jsx";
 
-export function PlayerGrid({ players, onView, onOpenDeleteModal }) {
+export function PlayerGrid({ players, onView, onOpenDeleteModal, isLoading }) {
+  if (isLoading) return <p>Cargando...</p>;
+
   if (!players || players.length === 0) return <p>No players found.</p>;
 
   return (
