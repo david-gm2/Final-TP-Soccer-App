@@ -51,8 +51,20 @@
   border: 1px #e20830 solid;
   color: #e20830;
   background: white;
+  display: flex;
+  flex-wrap: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
+.btn.btn-danger p{
+  gap: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  text-wrap: nowrap;
+}
 .btn-icon {
   width: auto;
   height: auto;

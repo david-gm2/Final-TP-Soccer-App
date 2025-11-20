@@ -111,6 +111,12 @@
   gap: 16px;
 }
 
+@media (min-width: 480px) {
+  .form-number-rating {
+    flex-direction: row;
+  }
+}
+
 .form-label {
   font-size: 0.875rem;
   font-weight: 500;
@@ -120,7 +126,7 @@
 .form-input {
   width: 100%;
   padding: 12px 16px;
-  height: 48px;
+  min-height: 48px;
   border: 1px solid #d1d5db;
   border-radius: 8px;
   font-size: 0.9rem;
@@ -140,6 +146,15 @@
 
 .form-input::placeholder {
   color: #9ca3af;
+}
+
+.form-input[type="number"] {
+  height: 48px;
+}
+
+textarea.form-input {
+  resize: vertical;
+  min-height: 96px;
 }
 
 .form-input-file {
@@ -197,6 +212,19 @@
 
 .modal-actions {
   width: 100%;
+}
+
+.checkbox-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.checkbox-inline input {
+  width: 18px;
+  height: 18px;
 }
 
 .modal-actions {

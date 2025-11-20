@@ -2,11 +2,38 @@ import { useEffect } from "react";
 import { API_BACKEND_URL } from "../constants/API_CONSTANTS";
 import { usePlayers } from "./usePlayers.js";
 
+const CACHE_KEY = "players-cache";
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+
 export function useListPlayer(setIsLoading) {
-  const { players, setPlayers } = usePlayers();
+  const { players, setPlayers, lastFetched, setLastFetched } = usePlayers();
 
   useEffect(() => {
     let mounted = true;
+
+    const readCache = () => {
+      try {
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (!cached) return null;
+        const parsed = JSON.parse(cached);
+        if (!Array.isArray(parsed?.data)) return null;
+        return parsed;
+      } catch (err) {
+        console.warn("useListPlayer: unable to parse cache", err);
+        return null;
+      }
+    };
+
+    const cached = readCache();
+    if (cached && Array.isArray(cached.data) && !players.length) {
+      setPlayers(cached.data);
+    }
+
+    const shouldFetch =
+      !cached ||
+      !cached.timestamp ||
+      Date.now() - cached.timestamp > CACHE_TTL_MS ||
+      !cached.data?.length;
 
     const fetchPlayers = async () => {
       if (typeof setIsLoading === "function") setIsLoading(true);
@@ -14,7 +41,10 @@ export function useListPlayer(setIsLoading) {
         const res = await fetch(`${API_BACKEND_URL}/players`);
         if (!res.ok) throw new Error(`Failed to fetch players: ${res.status}`);
         const data = await res.json();
-        if (mounted && typeof setPlayers === "function") setPlayers(data);
+        if (mounted && typeof setPlayers === "function") {
+          setPlayers(data);
+          if (typeof setLastFetched === "function") setLastFetched(Date.now());
+        }
       } catch (err) {
         console.error("useListPlayer: Error fetching players:", err);
       } finally {
@@ -22,12 +52,14 @@ export function useListPlayer(setIsLoading) {
       }
     };
 
-    fetchPlayers();
+    if (shouldFetch) {
+      fetchPlayers();
+    }
 
     return () => {
       mounted = false;
     };
-  }, [setPlayers, setIsLoading]);
+  }, [players.length, setPlayers, setIsLoading, setLastFetched, lastFetched]);
 
   return players;
 }

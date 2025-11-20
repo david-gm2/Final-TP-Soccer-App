@@ -9,7 +9,7 @@ function TopPlayers({ players }) {
           <div className="players-card" key={player.id}>
             <div className="player-info">
               <img src="../public/icons/Player1.svg" alt={player.nick} />
-              <div className="player-details">
+              <div className="player-details-home">
                 <p className="player-index"> {player.index}# </p>
                 <h3> {player.nick}</h3>
                 <p>{player.position}</p>

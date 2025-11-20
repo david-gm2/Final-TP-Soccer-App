@@ -15,8 +15,18 @@
   height: 100px;
 }
 
-.player-details {
+.player-details-home {
   text-align: left;
+  margin-left: 10px;
+}
+
+.player-details-home {
+  padding: 24px;
+}
+
+
+.player-details-home {
+display: flex;
 }
 
 .player-index {

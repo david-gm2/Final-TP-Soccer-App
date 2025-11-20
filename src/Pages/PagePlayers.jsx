@@ -3,8 +3,10 @@ import { useNavigate } from "react-router-dom";
 
 import { API_BACKEND_URL } from "../constants/API_CONSTANTS.js";
 import { useURLFilters } from "../hooks/useURLFilters.js";
+import { useURLSearch } from "../hooks/useURLSearch.js";
 import { useListPlayer } from "../hooks/useListPlayer.js";
 import { usePlayers } from "../hooks/usePlayers.js";
+import { filterPlayers } from "../utils/filterPlayers.js";
 
 import Header from "../components/Header.jsx";
 import { PlayerFilter } from "../components/PlayerFilter.jsx";
@@ -18,38 +20,36 @@ import "../styles/PlayerModal.css";
 
 function PlayersPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState("create");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedPlayer, setSelectedPlayer] = useState(null);
+  const [playerToDelete, setPlayerToDelete] = useState(null);
+  const [editingPlayer, setEditingPlayer] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   // Fetch players on mount (se pasa setIsLoading para activar indicador)
   useListPlayer(setIsLoading);
 
   // Get players from context
-  const { players, setPlayers } = usePlayers();
+  const { players, setPlayers, setLastFetched } = usePlayers();
 
   // Get position filters from URL
   const { active } = useURLFilters("position");
+  const { value: searchQuery } = useURLSearch("q");
 
-  // Filter players based on selected positions
-  const filtered = useMemo(() => {
-    if (!active || active.length === 0) return players;
-
-    const useBest = active.includes("best-performance");
-    const positions = active.filter(
-      (f) => f !== "best-performance" && f !== "all"
-    );
-
-    return players.filter((p) => {
-      const playerPos = (p.position || "").toLowerCase();
-      if (positions.length && !positions.includes(playerPos)) return false;
-      if (useBest && p.bestPerformance !== true) return false;
-      return true;
-    });
-  }, [players, active]);
+  // Filter players based on selected positions + search term
+  const filtered = useMemo(
+    () => filterPlayers(players, active, searchQuery),
+    [players, active, searchQuery]
+  );
+  const emptyMessage = searchQuery?.trim()
+    ? `No players match "${searchQuery.trim()}".`
+    : "No players available yet. Add your first player or try adjusting your filters.";
 
   const navigate = useNavigate();
-  const handleView = (player) => navigate(`/players/id/${player.player_id}`);
+  const handleView = (player) => {
+    if (!player?.player_id) return;
+    navigate(`/players/id/${player.player_id}`);
+  };
 
   const createPlayer = async (newPlayer) => {
     setIsLoading(true);
@@ -66,12 +66,35 @@ function PlayersPage() {
         throw new Error(`Failed to create player: ${response.statusText}`);
       }
 
-      const createdPlayer = await response.json();
-      console.log("Player created successfully:", createdPlayer);
-      return createdPlayer;
+      return await response.json();
     } catch (error) {
       console.error("Error creating player:", error);
       alert("Error creating player. Please try again.");
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const updatePlayer = async (playerId, updates) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${API_BACKEND_URL}/players/${playerId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updates),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to update player: ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error updating player:", error);
+      alert("Error updating player. Please try again.");
       return null;
     } finally {
       setIsLoading(false);
@@ -89,7 +112,6 @@ function PlayersPage() {
         throw new Error(`Failed to delete player: ${response.statusText}`);
       }
 
-      console.log(`Player ${playerId} deleted successfully`);
       return true;
     } catch (error) {
       console.error("Error deleting player:", error);
@@ -100,42 +122,93 @@ function PlayersPage() {
     }
   };
 
-  // State update handlers
-  const handleAddPlayer = async (newPlayer) => {
-    const createdPlayer = await createPlayer(newPlayer);
-    if (createdPlayer) {
-      setPlayers((prev) => [...prev, createdPlayer]);
+  const handleUpsertPlayer = async (formData) => {
+    const sanitizeNumber = (value) => {
+      if (value === undefined || value === null || value === "")
+        return undefined;
+      const parsed = Number.parseInt(value, 10);
+      return Number.isNaN(parsed) ? undefined : parsed;
+    };
+
+    const payload = {
+      nick: formData.nick?.trim(),
+      position: formData.position?.toLowerCase(),
+      rating: Number.parseFloat(formData.rating),
+    };
+
+    const jerseyNumber = sanitizeNumber(formData.number);
+    if (jerseyNumber !== undefined) payload.number = jerseyNumber;
+
+    if (modalMode === "edit" && editingPlayer?.player_id) {
+      const updated = await updatePlayer(editingPlayer.player_id, payload);
+      if (updated) {
+        setPlayers((prev) =>
+          prev.map((player) =>
+            player.player_id === updated.player_id
+              ? { ...player, ...updated }
+              : player
+          )
+        );
+        setLastFetched?.(Date.now());
+      }
+    } else {
+      const createdPlayer = await createPlayer(payload);
+      if (createdPlayer) {
+        setPlayers((prev) => [createdPlayer, ...prev]);
+        setLastFetched?.(Date.now());
+      }
     }
+
+    closeModal();
   };
 
   const handleRemovePlayer = async (playerId) => {
     const success = await deletePlayer(playerId);
     if (success) {
       setPlayers((prev) => prev.filter((p) => p.player_id !== playerId));
+      setLastFetched?.(Date.now());
     }
   };
 
-  // Modal handlers
+  const openCreateModal = () => {
+    setModalMode("create");
+    setEditingPlayer(null);
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (player) => {
+    setModalMode("edit");
+    setEditingPlayer(player);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setEditingPlayer(null);
+    setModalMode("create");
+  };
+
+  // Delete modal handlers
   const openDeleteModal = (player) => {
-    setSelectedPlayer(player);
+    setPlayerToDelete(player);
     setIsDeleteModalOpen(true);
   };
 
   const closeDeleteModal = () => {
     setIsDeleteModalOpen(false);
-    setSelectedPlayer(null);
+    setPlayerToDelete(null);
   };
 
-  const confirmDelete = () => {
-    if (selectedPlayer) {
-      handleRemovePlayer(selectedPlayer.player_id);
-      closeDeleteModal();
+  const confirmDelete = async () => {
+    if (playerToDelete?.player_id) {
+      await handleRemovePlayer(playerToDelete.player_id);
     }
+    closeDeleteModal();
   };
 
   return (
     <>
-      <Header handleToggleModal={() => setIsModalOpen((v) => !v)} />
+      <Header handleToggleModal={openCreateModal} />
 
       <main className="players-page">
         <PlayerFilter />
@@ -143,22 +216,26 @@ function PlayersPage() {
         <PlayerGrid
           players={filtered}
           onView={handleView}
+          onEdit={openEditModal}
           onOpenDeleteModal={openDeleteModal}
           isLoading={isLoading}
+          emptyMessage={emptyMessage}
         />
       </main>
 
       <PlayerModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={handleAddPlayer}
+        mode={modalMode}
+        initialPlayer={editingPlayer}
+        onClose={closeModal}
+        onSubmit={handleUpsertPlayer}
       />
 
       <DeletePlayerModal
         isOpen={isDeleteModalOpen}
         onClose={closeDeleteModal}
         onConfirm={confirmDelete}
-        player={selectedPlayer}
+        player={playerToDelete}
       />
     </>
   );

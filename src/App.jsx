@@ -4,7 +4,7 @@ import SignUp from "./Pages/PageSignUp.jsx";
 import NotFoundPage from "./Pages/PageNotFound.jsx";
 import StatsPage from "./Pages/PageStats.jsx";
 import Home from "./Pages/Home.jsx";
-import PageMatch from "./Pages/PageMatch.jsx";
+import PageMatches from "./Pages/PageMatches.jsx";
 import PlayersPage from "./Pages/PagePlayers.jsx";
 import PagePlayerDetails from "./Pages/PagePlayerDetails.jsx";
 import HistoryPage from "./Pages/PageHistory.jsx";
@@ -34,15 +34,17 @@ function App() {
 
       {/* Rutas con Sidebar */}
       <Route path="/" element={<Sidebar />}>
-        {/* Rutas que usan Header + página */}
+        {/* Páginas con su propio header */}
         <Route path="players" element={<PlayersPage />} />
+        <Route path="players/id/:id" element={<PagePlayerDetails />} />
+
+        {/* Layout con header general */}
+        <Route index element={<Home />} />
         <Route element={<Header />}>
-          <Route index element={<Home />} />
           <Route path="stats" element={<StatsPage player={dummyPlayer} />} />
-          <Route path="players/id/:id" element={<PagePlayerDetails />} />
           <Route path="history" element={<HistoryPage />} />
+          <Route path="matches" element={<PageMatches />} />
         </Route>
-        <Route path="matches" element={<PageMatch />} />
       </Route>
 
       {/* 404 */}

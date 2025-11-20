@@ -3,9 +3,9 @@ import LatestMatches from "../components/LatestMatches.jsx";
 import UpcomingMatches from "../components/UpcomingMatches.jsx";
 import TopPlayers from "../components/TopPlayers.jsx";
 import StatsCard from "../components/StatsCard.jsx";
+import Header from "../components/Header.jsx";
 
 function Home() {
-  let user = "user";
   let totalMatches = 5;
   let totalGoals = 44;
   let totalAssists = 13;
@@ -24,49 +24,35 @@ function Home() {
   ];
 
   return (
-    <main className="home-page">
-      {/* <div className="welcome-section">
-        <div>
-          <h1>Welcome {user}! </h1>
-          <p>
-            Here’s your weekly summary with the key stats and upcoming matches.
-          </p>
-        </div>
+    <>
+      <Header />
 
-        <div className="action-buttons">
-          <button className="btn btn-primary">
-            <img src="../public/icons/Vector.svg" alt="" /> New Match
-          </button>
-          <button className="btn btn-secondary">
-            <img src="../public/icons/Plus.svg" alt="" /> Add Player
-          </button>
-        </div>
-      </div> */}
-
-      <StatsCard
-        totalMatches={totalMatches}
-        totalGoals={totalGoals}
-        totalAssists={totalAssists}
-        activePlayers={activePlayers}
-      />
-      <div className="cards-overview">
-        <div className="cards-upcoming-matches">
-          <div className="cards-section">
-            <UpcomingMatches matches={upcomingMatches} />
+      <main className="home-page">
+        <StatsCard
+          totalMatches={totalMatches}
+          totalGoals={totalGoals}
+          totalAssists={totalAssists}
+          activePlayers={activePlayers}
+        />
+        <div className="cards-overview">
+          <div className="cards-upcoming-matches">
+            <div className="cards-section">
+              <UpcomingMatches matches={upcomingMatches} />
+            </div>
+          </div>
+          <div className="cards-top-players">
+            <div className="cards-section">
+              <TopPlayers players={topPlayers} />
+            </div>
           </div>
         </div>
-        <div className="cards-top-players">
+        <div className="latest-matches-section">
           <div className="cards-section">
-            <TopPlayers players={topPlayers} />
+            <LatestMatches matches={upcomingMatches} />
           </div>
         </div>
-      </div>
-      <div className="latest-matches-section">
-        <div className="cards-section">
-          <LatestMatches matches={upcomingMatches} />
-        </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
 

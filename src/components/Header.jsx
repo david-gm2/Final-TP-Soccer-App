@@ -1,9 +1,17 @@
-import { useLocation, Outlet } from "react-router-dom";
+import { useLocation, Outlet, useNavigate } from "react-router-dom";
 import "../styles/header.css";
+import { IconDelete } from "../../public/icons/IconsPlayer.jsx";
 
-function Header({ handleToggleModal }) {
+function Header({
+  handleToggleModal,
+  playerTitle,
+  playerSubtitle = "Manage your user profile",
+  onEditPlayer,
+  onDeletePlayer,
+}) {
+  const navigate = useNavigate();
   const user = "Gm2dev";
-  const player = "Lionel Messi";
+  const player = playerTitle || "Lionel Messi";
 
   const headerContent = {
     home: {
@@ -15,10 +23,12 @@ function Header({ handleToggleModal }) {
         {
           text: "New Match",
           className: "btn btn-primary",
+          onClick: () => navigate("/matches"),
         },
         {
           text: "Add player",
           className: "btn btn-secondary",
+          onClick: () => navigate("/players"),
         },
       ],
     },
@@ -38,13 +48,16 @@ function Header({ handleToggleModal }) {
       title: "Players",
       subtitle: "Manage your team of players",
       features: [],
-      buttons: [
-        {
-          text: "+ Add player",
-          className: "btn btn-primary",
-          onClick: handleToggleModal,
-        },
-      ],
+      buttons:
+        typeof handleToggleModal === "function"
+          ? [
+              {
+                text: "+ Add player",
+                className: "btn btn-primary",
+                onClick: handleToggleModal,
+              },
+            ]
+          : [],
     },
     history: {
       title: "History",
@@ -53,24 +66,29 @@ function Header({ handleToggleModal }) {
       buttons: [],
     },
     playersDetails: {
-      title: player, // acá después podés poner el nombre real desde props/context
-      subtitle: "Manage your user profile",
+      title: player,
+      subtitle: playerSubtitle,
       features: [],
       buttons: [
-        {
-          text: "Delete player",
-          className: "btn btn-danger",
+        typeof onDeletePlayer === "function" && {
+          text: (
+            <>
+              <IconDelete width="17" height="19" /> <p>Delete player</p>
+            </>
+          ),
+          className: "btn btn-icon btn-danger",
+          onClick: onDeletePlayer,
         },
-        {
+        typeof onEditPlayer === "function" && {
           text: "Edit",
           className: "btn btn-secondary",
+          onClick: onEditPlayer,
         },
-      ],
+      ].filter(Boolean),
     },
   };
 
   const { pathname } = useLocation();
-  console.log(pathname);
 
   // función para mapear la ruta a una "sección" del header
   const getSectionKeyFromPath = (path) => {
@@ -98,7 +116,7 @@ function Header({ handleToggleModal }) {
   return (
     <>
       <header className="header">
-        <div>
+        <div className="header-copy">
           <h1>{content.title}</h1>
           <h3>{content.subtitle}</h3>
         </div>
@@ -113,12 +131,13 @@ function Header({ handleToggleModal }) {
         )}
 
         {content.buttons.length > 0 && (
-          <div>
+          <div className="header-actions">
             {content.buttons.map((button, index) => (
               <button
                 key={index}
                 className={button.className}
-                onClick={() => button.onClick()}
+                onClick={() => button.onClick?.()}
+                type="button"
               >
                 {button.text}
               </button>

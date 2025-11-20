@@ -1,9 +1,17 @@
 import { PlayerCard } from "./PlayerCard.jsx";
 
-export function PlayerGrid({ players, onView, onOpenDeleteModal, isLoading }) {
-  if (isLoading) return <p>Cargando...</p>;
+export function PlayerGrid({
+  players,
+  onView,
+  onEdit,
+  onOpenDeleteModal,
+  isLoading,
+  emptyMessage = "No players found.",
+}) {
+  if (isLoading) return <p className="players-empty">Loading players...</p>;
 
-  if (!players || players.length === 0) return <p>No players found.</p>;
+  if (!players || players.length === 0)
+    return <p className="players-empty">{emptyMessage}</p>;
 
   return (
     <div className="player-card-container">
@@ -12,6 +20,7 @@ export function PlayerGrid({ players, onView, onOpenDeleteModal, isLoading }) {
           key={p.id || p.player_id}
           player={p}
           onView={onView}
+          onEdit={onEdit}
           onOpenDeleteModal={onOpenDeleteModal}
         />
       ))}

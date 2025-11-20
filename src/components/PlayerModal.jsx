@@ -1,7 +1,27 @@
 import { IconClose } from "../../public/icons/IconSidebar";
 import "../styles/PlayerModal.css";
 
-function PlayerModal({ isOpen, onClose, onSubmit }) {
+function PlayerModal({
+  isOpen,
+  onClose,
+  onSubmit,
+  initialPlayer = null,
+  mode = "create",
+}) {
+  const isEditMode = mode === "edit";
+  const formDefaults = {
+    nick: initialPlayer?.nick ?? "",
+    position: initialPlayer?.position ?? "",
+    number:
+      initialPlayer?.number === null || initialPlayer?.number === undefined
+        ? ""
+        : initialPlayer.number,
+    rating:
+      initialPlayer?.rating === null || initialPlayer?.rating === undefined
+        ? ""
+        : initialPlayer.rating,
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -32,7 +52,9 @@ function PlayerModal({ isOpen, onClose, onSubmit }) {
       <div className="modal-overlay" onClick={handleOverlayClick} />
       <div className="modal-player">
         <div className="modal-header">
-          <h2 className="modal-title">New player</h2>
+          <h2 className="modal-title">
+            {isEditMode ? "Edit player" : "New player"}
+          </h2>
           <button
             type="button"
             className="modal-close-btn"
@@ -67,6 +89,7 @@ function PlayerModal({ isOpen, onClose, onSubmit }) {
               name="name"
               className="form-input"
               placeholder="Enter player name"
+              defaultValue={formDefaults.nick}
               required
             />
           </div>
@@ -79,6 +102,7 @@ function PlayerModal({ isOpen, onClose, onSubmit }) {
               id="position"
               name="position"
               className="form-input form-select"
+              defaultValue={formDefaults.position}
               required
             >
               <option value="">Select one...</option>
@@ -102,6 +126,7 @@ function PlayerModal({ isOpen, onClose, onSubmit }) {
                 placeholder="Enter jersey number"
                 min="1"
                 max="99"
+                defaultValue={formDefaults.number}
                 required
               />
             </div>
@@ -118,6 +143,8 @@ function PlayerModal({ isOpen, onClose, onSubmit }) {
                 placeholder="Enter rating"
                 min="0"
                 max="10"
+                step="0.1"
+                defaultValue={formDefaults.rating}
                 required
               />
             </div>
@@ -125,7 +152,7 @@ function PlayerModal({ isOpen, onClose, onSubmit }) {
 
           <div className="modal-actions">
             <button type="submit" className="btn btn-primary">
-              Add
+              {isEditMode ? "Save changes" : "Add"}
             </button>
             <button
               type="button"

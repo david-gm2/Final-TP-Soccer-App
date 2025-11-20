@@ -19,6 +19,13 @@
   margin: 4px 0 0 0;
 }
 
+.header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-direction: column;
+}
+
 @media (min-width: 769px) {
   .header {
     flex-direction: row;
@@ -31,6 +38,9 @@
   }
   .header h3 {
     font-size: 1.125rem;
+  }
+  .header-actions {
+    flex-direction: row;
   }
 }
 

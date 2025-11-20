@@ -5,20 +5,26 @@ import {
 } from "../../public/icons/IconsPlayer.jsx";
 import "../styles/PlayersCard.css";
 
-export function PlayerCard({ player, onView, onOpenDeleteModal }) {
+export function PlayerCard({ player, onView, onEdit, onOpenDeleteModal }) {
   return (
-    <div className="player-card">
+    <div
+      className="player-card"
+      onDoubleClick={() => onEdit?.(player)}
+      role="presentation"
+    >
       <div className="player-card-profile">
-        {player.img ? (
-          <img src={player.img} alt={player.nick} className="player-avatar" />
-        ) : (
-          <IconDefaultUser width="40" height="40" />
-        )}
-        <div className="player-card-profile-text">
-          <h4>{player.nick}</h4>
-          <p>
-            {player.position} ● #{player.number}
-          </p>
+        <div className="player-card-profile-data">
+          {player.img ? (
+            <img src={player.img} alt={player.nick} className="player-avatar" />
+          ) : (
+            <IconDefaultUser width="40" height="40" />
+          )}
+          <div className="player-card-profile-text">
+            <h4>{player.nick}</h4>
+            <p>
+              {player.position} ● #{player.number}
+            </p>
+          </div>
         </div>
         <button
           type="button"
