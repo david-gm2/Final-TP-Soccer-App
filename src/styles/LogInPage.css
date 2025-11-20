@@ -3,7 +3,7 @@
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  background-image: url("/public/images/Image\ placeholder.svg");
+  background-image: url("/public/images/auth-background.svg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
