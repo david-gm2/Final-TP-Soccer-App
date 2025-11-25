@@ -1,16 +1,6 @@
-const scoreboardIcon = "/icons/scoreboard.svg";
-const soccerIcon = "/icons/sports_soccer.svg";
-const starIcon = "/icons/star.svg";
-const personIcon = "/icons/person.svg";
+import "../styles/StatsCard.css";
 
-function StatsCard({ totalMatches, totalGoals, totalAssists, activePlayers }) {
-  const stats = [
-    { title: "Total matches", value: totalMatches, icon: scoreboardIcon },
-    { title: "Total goals", value: totalGoals, icon: soccerIcon },
-    { title: "Total assists", value: totalAssists, icon: starIcon },
-    { title: "Active players", value: activePlayers, icon: personIcon },
-  ];
-
+const StatsCard = ({ stats = [] }) => {
   return (
     <div className="stats-overview">
       {stats.map((stat, index) => (
@@ -24,6 +14,6 @@ function StatsCard({ totalMatches, totalGoals, totalAssists, activePlayers }) {
       ))}
     </div>
   );
-}
+};
 
 export default StatsCard;

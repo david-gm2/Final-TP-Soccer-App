@@ -1,64 +1,60 @@
-import { Radar } from "react-chartjs-2";
-import Header from "../components/Header";
+import "../styles/StatsPage.css";
+import "../styles/PlayerFiltrer.css";
+import "../styles/StatsCard.css";
+import "../styles/ListPlayers.css";
 
-export function StatsPage({ player }) {
-  if (!player) {
-    return <main>Please select a player to see the stats.</main>;
-  }
+import StatsCard from "../components/StatsCard.jsx";
+import PlayerFilter from "../components/PlayerFilter.jsx";
+import ListPlayers from "../components/ListPlayers.jsx";
+import { useGlobalStats } from "../hooks/useGlobalStasts.js";
 
-  const labels = [
-    "Speed",
-    "Strength",
-    "Passing",
-    "Defense",
-    "Shooting",
-    "Stamina",
-    "Creativity",
-  ];
-
-  const data = {
-    labels,
-    datasets: [
-      {
-        label: `${player.nick || player.name} stats`,
-        data: [
-          player.speed,
-          player.strength,
-          player.passing,
-          player.defense,
-          player.shooting,
-          player.stamina,
-          player.creativity,
-        ],
-        backgroundColor: "rgba(54, 162, 235, 0.2)",
-        borderColor: "rgba(54, 162, 235, 1)",
-        borderWidth: 2,
-        pointBackgroundColor: "rgba(54, 162, 235, 1)",
-      },
-    ],
-  };
-
-  const options = {
-    scales: {
-      r: { beginAtZero: true, min: 0, max: 100, ticks: { stepSize: 20 } },
-    },
-    plugins: {
-      legend: { display: false },
-      title: {
-        display: true,
-        text: `Profile for ${player.nick || player.name}`,
-      },
-    },
-  };
+function StatsPage() {
+  const stats = useGlobalStats();
 
   return (
-    <>
-      <Header />
-      <main style={{ width: "400px", height: "400px" }}>
-        <Radar data={data} options={options} />
-      </main>
-    </>
+    <div className="stats-page">
+      <StatsCard stats={mapStats(stats)} />
+      <PlayerFilter />
+      <ListPlayers />
+    </div>
   );
 }
 
 export default StatsPage;
+
+function mapStats(stats) {
+  return Object.entries(stats)
+    .map(([key, value]) => {
+      let title = "";
+      let icon = "";
+      let priority = 0;
+
+      switch (key) {
+        case "activePlayers":
+          title = "Active Players";
+          icon = "../public/icons/person.svg";
+          priority = 1;
+          break;
+        case "totalGoals":
+          title = "Total Goals";
+          icon = "../public/icons/sports_soccer.svg";
+          priority = 2;
+          break;
+        case "totalAssists":
+          title = "Total Assists";
+          icon = "../public/icons/circule.svg";
+          priority = 3;
+          break;
+        case "averageRating":
+          title = "Average Rating";
+          icon = "../public/icons/star.svg";
+          priority = 4;
+          break;
+        default:
+          break;
+      }
+
+      return { title, value, icon, priority };
+    })
+    .sort((a, b) => a.priority - b.priority);
+}

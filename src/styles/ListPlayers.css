@@ -1,0 +1,29 @@
+.list-players {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.list-players table {
+  width: 100%;
+  height: auto;
+  opacity: 1;
+  border-radius: 12px;
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+}
+
+.list-players th,
+.list-players td {
+  padding: 12px 16px;
+  border-top: 1px solid #eeeeee;
+  text-align: left;
+}
+
+.list-players th {
+  background-color: #f9fafb;
+  font-weight: 600px;
+}
