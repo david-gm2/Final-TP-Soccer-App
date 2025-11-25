@@ -1,34 +1,72 @@
+import { useMemo, useState } from "react";
+import { usePlayers } from "../hooks/usePlayers.js";
+import { useListPlayer } from "../hooks/useListPlayer.js";
 import "../styles/TopPlayers.css";
 
 function TopPlayers({
-  players,
+  players: propPlayers,
   showTitle = true,
   compact = false,
   className = "",
 }) {
+  const [isLoading, setIsLoading] = useState(false);
+  useListPlayer(setIsLoading);
+  const { players: ctxPlayers } = usePlayers();
+
+  const sourcePlayers = propPlayers ?? ctxPlayers ?? [];
+  const topPlayers = useMemo(() => {
+    if (!Array.isArray(sourcePlayers)) return [];
+    const sorted = [...sourcePlayers].sort(
+      (a, b) => (b.rating ?? 0) - (a.rating ?? 0)
+    );
+    return sorted.slice(0, 3).map((player, idx) => ({
+      ...player,
+      index: player.index ?? idx + 1,
+    }));
+  }, [sourcePlayers]);
+
   const rootClass = ["top-players", compact ? "compact" : "", className]
     .filter(Boolean)
     .join(" ");
-
-  const arrowIcon = "/icons/arrow.svg";
 
   return (
     <div className={rootClass}>
       {showTitle && <h2>Top Players</h2>}
       <div className="players-list">
-        {players.slice(0, 3).map((player, index) => (
-          <div className="players-card feed-card" key={index}>
-            <div className="player-info">
-              <img src="../public/icons/Player1.svg" alt={player.nick} />
-              <div className="player-details">
-                <p className="player-index"> {player.index}# </p>
-                <h3> {player.nick}</h3>
-                <p>{player.position}</p>
+        {isLoading ? (
+          <p className="players-empty">Loading top players...</p>
+        ) : !topPlayers.length ? (
+          <p className="players-empty">No players available yet.</p>
+        ) : (
+          topPlayers.map((player, idx) => {
+            const key =
+              player.id ??
+              player.player_id ??
+              player.nick ??
+              player.name ??
+              idx;
+            const indexLabel = player.index ?? idx + 1;
+            return (
+              <div className="players-card feed-card" key={key}>
+                <div className="player-info">
+                  <img src="../public/icons/Player1.svg" alt={player.nick} />
+                  <div className="player-details-card">
+                    <div className="player-details-card-name">
+                      <strong className="player-index"> #{indexLabel} </strong>
+                      <h4> {player.nick}</h4>
+                    </div>
+                    <p>{player.position}</p>
+                  </div>
+                </div>
+                <img
+                  className="arrow-icon"
+                  src="../public/icons/arrow.svg"
+                  alt=""
+                />
               </div>
-              <img className="arrow-icon" src={arrowIcon} alt="See profile" />
-            </div>
-          </div>
-        ))}
+            );
+          })
+        )}
       </div>
     </div>
   );

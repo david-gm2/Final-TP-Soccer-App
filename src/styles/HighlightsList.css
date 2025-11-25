@@ -1,6 +1,6 @@
 .highlights-list {
   display: grid;
-  grid-template-columns: 1.25fr .75fr;
+  grid-template-columns: 1.25fr 0.75fr;
   gap: 16px;
 }
 

@@ -1,14 +1,6 @@
-.stat-value {
-  font-size: 24px;
-  font-weight: 700;
-  font-style: Bold;
-  line-height: 140%;
-  letter-spacing: 0%;
-}
-
 .home-page {
   background-color: #ffffff;
-  padding: 24px;
+  padding: 0 24px;
 }
 
 .welcome-section {
@@ -21,32 +13,6 @@
 .action-buttons {
   display: flex;
   gap: 1rem;
-}
-.stats-overview {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  gap: 24px;
-  width: auto;
-  overflow: auto;
-}
-
-.stats-card {
-  display: flex;
-  padding: 24px;
-  gap: 4px;
-  flex: 1;
-  border-radius: 12px;
-  justify-content: space-between;
-  align-items: center;
-  border-width: 1px;
-  border: 1px solid #eeeeee;
-}
-
-.stats-card img {
-  height: 32px;
-  width: 32px;
-  margin-right: 16px;
 }
 
 .cards-section {
@@ -72,9 +38,6 @@
 }
 
 @media (max-width: 769px) {
-  .stats-overview {
-    flex-direction: column;
-  }
   .home-page {
     padding: 16px;
     width: 100%;
