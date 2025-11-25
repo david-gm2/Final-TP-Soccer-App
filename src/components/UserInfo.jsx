@@ -1,5 +1,5 @@
-import { IconSesionOut } from "../../public/icons/IconSidebar";
-import { IconDefaultUser } from "../../public/icons/IconsPlayer";
+import { IconSignOut } from "../icons/IconSidebar";
+import { IconDefaultUser } from "../icons/IconsPlayer.jsx";
 import { useAuth } from "../hooks/useAuth";
 
 function UserInfo() {
@@ -27,7 +27,7 @@ function UserInfo() {
           onClick={() => logout()}
           aria-label="Sign out"
         >
-          <IconSesionOut />
+          <IconSignOut />
         </button>
       </div>
 

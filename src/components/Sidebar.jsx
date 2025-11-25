@@ -3,17 +3,15 @@ import { Outlet } from "react-router-dom";
 
 import "../styles/Sidebar.css";
 import { useAuth } from "../hooks/useAuth";
+import UserInfo from "./UserInfo.jsx";
+import MobileSidebar from "./MobileSidebar.jsx";
+import Overlay from "./Overlay.jsx";
+import Navigation from "./Navigation.jsx";
+import RoleBadge from "./RoleBadge.jsx";
+import { IconClose } from "../icons/IconSidebar.jsx";
 
 function Sidebar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const auth = useAuth();
-
-  const resolvedUser = user ?? auth?.user;
-  const resolvedRole =
-    role ??
-    (resolvedUser
-      ? { dot: "violet", name: resolvedUser.role ?? "viewer" }
-      : { dot: "gray", name: "viewer" });
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
@@ -21,7 +19,6 @@ function Sidebar() {
 
   // TODO: Remove hardcoded data, implement with useAuth()
   const logo = "imagen-logo.png";
-  const role = { dot: "violet", name: "view" };
 
   const handleSignOut = () => {
     logout();
@@ -48,7 +45,7 @@ function Sidebar() {
             <IconClose />
           </button>
 
-          <RoleBadge role={resolvedRole} />
+          <RoleBadge />
 
           <Navigation onItemClick={toggleMenu} />
         </div>
