@@ -6,20 +6,10 @@ import "../styles/ListPlayers.css";
 import StatsCard from "../components/StatsCard.jsx";
 import PlayerFilter from "../components/PlayerFilter.jsx";
 import ListPlayers from "../components/ListPlayers.jsx";
-
-function getGlobalStats() {
-  return {
-    activePlayers: 20,
-    totalGoals: 44,
-    totalAssists: 13,
-    averageRating: 2,
-  };
-}
+import { useGlobalStats } from "../hooks/useGlobalStasts.js";
 
 function StatsPage() {
-  const stats = getGlobalStats();
-
-  // stats = [{title, value, icon}]
+  const stats = useGlobalStats();
 
   return (
     <div className="stats-page">

@@ -24,6 +24,12 @@
   height: 104px;
 }
 
+.stats-card h2 {
+  text-transform: uppercase;
+  font-size: 16px;
+  font-weight: 400;
+}
+
 @media (min-width: 770px) {
   .stats-overview {
     display: flex;

@@ -1,19 +1,8 @@
-import React from "react";
+import { usePlayersStats } from "../hooks/usePlayersStats.js";
 
 function ListPlayers() {
-  const players = [
-    {
-      id: 1,
-      name: "John Doe",
-      matches: 20,
-      goals: 15,
-      goalsPerMatch: 0.75,
-      performance: "A",
-      victories: 12,
-      winRate: "60",
-      record: { wins: 12, draws: 5, losses: 3 },
-    },
-  ];
+  const playersStats = usePlayersStats();
+
   return (
     <div className="list-players">
       <table>
@@ -30,23 +19,21 @@ function ListPlayers() {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            {players.map((player) => (
-              <React.Fragment key={player.id}>
-                <td>{player.name}</td>
-                <td>{player.matches}</td>
-                <td>⚽ {player.goals}</td>
-                <td>{player.goalsPerMatch}</td>
-                <td>⭐ {player.performance}</td>
-                <td>🏆 {player.victories}</td>
-                <td>{player.winRate}%</td>
-                <td>
-                  {player.record.wins}W-{player.record.draws}D-
-                  {player.record.losses}L
-                </td>
-              </React.Fragment>
-            ))}
-          </tr>
+          {playersStats.map((player) => (
+            <tr key={player.player_id}>
+              <td>{player.nick}</td>
+              <td>{player.matches}</td>
+              <td>⚽ {player.goals}</td>
+              <td>{player.goalsPerMatch}</td>
+              <td>⭐ {player.rating}</td>
+              <td>🏆 {player.wins}</td>
+              <td>{player.rating}%</td>
+              <td>
+                {player.wins}W-{player.draws}D-
+                {player.losses}L
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
