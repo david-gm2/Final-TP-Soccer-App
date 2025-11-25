@@ -44,7 +44,7 @@ function App() {
   return (
     <Routes>
       {/* Public routes */}
-      <Route path="/sign-up" element={<PageSignUp />} />
+      <Route path="/signup" element={<PageSignUp />} />
       <Route path="/login" element={<LogInPage />} />
 
       <Route element={<PrivateRoute />}>
