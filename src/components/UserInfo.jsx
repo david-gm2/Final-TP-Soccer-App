@@ -8,7 +8,7 @@ function UserInfo() {
   return (
     <div className="sidebar-bottom">
       <div className="user-info">
-        {user ? (
+        {user.avatar ? (
           <img
             className="user-avatar"
             src={user.avatar}
