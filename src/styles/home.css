@@ -91,9 +91,9 @@ h2 {
 
 .cards-section {
   margin-top: 24px;
-  padding: 16px;
-  border-radius: 12px;
-  border: #eeeeee 1px solid;
+}
+.flat-feed {
+  width: 100%;
 }
 .cards-overview {
   display: flex;

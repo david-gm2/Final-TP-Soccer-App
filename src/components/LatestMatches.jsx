@@ -1,11 +1,19 @@
 import "../styles/upcomingMatches.css";
 
-function LatestMatches({ matches }) {
+function LatestMatches({ matches, showTitle = true, compact = false, className = "" }) {
+  const rootClass = [
+    "latest-matches-list",
+    compact ? "compact" : "",
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <div className="latest-matches-list">
-      <h2>Latest Matches</h2>
+    <div className={rootClass}>
+      {showTitle && <h2>Latest Matches</h2>}
       {matches.slice(0, 3).map((match, index) => (
-        <div className="match-card" key={index}>
+        <div className="match-card feed-card" key={index}>
           <div>
             <p>
               {match.local} vs {match.visitor}
