@@ -51,9 +51,9 @@
 
 .cards-section {
   margin-top: 24px;
-}
-.flat-feed {
-  width: 100%;
+  padding: 16px;
+  border-radius: 12px;
+  border: #eeeeee 1px solid;
 }
 .cards-overview {
   display: flex;
