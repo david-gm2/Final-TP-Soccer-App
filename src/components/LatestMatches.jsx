@@ -10,6 +10,8 @@ function LatestMatches({
     .filter(Boolean)
     .join(" ");
 
+  const arrowIcon = "/icons/arrow.svg";
+
   return (
     <div className={rootClass}>
       {showTitle && <h2>Latest Matches</h2>}
