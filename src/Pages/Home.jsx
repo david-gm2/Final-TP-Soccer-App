@@ -83,10 +83,28 @@ function Home() {
         <StatsCard {...summaryStats} />
 
         <StatsCard
-          totalMatches={totalMatches}
-          totalGoals={totalGoals}
-          totalAssists={totalAssists}
-          activePlayers={activePlayers}
+          stats={[
+            {
+              title: "Total Matches",
+              value: totalMatches,
+              icon: "/icons/scoreboard.svg",
+            },
+            {
+              title: "Total Goals",
+              value: totalGoals,
+              icon: "/icons/sports_soccer.svg",
+            },
+            {
+              title: "Total Assists",
+              value: totalAssists,
+              icon: "/icons/star.svg",
+            },
+            {
+              title: "Active Players",
+              value: activePlayers,
+              icon: "/icons/person.svg",
+            },
+          ]}
         />
         <div className="cards-section flat-feed">
           <HighlightsList

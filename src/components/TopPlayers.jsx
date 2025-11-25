@@ -16,8 +16,8 @@ function TopPlayers({
     <div className={rootClass}>
       {showTitle && <h2>Top Players</h2>}
       <div className="players-list">
-        {players.slice(0, 3).map((player) => (
-          <div className="players-card feed-card" key={player.id}>
+        {players.slice(0, 3).map((player, index) => (
+          <div className="players-card feed-card" key={index}>
             <div className="player-info">
               <img src="../public/icons/Player1.svg" alt={player.nick} />
               <div className="player-details">
