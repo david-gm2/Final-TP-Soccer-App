@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { MatchForm } from "../components/matches/MatchForm.jsx";
@@ -13,17 +13,46 @@ import { useURLSearch } from "../hooks/useURLSearch.js";
 import { filterPlayers } from "../utils/filterPlayers.js";
 import { API_BACKEND_URL } from "../constants/API_CONSTANTS.js";
 
+import Header from "../components/Header";
+
 import "../styles/PageMatches.css";
-import "../styles/PlayerFiltrer.css";
 
 const MATCH_FORMATS = ["5v5", "6v6", "7v7", "8v8", "9v9"];
 
 const FORM_FIELDS = [
-  { name: "datetime-local", type: "datetime-local", label: "Date*", required: "Date is required" },
-  { name: "location", type: "text", label: "Location*", placeholder: "Location", required: "Location is required" },
-  { name: "teamA", type: "text", label: "Team A Name*", placeholder: "Team A", required: "Team A name is required" },
-  { name: "teamB", type: "text", label: "Team B Name*", placeholder: "Team B", required: "Team B name is required" },
-  { name: "matchName", type: "text", label: "Match name (Optional)", placeholder: "Match name" },
+  {
+    name: "datetime-local",
+    type: "datetime-local",
+    label: "Date*",
+    required: "Date is required",
+  },
+  {
+    name: "location",
+    type: "text",
+    label: "Location*",
+    placeholder: "Location",
+    required: "Location is required",
+  },
+  {
+    name: "teamA",
+    type: "text",
+    label: "Team A Name*",
+    placeholder: "Team A",
+    required: "Team A name is required",
+  },
+  {
+    name: "teamB",
+    type: "text",
+    label: "Team B Name*",
+    placeholder: "Team B",
+    required: "Team B name is required",
+  },
+  {
+    name: "matchName",
+    type: "text",
+    label: "Match name (Optional)",
+    placeholder: "Match name",
+  },
 ];
 
 const POSITION_FILTERS = [
@@ -58,12 +87,19 @@ function PageMatches() {
   const [autoBalance, setAutoBalance] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [payloadMessage, setPayloadMessage] = useState("");
+  const [teamAssignments, setTeamAssignments] = useState({
+    teamA: [],
+    teamB: [],
+  });
+  const wasAutoBalance = useRef(autoBalance);
 
   useListPlayer(setIsLoading);
   const { players } = usePlayers();
 
-  const { active: activeFilters, toggle: toggleFilter } = useURLFilters("position");
-  const { value: searchQuery, setValue: setSearchQuery } = useURLSearch("player");
+  const { active: activeFilters, toggle: toggleFilter } =
+    useURLFilters("position");
+  const { value: searchQuery, setValue: setSearchQuery } =
+    useURLSearch("player");
 
   const filteredPlayers = useMemo(
     () => filterPlayers(players, activeFilters, searchQuery),
@@ -75,7 +111,15 @@ function PageMatches() {
     [players, selectedPlayers]
   );
 
-  const teams = useMemo(() => {
+  const playerMap = useMemo(() => {
+    const map = new Map();
+    players.forEach((player) => {
+      map.set(player.player_id, player);
+    });
+    return map;
+  }, [players]);
+
+  const autoTeams = useMemo(() => {
     const ordered = autoBalance
       ? [...selectedPlayerDetails].sort(
           (a, b) => (Number(b.rating) || 0) - (Number(a.rating) || 0)
@@ -90,13 +134,31 @@ function PageMatches() {
     return { teamA, teamB };
   }, [selectedPlayerDetails, autoBalance]);
 
+  const manualTeams = useMemo(() => {
+    const mapIdsToPlayers = (ids = []) =>
+      ids
+        .map((id) => playerMap.get(id))
+        .filter(Boolean);
+    return {
+      teamA: mapIdsToPlayers(teamAssignments.teamA),
+      teamB: mapIdsToPlayers(teamAssignments.teamB),
+    };
+  }, [teamAssignments, playerMap]);
+
+  const teams = autoBalance ? autoTeams : manualTeams;
+
   const avgRating = (team) => {
     if (!team.length) return 0;
-    const total = team.reduce((sum, player) => sum + (Number(player.rating) || 0), 0);
+    const total = team.reduce(
+      (sum, player) => sum + (Number(player.rating) || 0),
+      0
+    );
     return Number((total / team.length).toFixed(1));
   };
 
-  const rateBalance = Math.abs(avgRating(teams.teamA) - avgRating(teams.teamB)).toFixed(1);
+  const rateBalance = Math.abs(
+    avgRating(teams.teamA) - avgRating(teams.teamB)
+  ).toFixed(1);
 
   const togglePlayerSelection = (playerId) => {
     setSelectedPlayers((prev) =>
@@ -111,7 +173,8 @@ function PageMatches() {
   };
 
   const levelLabel = (rating) => {
-    if (rating === null || rating === undefined || rating === "") return "Lv —";
+    if (rating === null || rating === undefined || rating === "")
+      return "Lv --";
     const parsed = Number.parseFloat(rating);
     return Number.isFinite(parsed) ? `Lv ${parsed.toFixed(1)}` : `Lv ${rating}`;
   };
@@ -137,7 +200,9 @@ function PageMatches() {
       name: matchName?.trim() || undefined,
       location: locationInput?.trim() || "",
       playerPerTeam,
-      match_date: matchDateInput ? new Date(matchDateInput).toISOString() : null,
+      match_date: matchDateInput
+        ? new Date(matchDateInput).toISOString()
+        : null,
       homeTeam: {
         name: sanitizeName(teamAName, "Team A"),
         playersIds: teams.teamA
@@ -161,13 +226,15 @@ function PageMatches() {
     teams,
   ]);
 
-  const onSubmit = async (data) => {
+  const onSubmit = async () => {
     if (
       !playerPerTeam ||
       teams.teamA.length < playerPerTeam ||
       teams.teamB.length < playerPerTeam
     ) {
-      alert(`Select at least ${playerPerTeam * 2 || "the required"} players to form both teams.`);
+      alert(
+        `Select at least ${playerPerTeam * 2 || "the required"} players to form both teams.`
+      );
       return;
     }
 
@@ -192,50 +259,106 @@ function PageMatches() {
     }
   };
 
+  useEffect(() => {
+    setTeamAssignments((prev) => {
+      const filteredA = prev.teamA.filter((id) =>
+        selectedPlayers.includes(id)
+      );
+      const filteredB = prev.teamB.filter((id) =>
+        selectedPlayers.includes(id)
+      );
+      const assigned = new Set([...filteredA, ...filteredB]);
+      const remaining = selectedPlayers.filter((id) => !assigned.has(id));
+      const nextA = [...filteredA];
+      const nextB = [...filteredB];
+      remaining.forEach((id) => {
+        if (nextA.length <= nextB.length) {
+          nextA.push(id);
+        } else {
+          nextB.push(id);
+        }
+      });
+      return { teamA: nextA, teamB: nextB };
+    });
+  }, [selectedPlayers]);
+
+  useEffect(() => {
+    if (!autoBalance && wasAutoBalance.current) {
+      setTeamAssignments({
+        teamA: autoTeams.teamA.map((player) => player.player_id),
+        teamB: autoTeams.teamB.map((player) => player.player_id),
+      });
+    }
+    wasAutoBalance.current = autoBalance;
+  }, [autoBalance, autoTeams]);
+
+  const handleDragEnd = (result) => {
+    if (autoBalance) return;
+    if (!result.destination) return;
+    const { source, destination } = result;
+    const fromTeam = source.droppableId;
+    const toTeam = destination.droppableId;
+    const fromIndex = source.index;
+    const toIndex = destination.index;
+
+    setTeamAssignments((prev) => {
+      const next = {
+        teamA: [...prev.teamA],
+        teamB: [...prev.teamB],
+      };
+      const sourceList = next[fromTeam];
+      const [moved] = sourceList.splice(fromIndex, 1);
+      next[toTeam].splice(toIndex, 0, moved);
+      return next;
+    });
+  };
+
   return (
-    <main className="matches-page">
-      <div className="match-layout">
-        <div className="match-form-column">
-          <MatchForm
-            matchFormats={MATCH_FORMATS}
-            selectedFormat={selectedFormat}
-            onSelectFormat={(format) =>
-              setValue("format", format, { shouldValidate: true })
-            }
-            fields={FORM_FIELDS}
-            register={register}
-            errors={errors}
-            onSubmit={handleSubmit(onSubmit)}
-            isSubmitting={isSubmitting}
-          />
-          {/* hidden inputs to keep format registered */}
-          {MATCH_FORMATS.map((format) => (
-            <input
-              key={format}
-              type="radio"
-              value={format}
-              style={{ display: "none" }}
-              {...register("format", { required: "Choose a format" })}
+    <>
+      <Header />
+      <main className="matches-page">
+        <div className="match-layout">
+          <div className="match-form-column">
+            <MatchForm
+              matchFormats={MATCH_FORMATS}
+              selectedFormat={selectedFormat}
+              onSelectFormat={(format) =>
+                setValue("format", format, { shouldValidate: true })
+              }
+              fields={FORM_FIELDS}
+              register={register}
+              errors={errors}
+              onSubmit={handleSubmit(onSubmit)}
+              isSubmitting={isSubmitting}
             />
-          ))}
+            {/* hidden inputs to keep format registered */}
+            {MATCH_FORMATS.map((format) => (
+              <input
+                key={format}
+                type="radio"
+                value={format}
+                style={{ display: "none" }}
+                {...register("format", { required: "Choose a format" })}
+              />
+            ))}
 
-          <PlayerSelection
-            selectedCount={selectedPlayers.length}
-            searchValue={searchQuery}
-            onSearchChange={setSearchQuery}
-            filters={POSITION_FILTERS}
-            activeFilters={activeFilters}
-            onToggleFilter={toggleFilter}
-            players={filteredPlayers}
-            isLoading={isLoading}
-            selectedPlayers={selectedPlayers}
-            onTogglePlayer={togglePlayerSelection}
-            levelLabel={levelLabel}
-            formatPosition={formatPosition}
-          />
-        </div>
+            <PlayerSelection
+              selectedCount={selectedPlayers.length}
+              searchValue={searchQuery}
+              onSearchChange={setSearchQuery}
+              filters={POSITION_FILTERS}
+              activeFilters={activeFilters}
+              onToggleFilter={toggleFilter}
+              players={filteredPlayers}
+              isLoading={isLoading}
+              selectedPlayers={selectedPlayers}
+              onTogglePlayer={togglePlayerSelection}
+              levelLabel={levelLabel}
+              formatPosition={formatPosition}
+            />
+          </div>
 
-        <div className="match-sidebar-column">
+          <div className="match-sidebar-column">
           <MatchPreview
             teams={teams}
             playerPerTeam={playerPerTeam}
@@ -248,20 +371,23 @@ function PageMatches() {
             levelLabel={levelLabel}
             homeTeamName={matchToCreate.homeTeam.name}
             awayTeamName={matchToCreate.awayTeam.name}
+            onDragPlayers={handleDragEnd}
+            enableDrag={!autoBalance}
           />
 
-          <MatchSummary
-            match={matchToCreate}
-            onCopy={(message) => setPayloadMessage(message)}
-          />
-          {payloadMessage && (
-            <p className="payload-feedback" role="status">
-              {payloadMessage}
-            </p>
-          )}
+            <MatchSummary
+              match={matchToCreate}
+              onCopy={(message) => setPayloadMessage(message)}
+            />
+            {payloadMessage && (
+              <p className="payload-feedback" role="status">
+                {payloadMessage}
+              </p>
+            )}
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
 

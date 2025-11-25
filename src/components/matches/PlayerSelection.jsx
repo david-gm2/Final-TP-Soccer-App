@@ -1,4 +1,4 @@
-import { IconLupa, IconDefaultUser } from "../../../public/icons/IconsPlayer.jsx";
+import { IconLupa, IconDefaultUser } from "../../icons/IconsPlayer.jsx";
 
 export function PlayerSelection({
   selectedCount,
@@ -23,7 +23,7 @@ export function PlayerSelection({
       const displayNumber =
         selectionIndex >= 0
           ? `#${selectionIndex + 1}`
-          : `#${player.number ?? "—"}`;
+          : `#${player.number ?? "--"}`;
 
       return (
         <label
@@ -54,6 +54,7 @@ export function PlayerSelection({
               type="checkbox"
               checked={selectionIndex >= 0}
               onChange={() => onTogglePlayer(player.player_id)}
+              aria-label={`Select ${player.nick}`}
             />
           </div>
         </label>
@@ -69,19 +70,20 @@ export function PlayerSelection({
           <p>Choose who will play the next match.</p>
         </div>
         <span className="player-selection__counter">
-          {selectedCount} Players selected
+          {selectedCount} players selected
         </span>
       </div>
 
       <div className="player-filter">
         <div className="search-player-box">
           <label htmlFor="match-player-search">
-            <IconLupa width={18} height={18} />
+            <IconLupa width={18} height={18} aria-hidden="true" />
           </label>
           <input
             id="match-player-search"
             type="search"
             placeholder="Search player..."
+            aria-label="Search players for the match"
             value={searchValue}
             onChange={(event) => onSearchChange(event.target.value)}
           />

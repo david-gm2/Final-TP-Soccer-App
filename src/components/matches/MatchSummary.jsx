@@ -32,7 +32,7 @@ export function MatchSummary({ match, onCopy }) {
         </div>
         <div>
           <span>Location</span>
-          <strong>{match.location || "—"}</strong>
+          <strong>{match.location || "--"}</strong>
         </div>
         <div>
           <span>Date</span>
@@ -44,13 +44,13 @@ export function MatchSummary({ match, onCopy }) {
         </div>
         <div>
           <span>Players per team</span>
-          <strong>{match.playerPerTeam || "—"}</strong>
+          <strong>{match.playerPerTeam || "--"}</strong>
         </div>
       </div>
 
       <div className="match-summary-card__teams">
         {[match.homeTeam, match.awayTeam].map((team, index) => (
-          <article key={index}>
+          <article key={team?.name ?? index}>
             <header>
               <p>{index === 0 ? "Team A" : "Team B"}</p>
               <strong>{team?.name || "Unnamed team"}</strong>
@@ -71,4 +71,3 @@ export function MatchSummary({ match, onCopy }) {
     </section>
   );
 }
-
