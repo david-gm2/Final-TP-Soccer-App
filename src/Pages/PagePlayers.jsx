@@ -157,6 +157,7 @@ function PlayersPage() {
         setPlayers((prev) => [createdPlayer, ...prev]);
         setLastFetched?.(Date.now());
       }
+      console.log(`Player with id ${playerId} deleted successfully from API.`);
     }
 
     closeModal();
