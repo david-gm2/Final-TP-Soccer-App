@@ -17,25 +17,25 @@
   display: none;
 }
 
-.match-card {
-  /* keeps backwards compatibility if feed-card is not present */
+.home-match-card {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
 }
 
-.match-actions {
+.home-match-actions {
   display: flex;
   gap: 8px;
-  img {
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-  }
 }
 
-.match-info {
+.home-match-actions img {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.home-match-info {
   display: flex;
   flex-direction: column;
   color: var(--Opacity-Neutral-Darkest-60, #00000099);

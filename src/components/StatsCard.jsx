@@ -1,26 +1,20 @@
-import React from "react";
+const scoreboardIcon = "/icons/scoreboard.svg";
+const soccerIcon = "/icons/sports_soccer.svg";
+const starIcon = "/icons/star.svg";
+const personIcon = "/icons/person.svg";
 
-const StatsCard = ({
-  totalMatches,
-  totalGoals,
-  totalAssists,
-  activePlayers,
-}) => {
-  const scoreboardIcon = "../public/icons/scoreboard.svg";
-  const soccerIcon = "../public/icons/sports_soccer.svg";
-  const starIcon = "../public/icons/star.svg";
-  const personIcon = "../public/icons/person.svg";
+function StatsCard({ totalMatches, totalGoals, totalAssists, activePlayers }) {
   const stats = [
-    { title: "Total Matches", value: totalMatches, icon: scoreboardIcon },
-    { title: "Total Goals", value: totalGoals, icon: soccerIcon },
-    { title: "Total Assists", value: totalAssists, icon: starIcon },
-    { title: "Active Players", value: activePlayers, icon: personIcon },
+    { title: "Total matches", value: totalMatches, icon: scoreboardIcon },
+    { title: "Total goals", value: totalGoals, icon: soccerIcon },
+    { title: "Total assists", value: totalAssists, icon: starIcon },
+    { title: "Active players", value: activePlayers, icon: personIcon },
   ];
 
   return (
     <div className="stats-overview">
       {stats.map((stat, index) => (
-        <div className="stats-card" key={index}>
+        <div className="stats-card" key={stat.title ?? index}>
           <div>
             <h2>{stat.title}</h2>
             <p className="stat-value">{stat.value}</p>
@@ -30,6 +24,6 @@ const StatsCard = ({
       ))}
     </div>
   );
-};
+}
 
 export default StatsCard;

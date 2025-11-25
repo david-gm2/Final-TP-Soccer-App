@@ -1,11 +1,12 @@
 import "../styles/TopPlayers.css";
 
-function TopPlayers({ players, showTitle = true, compact = false, className = "" }) {
-  const rootClass = [
-    "top-players",
-    compact ? "compact" : "",
-    className,
-  ]
+function TopPlayers({
+  players,
+  showTitle = true,
+  compact = false,
+  className = "",
+}) {
+  const rootClass = ["top-players", compact ? "compact" : "", className]
     .filter(Boolean)
     .join(" ");
 
@@ -22,12 +23,8 @@ function TopPlayers({ players, showTitle = true, compact = false, className = ""
                 <h3> {player.nick}</h3>
                 <p>{player.position}</p>
               </div>
+              <img className="arrow-icon" src={arrowIcon} alt="See profile" />
             </div>
-            <img
-              className="arrow-icon"
-              src="../public/icons/arrow.svg"
-              alt=""
-            />
           </div>
         ))}
       </div>

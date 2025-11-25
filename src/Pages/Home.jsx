@@ -1,9 +1,55 @@
 import "../styles/home.css";
 import HighlightsList from "../components/HighlightsList.jsx";
+import Header from "../components/Header.jsx";
 import LatestMatches from "../components/LatestMatches.jsx";
 import UpcomingMatches from "../components/UpcomingMatches.jsx";
 import TopPlayers from "../components/TopPlayers.jsx";
 import StatsCard from "../components/StatsCard.jsx";
+
+const summaryStats = {
+  totalMatches: 5,
+  totalGoals: 44,
+  totalAssists: 13,
+  activePlayers: 20,
+};
+
+const sampleMatches = [
+  {
+    id: 1,
+    homeTeam: "Team A",
+    awayTeam: "Team C",
+    date: "2023-10-01",
+    time: "15:00",
+  },
+  {
+    id: 2,
+    homeTeam: "Team B",
+    awayTeam: "Team D",
+    date: "2023-10-02",
+    time: "17:00",
+  },
+  {
+    id: 3,
+    homeTeam: "Team E",
+    awayTeam: "Team F",
+    date: "2023-10-03",
+    time: "19:00",
+  },
+  {
+    id: 4,
+    homeTeam: "Team G",
+    awayTeam: "Team H",
+    date: "2023-10-04",
+    time: "16:00",
+  },
+];
+
+const samplePlayers = [
+  { id: 1, nick: "Player 1", position: "Forward" },
+  { id: 2, nick: "Player 2", position: "Midfielder" },
+  { id: 3, nick: "Player 3", position: "Defender" },
+  { id: 4, nick: "Player 4", position: "Goalkeeper" },
+];
 
 function Home() {
   let user = "user";
@@ -30,67 +76,55 @@ function Home() {
   ];
 
   return (
-    <main className="home-page">
-      <div className="welcome-section">
-        <div>
-          <h1>Welcome {user}! </h1>
-          <p>
-            Here’s your weekly summary with the key stats and upcoming matches.
-          </p>
-        </div>
+    <>
+      <Header />
 
-        <div className="action-buttons">
-          <button id="new-match-button">
-            <img src="../public/icons/Vector.svg" alt="" /> New Match
-          </button>
-          <button id="add-player-button">
-            <img src="../public/icons/Plus.svg" alt="" /> Add Player
-          </button>
-        </div>
-      </div>
+      <main className="home-page">
+        <StatsCard {...summaryStats} />
 
-      <StatsCard
-        totalMatches={totalMatches}
-        totalGoals={totalGoals}
-        totalAssists={totalAssists}
-        activePlayers={activePlayers}
-      />
-      <div className="cards-section flat-feed">
-        <HighlightsList
-          sections={[
-            {
-              key: "upcoming",
-              title: "Upcoming Matches",
-              content: (
-                <UpcomingMatches
-                  matches={upcomingMatches}
-                  showTitle={false}
-                  compact
-                />
-              ),
-            },
-            {
-              key: "topPlayers",
-              title: "Top Players",
-              content: (
-                <TopPlayers players={topPlayers} showTitle={false} compact />
-              ),
-            },
-            {
-              key: "latest",
-              title: "Latest Matches",
-              content: (
-                <LatestMatches
-                  matches={latestMatches}
-                  showTitle={false}
-                  compact
-                />
-              ),
-            },
-          ]}
+        <StatsCard
+          totalMatches={totalMatches}
+          totalGoals={totalGoals}
+          totalAssists={totalAssists}
+          activePlayers={activePlayers}
         />
-      </div>
-    </main>
+        <div className="cards-section flat-feed">
+          <HighlightsList
+            sections={[
+              {
+                key: "upcoming",
+                title: "Upcoming Matches",
+                content: (
+                  <UpcomingMatches
+                    matches={upcomingMatches}
+                    showTitle={false}
+                    compact
+                  />
+                ),
+              },
+              {
+                key: "topPlayers",
+                title: "Top Players",
+                content: (
+                  <TopPlayers players={topPlayers} showTitle={false} compact />
+                ),
+              },
+              {
+                key: "latest",
+                title: "Latest Matches",
+                content: (
+                  <LatestMatches
+                    matches={latestMatches}
+                    showTitle={false}
+                    compact
+                  />
+                ),
+              },
+            ]}
+          />
+        </div>
+      </main>
+    </>
   );
 }
 

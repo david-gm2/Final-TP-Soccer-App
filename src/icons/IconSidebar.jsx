@@ -78,7 +78,7 @@ export function IconHistory() {
   );
 }
 
-export function IconSesionOut() {
+export function IconSignOut() {
   return (
     <svg
       width="24"

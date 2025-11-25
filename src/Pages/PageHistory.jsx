@@ -1,9 +1,14 @@
+import Header from "../components/Header";
+
 export function HistoryPage() {
-    return (
-        <main>
-        <p>habia una vez...</p>
-        </main>
-    );
+  return (
+    <>
+      <Header />
+      <main>
+        <p>Match history will be available soon.</p>
+      </main>
+    </>
+  );
 }
 
 export default HistoryPage;

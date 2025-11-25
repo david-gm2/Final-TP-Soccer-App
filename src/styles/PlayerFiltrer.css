@@ -1,106 +1,103 @@
 .player-filter {
-    padding: 16px;
-    background: #FFFFFF;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  padding: 16px;
+  background: #ffffff;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .search-player-box {
-    display: flex;
-    align-items: center;
-    height: 48px;
-    gap: 8px;
-    padding: 8px 16px;
-    border: 1px solid #E0E0E0;
-    border-radius: 8px;
-    color: #AAAAAA;
+  display: flex;
+  align-items: center;
+  height: 48px;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  color: #aaaaaa;
 }
 
 .search-player-box label {
-    align-items: center;
-}
-
-.search-player-box label svg {
-    width: 16px;
-    height: 16px;
-    display: block;
-    flex: 0 0 auto;
+  display: flex;
+  align-items: center;
 }
 
 .search-player-box input {
-    border: none;
-    outline: none;
-    font-size: 16px;
-    width: 100%;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  width: 100%;
 }
 
-.filtrering{
-    display: flex;
-    gap: 16px;
-    overflow-y: auto;
-    scrollbar-width: 10px;
+.filtrering {
+  display: flex;
+  gap: 16px;
+  overflow-y: auto;
+  scrollbar-width: none;
 }
 
-.filtrering::-webkit-scrollbar { width: 20px; }
+.filtrering::-webkit-scrollbar {
+  width: 20px;
+}
 
 .filter-item {
-    position: relative;
-    padding: 8px 16px;
-    border-radius: 8px;
-    color: #666666;
-    border: 1px solid #EEEEEE;
-    font-weight: 600;
-    cursor: pointer;
-    display:  flex;
-    height: 40px;
+  position: relative;
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: #666666;
+  border: 1px solid #eeeeee;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  height: 40px;
+}
+
+.filter-item p {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  width: max-content;
 }
 
 .filter-item.active {
-    position: relative;
-    border: 1px solid transparent;
-    padding: 8px 16px;
-    border-radius: 8px;
-    background:
-        linear-gradient(#fff, #fff) padding-box,
-        linear-gradient(270deg, #E968FE, #602EE1) border-box;
-    font-weight: 600;
-    cursor: pointer;
-    display:  flex;
-    height: 40px;
+  border: 1px solid transparent;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(270deg, #e968fe, #602ee1) border-box;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  height: 40px;
+}
 
-    p{
-        display: flex;
-        align-items: center;
-        background: linear-gradient(270deg, #E968FE, #602EE1);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent; 
-        flex-wrap: wrap;
-            width: max-content;
+.filter-item.active p {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(270deg, #e968fe, #602ee1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  flex-wrap: wrap;
+  width: max-content;
   padding-right: 16px;
-
-
-    }
-
 }
 
 .filter-item.active::after {
-  content: "✓";
+  content: "\2713";
   position: absolute;
-  margin-right: 6px;
-  margin-top: 8px;
-  top: 2px;
+  top: 8px;
   right: 8px;
   font-weight: bold;
-  background: linear-gradient(270deg, #E968FE, #602EE1);
+  background: linear-gradient(270deg, #e968fe, #602ee1);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 @media (max-width: 769px) {
-    .player-filter {
-        gap: 24px;
-    }
+  .player-filter {
+    gap: 24px;
+  }
 }

@@ -1,11 +1,12 @@
-import "../styles/upcomingMatches.css";
+import "../styles/UpcomingMatches.css";
 
-function LatestMatches({ matches, showTitle = true, compact = false, className = "" }) {
-  const rootClass = [
-    "latest-matches-list",
-    compact ? "compact" : "",
-    className,
-  ]
+function LatestMatches({
+  matches,
+  showTitle = true,
+  compact = false,
+  className = "",
+}) {
+  const rootClass = ["latest-matches-list", compact ? "compact" : "", className]
     .filter(Boolean)
     .join(" ");
 
@@ -16,18 +17,19 @@ function LatestMatches({ matches, showTitle = true, compact = false, className =
         <div className="match-card feed-card" key={index}>
           <div>
             <p>
-              {match.local} vs {match.visitor}
+              {match.homeTeam} vs {match.awayTeam}
             </p>
-            <div className="match-info">
+            <div className="home-match-info">
               Date: {match.date} | Time: {match.time}
             </div>
           </div>
-          <div className="match-actions">
-            <img src="../public/icons/arrow.svg" alt="" />
+          <div className="home-match-actions">
+            <img src={arrowIcon} alt="View match details" />
           </div>
         </div>
       ))}
     </div>
   );
 }
+
 export default LatestMatches;
