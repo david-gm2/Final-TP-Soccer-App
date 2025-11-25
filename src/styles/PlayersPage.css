@@ -1,4 +1,5 @@
 .players-page {
+  margin-left: 300px;
   padding: 16px;
   display: flex;
   flex-direction: column;

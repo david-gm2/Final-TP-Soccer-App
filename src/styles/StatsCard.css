@@ -1,0 +1,40 @@
+.stats-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.stat-value {
+  font-style: normal;
+  font-size: 24px;
+}
+.stats-card img {
+  margin-right: 16px;
+}
+.stats-card {
+  display: flex;
+  margin-top: 1rem;
+  padding: 24px;
+  flex: 1;
+  border-radius: 12px;
+  justify-content: space-between;
+  align-items: center;
+  border-width: 1px;
+  background-color: #fff;
+  border: 1px solid #eeeeee;
+  height: 104px;
+}
+
+@media (min-width: 770px) {
+  .stats-overview {
+    display: flex;
+    flex-direction: row;
+    width: auto;
+    gap: 8px;
+  }
+
+  .stats-card img {
+    height: 32px;
+    width: 32px;
+    margin-right: 16px;
+  }
+}

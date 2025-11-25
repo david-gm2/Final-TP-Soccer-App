@@ -1,4 +1,5 @@
 import React from "react";
+import "../styles/StatsCard.css";
 
 const StatsCard = ({ stats = [] }) => {
   return (

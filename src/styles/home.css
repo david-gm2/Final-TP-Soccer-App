@@ -10,13 +10,6 @@ h2 {
   line-height: 150%;
   letter-spacing: 0%;
 }
-.stat-value {
-  font-size: 24px;
-  font-weight: 700;
-  font-style: Bold;
-  line-height: 140%;
-  letter-spacing: 0%;
-}
 
 .home-page {
   background-color: #ffffff;
@@ -63,31 +56,6 @@ h2 {
   align-items: center;
   justify-content: center;
 }
-.stats-overview {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  gap: 24px;
-  width: auto;
-}
-
-.stats-card {
-  display: flex;
-  padding: 24px;
-  gap: 4px;
-  flex: 1;
-  border-radius: 12px;
-  justify-content: space-between;
-  align-items: center;
-  border-width: 1px;
-  border: 1px solid #eeeeee;
-}
-
-.stats-card img {
-  height: 32px;
-  width: 32px;
-  margin-right: 16px;
-}
 
 .cards-section {
   margin-top: 24px;
@@ -112,9 +80,6 @@ h2 {
 }
 
 @media (max-width: 769px) {
-  .stats-overview {
-    flex-direction: column;
-  }
   .home-page {
     padding: 16px;
     width: 100%;
@@ -131,20 +96,6 @@ h2 {
     flex-direction: column;
     width: 100%;
     gap: 16px;
-  }
-
-  .stats-card {
-    flex-direction: row;
-    align-items: center;
-    text-align: center;
-  }
-
-  .stats-card img {
-    margin-right: 16px;
-  }
-
-  .stats-card img {
-    margin-right: 16px;
   }
 
   #new-match-button,

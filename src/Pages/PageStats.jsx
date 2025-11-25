@@ -1,70 +1,75 @@
-import { Component } from "react";
-import { Radar } from "react-chartjs-2";
+import "../styles/StatsPage.css";
+import "../styles/PlayerFiltrer.css";
+import "../styles/StatsCard.css";
+import "../styles/ListPlayers.css";
+
 import StatsCard from "../components/StatsCard.jsx";
+import PlayerFilter from "../components/PlayerFilter.jsx";
+import ListPlayers from "../components/ListPlayers.jsx";
 
-export function StatsPage({ player }) {
-  const scoreboardIcon = "../public/icons/scoreboard.svg";
+function getGlobalStats() {
+  return {
+    activePlayers: 20,
+    totalGoals: 44,
+    totalAssists: 13,
+    averageRating: 2,
+  };
+}
+
+function StatsPage() {
   const soccerIcon = "../public/icons/sports_soccer.svg";
-  const starIcon = "../public/icons/star.svg";
+  const circuleIcon = "../public/icons/circule.svg";
   const personIcon = "../public/icons/person.svg";
-  const stats = [
-    { title: "Total Matches", value: 2, icon: scoreboardIcon },
-    { title: "Total Goals", value: 44, icon: soccerIcon },
-    { title: "Total Assists", value: 13, icon: starIcon },
-    { title: "Active Players", value: 20, icon: personIcon },
-  ];
-  if (!player) {
-    return <main>Seleccioná un jugador para ver las estadísticas.</main>;
-  }
+  const starIcon = "../public/icons/star.svg";
 
-  const data = {
-    labels: [
-      "Velocidad",
-      "Fuerza",
-      "Pases",
-      "Defensa",
-      "Tiro",
-      "Resistencia",
-      "Azul",
-    ],
-    datasets: [
-      {
-        label: `Estadísticas de ${player.nick}`,
-        data: [
-          player.speed,
-          player.strength,
-          player.passing,
-          player.defense,
-          player.shooting,
-          player.stamina,
-          player.azul,
-        ],
-        backgroundColor: "rgba(54, 162, 235, 0.2)",
-        borderColor: "rgba(54, 162, 235, 1)",
-        borderWidth: 2,
-        pointBackgroundColor: "rgba(54, 162, 235, 1)",
-      },
-    ],
-  };
+  const stats = getGlobalStats();
 
-  const options = {
-    scales: {
-      r: { beginAtZero: true, min: 0, max: 100, ticks: { stepSize: 20 } },
-    },
-    plugins: {
-      legend: { display: false },
-      title: { display: true, text: `Perfil de ${player.nick}` },
-    },
-  };
+  // stats = [{title, value, icon}]
 
   return (
-    <div>
-      <StatsCard stats={stats} />
-      <main style={{ width: "400px", height: "400px" }}>
-        <Radar data={data} options={options} />
-      </main>
+    <div className="stats-page">
+      <StatsCard stats={mapStats(stats)} />
+      <PlayerFilter />
+      <ListPlayers />
     </div>
   );
 }
 
 export default StatsPage;
+
+function mapStats(stats) {
+  return Object.entries(stats)
+    .map(([key, value]) => {
+      let title = "";
+      let icon = "";
+      let priority = 0;
+
+      switch (key) {
+        case "activePlayers":
+          title = "Active Players";
+          icon = "../public/icons/person.svg";
+          priority = 1;
+          break;
+        case "totalGoals":
+          title = "Total Goals";
+          icon = "../public/icons/sports_soccer.svg";
+          priority = 2;
+          break;
+        case "totalAssists":
+          title = "Total Assists";
+          icon = "../public/icons/circule.svg";
+          priority = 3;
+          break;
+        case "averageRating":
+          title = "Average Rating";
+          icon = "../public/icons/star.svg";
+          priority = 4;
+          break;
+        default:
+          break;
+      }
+
+      return { title, value, icon, priority };
+    })
+    .sort((a, b) => a.priority - b.priority);
+}

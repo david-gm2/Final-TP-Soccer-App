@@ -56,3 +56,5 @@ export function PlayerFilter() {
     </div>
   );
 }
+
+export default PlayerFilter;

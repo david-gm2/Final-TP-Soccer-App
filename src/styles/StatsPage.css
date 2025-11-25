@@ -1,0 +1,13 @@
+.stats-page {
+  display: block;
+  padding: 1rem;
+  flex-direction: column;
+}
+@media (min-width: 770px) {
+  .stats-page {
+    width: fit-content;
+    display: flex;
+    margin-left: 300px;
+    margin-right: 24px;
+  }
+}
