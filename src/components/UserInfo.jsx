@@ -1,21 +1,27 @@
-import { IconSesionOut } from "../../public/icons/IconSidebar";
-import { IconDefaultUser } from "../../public/icons/IconsPlayer";
+import { IconSignOut } from "../icons/IconSidebar.jsx";
+import { IconDefaultUser } from "../icons/IconsPlayer.jsx";
+import { useAuth } from "../hooks/useAuth.js";
 
-function UserInfo(props) {
-  // Desestructuro con fallback para evitar que props sea undefined
-  const { user, roleUser, onSignOut } = props || {};
+function UserInfo({ user: userProp, roleUser, onSignOut }) {
+  const { user: authUser, signOut } = useAuth() ?? {};
+  const user = userProp ?? authUser;
+  const isLoggedIn = Boolean(user);
 
-  const isLoggedIn = !!user;
-
-  const displayName = user?.name || user?.user_name || "Invitado";
+  const displayName = user?.name || user?.user_name || "Guest";
   const displayEmail = user?.email || "";
+  const avatarSrc = user?.avatar || null;
 
-  const avatarSrc = user && user.avatar ? user.avatar : null;
+  const handleSignOut = () => {
+    if (typeof onSignOut === "function") {
+      onSignOut();
+    } else if (typeof signOut === "function") {
+      signOut();
+    }
+  };
 
   return (
     <div className="sidebar-bottom">
       <div className="user-info">
-        {/* Avatar o icono por defecto */}
         {avatarSrc ? (
           <img
             className="user-avatar"
@@ -23,30 +29,30 @@ function UserInfo(props) {
             alt={`${displayName} avatar`}
           />
         ) : (
-          <IconDefaultUser width="24" height="24" className="user-avatar" />
+          <IconDefaultUser width="40" height="40" className="user-avatar" />
         )}
 
-        {/* Texto del usuario */}
         <div className="user-text">
           <p className="user-name">{displayName}</p>
           {displayEmail && <p className="user-email">{displayEmail}</p>}
         </div>
 
-        {/* Botón de cerrar sesión solo si hay usuario */}
         {isLoggedIn && (
           <button
+            type="button"
             className="user-switch-btn"
-            onClick={onSignOut}
+            onClick={handleSignOut}
             aria-label="Sign out"
           >
-            <IconSesionOut />
+            <IconSignOut />
           </button>
         )}
       </div>
 
-      {/* Botón de Request Admin Access solo si hay usuario y no es admin */}
-      {isLoggedIn && roleUser?.name !== "admin" && (
-        <button className="btn btn-secondary">Request Admin Access</button>
+      {isLoggedIn && roleUser?.name?.toLowerCase() !== "admin" && (
+        <button type="button" className="btn btn-secondary">
+          Request admin access
+        </button>
       )}
     </div>
   );

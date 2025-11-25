@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth.js";
 
 import "../styles/LogIn.css";
 
@@ -7,20 +8,22 @@ const API_URL = "https://backend-exercises-production.up.railway.app";
 
 export function LogIn() {
   const navigate = useNavigate();
+  const { syncUserFromToken } = useAuth() ?? {};
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const [isCharging, setIsCharging] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsCharging(true);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setIsLoading(true);
 
     if (!email || !password) {
-      setMessage("Faltan campos obligatorios.");
-      setIsCharging(false);
+      setMessage("Please complete the required fields.");
+      setIsLoading(false);
       return;
     }
+
     try {
       const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
@@ -29,22 +32,23 @@ export function LogIn() {
       });
 
       const text = await response.text();
-
       let data;
       try {
         data = JSON.parse(text);
       } catch {
-        throw new Error("El servidor no devolvió JSON válido");
+        throw new Error("The server returned invalid JSON.");
       }
 
-      if (!response.ok) throw new Error(data.message || "Error en el login");
+      if (!response.ok) throw new Error(data.message || "Error logging in");
 
       localStorage.setItem("accessToken", data.accessToken);
-      setMessage("Login exitoso, redirigiendo a la pagina...");
-
+      syncUserFromToken?.();
+      setMessage("Login successful. Redirecting to the dashboard...");
       navigate("/");
     } catch (error) {
-      setMessage(`${error.message}`);
+      setMessage(error.message || "Unable to log in.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -57,35 +61,31 @@ export function LogIn() {
           Keep the game alive.
         </p>
         <form onSubmit={handleSubmit}>
-          <label html="email">Email*</label>
+          <label htmlFor="email">Email*</label>
           <input
+            id="email"
             name="email"
             type="email"
             value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
+            onChange={(event) => setEmail(event.target.value)}
             required
           />
           <label htmlFor="password">Password*</label>
           <input
+            id="password"
             name="password"
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(event) => setPassword(event.target.value)}
             required
           />
-          <button
-            type="submit"
-            disabled={isCharging}
-            className="btn btn-primary"
-          >
-            {isCharging ? "Cargando..." : "Log In"}
+          <button type="submit" disabled={isLoading} className="btn btn-primary">
+            {isLoading ? "Loading..." : "Log In"}
           </button>
-          <p>{message}</p>
+          <p role="alert">{message}</p>
         </form>
         <div className="linksLogIn">
-          <a href="#">Forgot you password?</a>
+          <a href="#forgot-password">Forgot your password?</a>
           <p>
             Don't have an account? <Link to="/sign-up">Sign Up</Link>
           </p>

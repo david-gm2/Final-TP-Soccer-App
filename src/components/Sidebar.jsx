@@ -1,28 +1,34 @@
-import { IconClose } from "../../public/icons/IconSidebar";
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
-import MobileSidebar from "./MobileSidebar";
-import Overlay from "./Overlay";
-import RoleBadge from "./RoleBadge";
-import Navigation from "./Navigation";
-import UserInfo from "./UserInfo";
+
 import "../styles/Sidebar.css";
 
-function Sidebar({
-  // TODO sincronizar con la base de datos
-  role = { dot: "violet", name: "viewer" },
-  user = { name: "Doye", email: "doyel.gusmerotti@gm", avatar: "avatar.jpg" },
-  logo = "imagen-logo.png",
-  onSignOut,
-}) {
+import { IconClose } from "../icons/IconSidebar.jsx";
+import MobileSidebar from "./MobileSidebar.jsx";
+import Overlay from "./Overlay.jsx";
+import RoleBadge from "./RoleBadge.jsx";
+import Navigation from "./Navigation.jsx";
+import UserInfo from "./UserInfo.jsx";
+import { useAuth } from "../hooks/useAuth.js";
+
+function Sidebar({ role, user, logo = "/imagen-logo.png", onSignOut }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const auth = useAuth();
+
+  const resolvedUser = user ?? auth?.user;
+  const resolvedRole =
+    role ??
+    (resolvedUser
+      ? { dot: "violet", name: resolvedUser.role ?? "viewer" }
+      : { dot: "gray", name: "viewer" });
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
   const handleSignOut = () => {
-    if (onSignOut) {
-      console.info("Te deslogueaste hehe");
+    if (typeof onSignOut === "function") {
       onSignOut();
+    } else {
+      auth?.signOut?.();
     }
   };
 
@@ -30,10 +36,7 @@ function Sidebar({
     <>
       <MobileSidebar logo={logo} onOpenMenu={toggleMenu} />
 
-      <Overlay
-        isOpen={isMenuOpen}
-        onClose={() => setIsMenuOpen((prev) => !prev)}
-      />
+      <Overlay isOpen={isMenuOpen} onClose={toggleMenu} />
 
       <aside className={`sidebar ${isMenuOpen ? "sidebar-open" : ""}`}>
         <div className="sidebar-top">
@@ -45,17 +48,21 @@ function Sidebar({
             type="button"
             className="sidebar-close-btn"
             onClick={toggleMenu}
-            aria-label="Cerrar menú"
+            aria-label="Close menu"
           >
             <IconClose />
           </button>
 
-          <RoleBadge role={role} />
+          <RoleBadge role={resolvedRole} />
 
           <Navigation onItemClick={toggleMenu} />
         </div>
 
-        <UserInfo user={user} roleUser={role} onSignOut={handleSignOut} />
+        <UserInfo
+          user={resolvedUser}
+          roleUser={resolvedRole}
+          onSignOut={handleSignOut}
+        />
       </aside>
       <Outlet />
     </>
