@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 import "../styles/SignUp.css";
+
+const API_URL = "https://backend-exercises-production.up.railway.app";
 
 export function SignUp() {
   const navigate = useNavigate();
@@ -8,58 +11,49 @@ export function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    console.log(
-      "Request body:",
-      JSON.stringify({ user_name: name, email, password })
-    );
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setIsLoading(true);
 
     if (!name || !email || !password) {
-      setMessage("Faltan campos obligatorios.");
+      setMessage("Please complete the required fields.");
+      setIsLoading(false);
       return;
     }
-    try {
-      const response = await fetch(
-        "https://backend-exercises-production.up.railway.app/auth/register",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ user_name: name, email, password }),
-        }
-      );
 
-      console.log(response);
+    try {
+      const response = await fetch(`${API_URL}/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_name: name, email, password }),
+      });
 
       const text = await response.text();
-
       let data;
       try {
         data = JSON.parse(text);
       } catch {
-        throw new Error("El servidor no devolvió JSON válido");
+        throw new Error("The server returned invalid JSON.");
+      }
+
+      if (!response.ok) {
+        throw new Error(data.message || "Error registering the user.");
       }
 
       sessionStorage.setItem("accessToken", data.accessToken);
-      setMessage(
-        "Usuario creado exitosamente. Redirigiendo a la pagina principal..."
-      );
-
-      if (!response.ok) {
-        console.log(response);
-        throw new Error(data.message || "Error en registro");
-      }
+      setMessage("User created successfully. Redirecting to the dashboard...");
 
       setTimeout(() => {
         navigate("/");
       }, 1500);
     } catch (error) {
-      setMessage(`${error.message}`);
+      setMessage(error.message || "Unable to sign up.");
+    } finally {
+      setIsLoading(false);
     }
   };
-  // * preventivo hasta aca
 
   return (
     <div className="signupContainer">
@@ -72,33 +66,35 @@ export function SignUp() {
         <form onSubmit={handleSubmit}>
           <label htmlFor="name">Name*</label>
           <input
+            id="name"
             name="name"
             type="text"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(event) => setName(event.target.value)}
+            required
           />
           <label htmlFor="email">Email*</label>
           <input
+            id="email"
             name="email"
             type="email"
             value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
+            onChange={(event) => setEmail(event.target.value)}
             required
           />
           <label htmlFor="password">Password*</label>
           <input
+            id="password"
             name="password"
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(event) => setPassword(event.target.value)}
             required
           />
-          <button type="submit" className="btn btn-primary">
-            Sign Up
+          <button type="submit" className="btn btn-primary" disabled={isLoading}>
+            {isLoading ? "Creating..." : "Sign Up"}
           </button>
-          <p>{message}</p>
+          <p role="alert">{message}</p>
         </form>
         <div className="linksSignUp">
           <p>
