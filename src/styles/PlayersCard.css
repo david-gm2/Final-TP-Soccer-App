@@ -1,66 +1,64 @@
 .player-card {
-    flex: 1 1 300px;
-    min-width: 300px;
-    width: 500px;
-    max-width: 550px;
-    border-radius: 12px;
-    padding: 16px;
-    gap: 16px;
-    border: 1px #EEEEEE solid;
-    background: #FFFFFF;
-    display: flex;
-    flex-direction: column;
-} 
+  flex: 1 1 300px;
+  min-width: 300px;
+  max-width: 550px;
+  border-radius: 12px;
+  padding: 16px;
+  gap: 16px;
+  border: 1px #eeeeee solid;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
 
 .player-card-profile {
-    height: 51px;
-    display: flex;
-    justify-content: space-between;
+  height: 51px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .player-card-profile-data {
-    display: flex;
-    align-items: center;
-    gap: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .player-card-profile-text {
-    width: 170px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    align-items: flex-start
+  width: 170px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-items: flex-start;
 }
-.player-card-profile-text h4{
-    text-align: left;
-}
-
-
-.player-card-profile .button-view{
-    height: 40px;
-    width: 40px;
-    padding: 8px;
-    background: white;
-    border: none;
+.player-card-profile-text h4 {
+  text-align: left;
 }
 
-.player-card-profile svg:active{
-    transform: scale(0.9);
-    color:  #602EE1;
+.player-card-profile .button-view {
+  height: 40px;
+  width: 40px;
+  padding: 8px;
+  background: white;
+  border: none;
 }
 
-.player-card-button{
-    color:  #602EE1;
-    height: 40px;
-    border-radius: 6px;
-    background: white;
-    border: 1px #602EE1 solid;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
+.player-card-profile svg:active {
+  transform: scale(0.9);
+  color: #602ee1;
 }
 
-.player-card-button:active{
-    transform: scale(0.985);
+.player-card-button {
+  color: #602ee1;
+  height: 40px;
+  border-radius: 6px;
+  background: white;
+  border: 1px #602ee1 solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
+.player-card-button:active {
+  transform: scale(0.985);
 }

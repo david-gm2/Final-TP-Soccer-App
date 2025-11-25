@@ -1,32 +1,28 @@
 h2 {
   font-weight: 700;
-  font-style: Bold;
-  font-size: Text Sizes/Heading 5;
-  line-height: 140%;
-  letter-spacing: 0%;
+  font-size: 1.5rem;
+  line-height: 1.4;
+  letter-spacing: 0;
 }
 
 h3 {
   font-weight: 400;
-  font-style: Regular;
-  font-size: Text Sizes/Text Medium;
-  leading-trim: NONE;
-  line-height: 150%;
-  letter-spacing: 0%;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  letter-spacing: 0;
 }
 
 p {
   font-weight: 400;
-  font-style: Regular;
-  font-size: Text Sizes/Text Small;
-  leading-trim: NONE;
-  line-height: 150%;
-  letter-spacing: 0%;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  letter-spacing: 0;
 }
 
-  main {
-    padding: 0 16px 16px;
-  }
+main {
+  padding: 0 16px 16px;
+}
+
 @media (min-width: 769px) {
   main {
     margin-left: 300px;

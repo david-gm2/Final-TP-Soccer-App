@@ -110,11 +110,11 @@
 }
 
 .role-dot {
-  width: 22px;
-  height: 22px;
-  font-size: 1rem;
+  width: 6px;
+  height: 6px;
   display: flex;
   justify-content: center;
+  margin: 8px;
 }
 
 .sidebar-nav {

@@ -16,6 +16,10 @@
   border: 0;
   color: white;
   width: 100%;
+
+  justify-content: center;
+  flex-wrap: nowrap;
+  text-wrap: nowrap;
 }
 
 .btn-primary {
@@ -57,13 +61,10 @@
   align-items: center;
   justify-content: center;
 }
-.btn.btn-danger p{
+.btn.btn-danger p {
   gap: 8px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-wrap: nowrap;
-  text-wrap: nowrap;
 }
 .btn-icon {
   width: auto;
