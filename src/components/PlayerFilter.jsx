@@ -1,6 +1,6 @@
 import { useURLFilters } from "../hooks/useURLFilters.js";
 import { useURLSearch } from "../hooks/useURLSearch.js";
-import { IconLupa } from "../../public/icons/IconsPlayer.jsx";
+import { IconLupa } from "../icons/IconsPlayer.jsx";
 
 const FILTERS = [
   { label: "All", value: "all" },
@@ -8,7 +8,7 @@ const FILTERS = [
   { label: "Defender", value: "defender" },
   { label: "Midfielder", value: "midfielder" },
   { label: "Forward", value: "forward" },
-  { label: "Best Performance", value: "best-performance" },
+  { label: "Best performance", value: "best-performance" },
 ];
 
 export function PlayerFilter() {
@@ -18,37 +18,38 @@ export function PlayerFilter() {
   return (
     <div className="player-filter">
       <div className="search-player-box">
-        <label htmlFor="search">
-          <IconLupa width={16} height={16} />
+        <label htmlFor="players-search">
+          <IconLupa width={16} height={16} aria-hidden="true" />
         </label>
         <input
           type="search"
-          id="search"
+          id="players-search"
           placeholder="Search player..."
           value={search}
+          aria-label="Search players"
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
 
       <div className="filtrering">
-        {FILTERS.map((f) => {
-          const isAll = f.value === "all";
+        {FILTERS.map((filter) => {
+          const isAll = filter.value === "all";
           const isChecked = isAll
             ? active.length === 0
-            : active.includes(f.value);
+            : active.includes(filter.value);
 
           return (
             <label
-              key={f.value}
+              key={filter.value}
               className={`filter-item ${isChecked ? "active" : ""}`}
             >
               <input
                 type="checkbox"
                 hidden
                 checked={isChecked}
-                onChange={(e) => toggle(f.value, e.target.checked)}
+                onChange={(event) => toggle(filter.value, event.target.checked)}
               />
-              <p>{f.label}</p>
+              <p>{filter.label}</p>
             </label>
           );
         })}

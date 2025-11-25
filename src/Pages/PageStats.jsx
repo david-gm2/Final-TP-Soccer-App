@@ -17,11 +17,6 @@ function getGlobalStats() {
 }
 
 function StatsPage() {
-  const soccerIcon = "../public/icons/sports_soccer.svg";
-  const circuleIcon = "../public/icons/circule.svg";
-  const personIcon = "../public/icons/person.svg";
-  const starIcon = "../public/icons/star.svg";
-
   const stats = getGlobalStats();
 
   // stats = [{title, value, icon}]

@@ -1,26 +1,53 @@
-import { IconClose } from "../../public/icons/IconSidebar";
+import { useState } from "react";
+
+import { IconClose } from "../icons/IconSidebar.jsx";
 import "../styles/PlayerModal.css";
 
-function PlayerModal({ isOpen, onClose, onSubmit }) {
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const playerData = {
-      profilePicture: formData.get("profilePicture"),
-      nick: formData.get("name"),
-      position: formData.get("position"),
-      number: formData.get("number"),
-      rating: formData.get("rating"),
-    };
+function PlayerModal({
+  isOpen,
+  onClose,
+  onSubmit,
+  initialPlayer = null,
+  mode = "create",
+}) {
+  const isEditMode = mode === "edit";
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-    if (onSubmit) {
-      onSubmit(playerData);
-    }
-    onClose();
+  const formDefaults = {
+    nick: initialPlayer?.nick ?? "",
+    position: initialPlayer?.position ?? "",
+    number:
+      initialPlayer?.number === null || initialPlayer?.number === undefined
+        ? ""
+        : initialPlayer.number,
+    rating:
+      initialPlayer?.rating === null || initialPlayer?.rating === undefined
+        ? ""
+        : initialPlayer.rating,
   };
 
-  const handleOverlayClick = (e) => {
-    if (e.target === e.currentTarget) {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const data = new FormData(event.target);
+    const playerData = {
+      profilePicture: data.get("profilePicture"),
+      nick: data.get("name"),
+      position: data.get("position"),
+      number: data.get("number"),
+      rating: data.get("rating"),
+    };
+
+    try {
+      setIsSubmitting(true);
+      await onSubmit?.(playerData);
+      onClose();
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleOverlayClick = (event) => {
+    if (event.target === event.currentTarget) {
       onClose();
     }
   };
@@ -32,12 +59,14 @@ function PlayerModal({ isOpen, onClose, onSubmit }) {
       <div className="modal-overlay" onClick={handleOverlayClick} />
       <div className="modal-player">
         <div className="modal-header">
-          <h2 className="modal-title">New player</h2>
+          <h2 className="modal-title">
+            {isEditMode ? "Edit player" : "New player"}
+          </h2>
           <button
             type="button"
             className="modal-close-btn"
             onClick={onClose}
-            aria-label="Cerrar modal"
+            aria-label="Close modal"
           >
             <IconClose />
           </button>
@@ -46,7 +75,7 @@ function PlayerModal({ isOpen, onClose, onSubmit }) {
         <form className="modal-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="profile-picture" className="form-label">
-              Profile Picture
+              Profile picture
             </label>
             <input
               type="file"
@@ -67,6 +96,7 @@ function PlayerModal({ isOpen, onClose, onSubmit }) {
               name="name"
               className="form-input"
               placeholder="Enter player name"
+              defaultValue={formDefaults.nick}
               required
             />
           </div>
@@ -79,13 +109,14 @@ function PlayerModal({ isOpen, onClose, onSubmit }) {
               id="position"
               name="position"
               className="form-input form-select"
+              defaultValue={formDefaults.position}
               required
             >
               <option value="">Select one...</option>
-              <option value="Goalkeeper">Goalkeeper</option>
-              <option value="Defender">Defender</option>
-              <option value="Midfielder">Midfielder</option>
-              <option value="Forward">Forward</option>
+              <option value="goalkeeper">Goalkeeper</option>
+              <option value="defender">Defender</option>
+              <option value="midfielder">Midfielder</option>
+              <option value="forward">Forward</option>
             </select>
           </div>
 
@@ -102,6 +133,7 @@ function PlayerModal({ isOpen, onClose, onSubmit }) {
                 placeholder="Enter jersey number"
                 min="1"
                 max="99"
+                defaultValue={formDefaults.number}
                 required
               />
             </div>
@@ -118,19 +150,22 @@ function PlayerModal({ isOpen, onClose, onSubmit }) {
                 placeholder="Enter rating"
                 min="0"
                 max="10"
+                step="0.1"
+                defaultValue={formDefaults.rating}
                 required
               />
             </div>
           </div>
 
           <div className="modal-actions">
-            <button type="submit" className="btn btn-primary">
-              Add
+            <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+              {isEditMode ? "Save changes" : "Add"}
             </button>
             <button
               type="button"
               className="btn btn-secondary"
               onClick={onClose}
+              disabled={isSubmitting}
             >
               Cancel
             </button>
