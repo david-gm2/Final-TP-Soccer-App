@@ -26,7 +26,7 @@ function PlayersPage() {
   const [editingPlayer, setEditingPlayer] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Fetch players on mount (se pasa setIsLoading para activar indicador)
+  // Fetch players on mount (setIsLoading keeps the loading indicator in sync)
   useListPlayer(setIsLoading);
 
   // Get players from context

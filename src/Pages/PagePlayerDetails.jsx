@@ -3,7 +3,7 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Radar } from "react-chartjs-2";
 
 import { API_BACKEND_URL } from "../constants/API_CONSTANTS.js";
-import { IconDefaultUser } from "../../public/icons/IconsPlayer.jsx";
+import { IconDefaultUser } from "../icons/IconsPlayer.jsx";
 import Header from "../components/Header.jsx";
 import PlayerModal from "../components/PlayerModal.jsx";
 import DeletePlayerModal from "../components/DeletePlayerModal.jsx";
@@ -15,7 +15,7 @@ const DEFAULT_MATCHES = [
   {
     id: 1,
     result: "9-10",
-    location: "El Fulbito",
+    location: "Fulbito Arena",
     winner: "Team A",
     date: "Jan 11, 2050",
     playerRate: 7.2,
@@ -24,7 +24,7 @@ const DEFAULT_MATCHES = [
   {
     id: 2,
     result: "11-8",
-    location: "El Fulbito",
+    location: "Fulbito Arena",
     winner: "Team B",
     date: "Jan 11, 2050",
     playerRate: 7.2,
@@ -33,7 +33,7 @@ const DEFAULT_MATCHES = [
   {
     id: 3,
     result: "11-13",
-    location: "El Fulbito",
+    location: "Fulbito Arena",
     winner: "Team A",
     date: "Jan 11, 2050",
     playerRate: 7.2,
@@ -263,7 +263,7 @@ function PagePlayerDetails() {
     maintainAspectRatio: true,
   };
 
-  const formatLabel = (value, fallback = "—") => {
+  const formatLabel = (value, fallback = "--") => {
     if (!value && value !== 0) return fallback;
     if (typeof value !== "string") return value;
     return value.charAt(0).toUpperCase() + value.slice(1);
@@ -275,7 +275,7 @@ function PagePlayerDetails() {
     ? playerLevel.toFixed(1)
     : playerLevel;
   const formattedPosition = formatLabel(player.position, "Player");
-  const jerseyNumber = player.number ?? "—";
+  const jerseyNumber = player.number ?? "--";
 
   const summaryChips = [
     { id: "status", label: "Ready to play", tone: "success" },
@@ -290,25 +290,25 @@ function PagePlayerDetails() {
       id: "wins",
       label: "Wins rate",
       value: `${player.winsRate ?? 75}%`,
-      icon: "📈",
+      icon: "chart",
     },
     {
       id: "assists",
       label: "Total assists",
       value: player.assists ?? 7,
-      icon: "⭐",
+      icon: "star",
     },
     {
       id: "goals",
       label: "Total goals",
       value: player.goals ?? 18,
-      icon: "⚽",
+      icon: "ball",
     },
     {
       id: "matches",
       label: "Total matches",
       value: player.totalMatches ?? 24,
-      icon: "📅",
+      icon: "calendar",
     },
   ];
 
@@ -321,15 +321,7 @@ function PagePlayerDetails() {
       />
       <main className="player-details-page">
         <section className="player-summary-card">
-          <div className="player-summary__header">
-            <div>
-              <p className="player-summary__role">{formattedPosition}</p>
-              <div className="player-summary__title">
-                <h1>{player.nick}</h1>
-                <span className="player-pill outline">#{jerseyNumber}</span>
-              </div>
-            </div>
-          </div>
+          //TODO poner esto en el header pasarlo como porp
           <div className="player-summary__chips">
             {summaryChips.map((chip) => (
               <span key={chip.id} className={`player-pill ${chip.tone}`}>
@@ -461,8 +453,9 @@ function PagePlayerDetails() {
               className="link-button"
               onClick={() => handleChangePage(currentPage - 1)}
               disabled={currentPage <= 1}
+              aria-label="Go to previous page"
             >
-              ← Prev
+              &lt; Prev
             </button>
             <div className="table-pagination">
               {Array.from({ length: totalPages }, (_, index) => {
@@ -471,7 +464,7 @@ function PagePlayerDetails() {
                   <button
                     key={page}
                     type="button"
-                    className={`page-bullet ${page === currentPage ? "active" : ""}`}
+                    className={`btn ${page === currentPage ? "btn-primary" : "btn-secondary"}`}
                     onClick={() => handleChangePage(page)}
                   >
                     {page}
@@ -484,12 +477,12 @@ function PagePlayerDetails() {
               className="link-button"
               onClick={() => handleChangePage(currentPage + 1)}
               disabled={currentPage >= totalPages}
+              aria-label="Go to next page"
             >
-              Next →
+              Next &gt;
             </button>
           </div>
         </section>
-
         <section className="player-notes">
           <div className="section-header">
             <h3>Player Notes</h3>
