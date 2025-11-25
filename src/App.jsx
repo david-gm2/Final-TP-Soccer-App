@@ -1,50 +1,59 @@
-import { Routes, Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
+
 import Sidebar from "./components/Sidebar.jsx";
-import SignUp from "./Pages/PageSignUp.jsx";
-import NotFoundPage from "./Pages/PageNotFound.jsx";
-import StatsPage from "./Pages/PageStats.jsx";
-import Home from "./Pages/Home.jsx";
-import PageMatches from "./Pages/PageMatches.jsx";
-import PlayersPage from "./Pages/PagePlayers.jsx";
-import PagePlayerDetails from "./Pages/PagePlayerDetails.jsx";
-import HistoryPage from "./Pages/PageHistory.jsx";
-import LogIn from "./Pages/PageLogIn.jsx";
-import "./App.css";
 import Header from "./components/Header.jsx";
 
+import Home from "./Pages/Home.jsx";
+import PageMatches from "./Pages/PageMatches.jsx";
+import PagePlayers from "./Pages/PagePlayers.jsx";
+import PagePlayerDetails from "./Pages/PagePlayerDetails.jsx";
+import PageStats from "./Pages/PageStats.jsx";
+import PageHistory from "./Pages/PageHistory.jsx";
+import PageSignUp from "./Pages/PageSignUp.jsx";
+import PageLogIn from "./Pages/PageLogIn.jsx";
+import NotFoundPage from "./Pages/PageNotFound.jsx";
+
+import "./App.css";
 import "./styles/button.css";
 
-const dummyPlayer = {
-  name: "Martínez",
+const fallbackPlayer = {
+  name: "Lautaro Martinez",
+  nick: "LM10",
   speed: 85,
   strength: 75,
   passing: 70,
   defense: 60,
   shooting: 90,
   stamina: 80,
-  azul: 50,
+  creativity: 50,
 };
+
+function Users() {
+  return (
+    <>
+      <Header />
+      <main>
+        <p>User list will be available soon for ADMINS.</p>
+      </main>
+    </>
+  );
+}
 
 function App() {
   return (
     <Routes>
-      {/* Rutas públicas */}
-      <Route path="/sign-up" element={<SignUp />} />
-      <Route path="/log-in" element={<LogIn />} />
+      {/* Public routes */}
+      <Route path="/sign-up" element={<PageSignUp />} />
+      <Route path="/log-in" element={<PageLogIn />} />
 
-      {/* Rutas con Sidebar */}
       <Route path="/" element={<Sidebar />}>
-        {/* Páginas con su propio header */}
-        <Route path="players" element={<PlayersPage />} />
-        <Route path="players/id/:id" element={<PagePlayerDetails />} />
-
-        {/* Layout con header general */}
         <Route index element={<Home />} />
-        <Route element={<Header />}>
-          <Route path="stats" element={<StatsPage player={dummyPlayer} />} />
-          <Route path="history" element={<HistoryPage />} />
-          <Route path="matches" element={<PageMatches />} />
-        </Route>
+        <Route path="players" element={<PagePlayers />} />
+        <Route path="players/id/:id" element={<PagePlayerDetails />} />
+        <Route path="stats" element={<PageStats player={fallbackPlayer} />} />
+        <Route path="history" element={<PageHistory />} />
+        <Route path="matches" element={<PageMatches />} />
+        <Route path="users" element={<Users />} />
       </Route>
 
       {/* 404 */}
