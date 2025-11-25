@@ -1,27 +1,30 @@
 import "../styles/UpcomingMatches.css";
 
-const eyeIcon = "/icons/icon-eye.svg";
-const penIcon = "/icons/icon-pen.svg";
+function UpcomingMatches({
+  matches,
+  showTitle = true,
+  compact = false,
+  className = "",
+}) {
+  const rootClass = [
+    "upcoming-matches-list",
+    compact ? "compact" : "",
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
-function UpcomingMatches({ matches = [] }) {
   return (
-    <div className="upcoming-matches-list">
-      <h2>Upcoming Matches</h2>
-      {matches.slice(0, 3).map((match, index) => {
-        const key = match.id ?? index;
-        return (
-          <div className="home-match-card" key={key}>
-            <div>
-              <p>
-                {match.homeTeam} vs {match.awayTeam}
-              </p>
-              <div className="home-match-info">
-                Date: {match.date} | Time: {match.time}
-              </div>
-            </div>
-            <div className="home-match-actions">
-              <img src={eyeIcon} alt="See match" />
-              <img src={penIcon} alt="Edit match" />
+    <div className={rootClass}>
+      {showTitle && <h2>Upcoming Matches</h2>}
+      {matches.slice(0, 3).map((match, index) => (
+        <div className="match-card feed-card" key={index}>
+          <div>
+            <p>
+              {match.local} vs {match.visitor}
+            </p>
+            <div className="match-info">
+              {match.date} - {match.time}hs
             </div>
           </div>
         );

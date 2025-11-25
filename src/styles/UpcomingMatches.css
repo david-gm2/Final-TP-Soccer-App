@@ -1,21 +1,28 @@
-.upcoming-matches-section {
-  margin-top: 24px;
-  padding: 16px;
-  border-radius: 12px;
-  border: #eeeeee 1px solid;
+.upcoming-matches-list,
+.latest-matches-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.home-match-card {
+.upcoming-matches-list h2,
+.latest-matches-list h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.upcoming-matches-list.compact h2,
+.latest-matches-list.compact h2 {
+  display: none;
+}
+
+.match-card {
+  /* keeps backwards compatibility if feed-card is not present */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  background-color: #fafafa;
-  border-radius: 8px;
-  padding: 12px;
-  margin-bottom: 12px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  height: 100px;
 }
 
 .home-match-actions {

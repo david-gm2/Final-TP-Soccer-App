@@ -1,15 +1,19 @@
 import "../styles/UpcomingMatches.css";
 
-const arrowIcon = "/icons/arrow.svg";
+function LatestMatches({ matches, showTitle = true, compact = false, className = "" }) {
+  const rootClass = [
+    "latest-matches-list",
+    compact ? "compact" : "",
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
-function LatestMatches({ matches = [] }) {
   return (
-    <div className="latest-matches-list">
-      <h2>Latest Matches</h2>
-      {matches.slice(0, 3).map((match, index) => {
-        const key = match.id ?? index;
-        return (
-        <div className="home-match-card" key={key}>
+    <div className={rootClass}>
+      {showTitle && <h2>Latest Matches</h2>}
+      {matches.slice(0, 3).map((match, index) => (
+        <div className="match-card feed-card" key={index}>
           <div>
             <p>
               {match.homeTeam} vs {match.awayTeam}
