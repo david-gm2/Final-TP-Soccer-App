@@ -7,20 +7,18 @@ h2 {
 
 h3 {
   font-weight: 400;
-  font-size: 1.1rem;
-  line-height: 1.5;
-  letter-spacing: 0;
+  font-style: Regular;
+  font-size: Text Sizes/Text Medium;
+  line-height: 150%;
+  letter-spacing: 0%;
 }
 
 p {
   font-weight: 400;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-
-main {
-  padding: 0 16px 16px;
+  font-style: Regular;
+  font-size: Text Sizes/Text Small;
+  line-height: 150%;
+  letter-spacing: 0%;
 }
 
 @media (min-width: 769px) {

@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
+import { AuthProvider } from "./providers/AuthProvider";
 import { PlayerProvider } from "./providers/PlayerProvider";
 import { AuthProvider } from "./providers/AuthProvider.jsx";
 
@@ -10,12 +11,12 @@ import "./chartCongif.js";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <AuthProvider>
-      <PlayerProvider>
-        <BrowserRouter>
+    <PlayerProvider>
+      <BrowserRouter>
+        <AuthProvider>
           <App />
-        </BrowserRouter>
-      </PlayerProvider>
-    </AuthProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    </PlayerProvider>
   </StrictMode>
 );

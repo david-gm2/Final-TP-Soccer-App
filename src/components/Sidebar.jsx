@@ -2,16 +2,9 @@ import { useState } from "react";
 import { Outlet } from "react-router-dom";
 
 import "../styles/Sidebar.css";
+import { useAuth } from "../hooks/useAuth";
 
-import { IconClose } from "../icons/IconSidebar.jsx";
-import MobileSidebar from "./MobileSidebar.jsx";
-import Overlay from "./Overlay.jsx";
-import RoleBadge from "./RoleBadge.jsx";
-import Navigation from "./Navigation.jsx";
-import UserInfo from "./UserInfo.jsx";
-import { useAuth } from "../hooks/useAuth.js";
-
-function Sidebar({ role, user, logo = "/imagen-logo.png" }) {
+function Sidebar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const auth = useAuth();
 
@@ -23,6 +16,16 @@ function Sidebar({ role, user, logo = "/imagen-logo.png" }) {
       : { dot: "gray", name: "viewer" });
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
+
+  const { logout } = useAuth();
+
+  // TODO: Remove hardcoded data, implement with useAuth()
+  const logo = "imagen-logo.png";
+  const role = { dot: "violet", name: "view" };
+
+  const handleSignOut = () => {
+    logout();
+  };
 
   return (
     <>
@@ -50,7 +53,7 @@ function Sidebar({ role, user, logo = "/imagen-logo.png" }) {
           <Navigation onItemClick={toggleMenu} />
         </div>
 
-        <UserInfo user={resolvedUser} roleUser={resolvedRole} />
+        <UserInfo />
       </aside>
       <Outlet />
     </>

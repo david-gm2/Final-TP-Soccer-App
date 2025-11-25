@@ -1,67 +1,44 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { AuthContext } from "../context/AuthContext.js";
+import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+import { AuthContext } from "../context/AuthContext";
 
-const ACCESS_TOKEN_KEY = "accessToken";
+const TOKEN_KEY = "accessToken";
 
-function decodeJWT(token) {
-  if (typeof token !== "string") return null;
-  const parts = token.split(".");
-  if (parts.length < 2) return null;
-  try {
-    const base64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
-    const jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split("")
-        .map((c) => `%${`00${c.charCodeAt(0).toString(16)}`.slice(-2)}`)
-        .join("")
-    );
-    return JSON.parse(jsonPayload);
-  } catch (error) {
-    console.warn("AuthProvider: unable to decode token", error);
-    return null;
-  }
-}
+export const AuthProvider = ({ children }) => {
+  const navigate = useNavigate();
 
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+  const initialState = localStorage.getItem(TOKEN_KEY);
 
-  const syncUserFromToken = useCallback(() => {
-    const token = sessionStorage.getItem(ACCESS_TOKEN_KEY);
-    if (!token) {
-      setUser(null);
-      return;
+  const [accessToken, setAccessToken] = useState(initialState);
+
+  const login = (token) => {
+    localStorage.setItem(TOKEN_KEY, token);
+    setAccessToken(token);
+    navigate("/");
+  };
+
+  const logout = () => {
+    localStorage.removeItem(TOKEN_KEY);
+    setAccessToken(null);
+    navigate("/login", { replace: true });
+  };
+
+  const user = useMemo(() => {
+    try {
+      return accessToken ? jwtDecode(accessToken) : null;
+    } catch (e) {
+      console.error(e);
     }
-    const payload = decodeJWT(token);
-    if (payload) {
-      const nextUser = {
-        id: payload.sub ?? payload.userId ?? null,
-        email: payload.email ?? payload.user_email ?? null,
-        name: payload.name ?? payload.userName ?? null,
-        role: payload.role ?? payload.user_role ?? "viewer",
-        avatar: payload.avatar ?? null,
-      };
-      setUser(nextUser);
-    } else {
-      setUser(null);
-    }
-  }, []);
+  }, [accessToken]);
 
-  const signOut = useCallback(() => {
-    sessionStorage.removeItem(ACCESS_TOKEN_KEY);
-    setUser(null);
-  }, []);
+  const isAdmin = useMemo(() => {
+    return user?.roles.some((role) => role.roleName === "admin");
+  }, [user]);
 
-  useEffect(() => {
-    syncUserFromToken();
-    const handler = () => syncUserFromToken();
-    window.addEventListener("storage", handler);
-    return () => window.removeEventListener("storage", handler);
-  }, [syncUserFromToken]);
-
-  const value = useMemo(
-    () => ({ user, setUser, syncUserFromToken, signOut }),
-    [user, syncUserFromToken, signOut]
+  return (
+    <AuthContext.Provider value={{ accessToken, user, isAdmin, login, logout }}>
+      {children}
+    </AuthContext.Provider>
   );
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
+};

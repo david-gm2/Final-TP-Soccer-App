@@ -1,54 +1,38 @@
-import { IconSignOut } from "../icons/IconSidebar.jsx";
-import { IconDefaultUser } from "../icons/IconsPlayer.jsx";
-import { useAuth } from "../hooks/useAuth.js";
+import { IconSesionOut } from "../../public/icons/IconSidebar";
+import { IconDefaultUser } from "../../public/icons/IconsPlayer";
+import { useAuth } from "../hooks/useAuth";
 
-function UserInfo({ user: userProp, roleUser }) {
-  const { user: authUser, signOut } = useAuth();
-  const user = userProp ?? authUser;
-  const isLoggedIn = Boolean(user);
-
-  const displayName = user?.name || "Guest";
-  const displayEmail = user?.email || "";
-  const avatarSrc = user?.avatar || null;
-
-  const handleSignOut = () => {
-    signOut();
-  };
+function UserInfo() {
+  const { user, isAdmin, logout } = useAuth();
 
   return (
     <div className="sidebar-bottom">
       <div className="user-info">
-        {avatarSrc ? (
+        {user ? (
           <img
             className="user-avatar"
-            src={avatarSrc}
-            alt={`${displayName} avatar`}
+            src={user.avatar}
+            alt={`${user} avatar`}
           />
         ) : (
           <IconDefaultUser width="40" height="40" className="user-avatar" />
         )}
-
         <div className="user-text">
-          <p className="user-name">{displayName}</p>
-          {displayEmail && <p className="user-email">{displayEmail}</p>}
+          <p className="user-name">{user.userName}</p>
+          <p className="user-email">{user.email}</p>
         </div>
 
-        {isLoggedIn && (
-          <button
-            type="button"
-            className="user-switch-btn"
-            onClick={handleSignOut}
-            aria-label="Sign out"
-          >
-            <IconSignOut />
-          </button>
-        )}
+        <button
+          className="user-switch-btn"
+          onClick={() => logout()}
+          aria-label="Sign out"
+        >
+          <IconSesionOut />
+        </button>
       </div>
 
-      {isLoggedIn && roleUser?.name?.toLowerCase() !== "admin" && (
-        <button type="button" className="btn btn-secondary">
-          Request admin access
-        </button>
+      {!isAdmin && (
+        <button className="request-admin-access">Request Admin Access</button>
       )}
     </div>
   );

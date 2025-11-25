@@ -1,52 +1,45 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth.js";
+import { data, Link } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
-import "../styles/LogIn.css";
+import "../styles/LogInPage.css";
 
 const API_URL = "https://backend-exercises-production.up.railway.app";
 
-export function LogIn() {
-  const navigate = useNavigate();
-  const { syncUserFromToken } = useAuth() ?? {};
+export function LogInPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setIsLoading(true);
+  const { login } = useAuth();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
     if (!email || !password) {
-      setMessage("Please complete the required fields.");
-      setIsLoading(false);
+      setMessage("Faltan campos obligatorios.");
       return;
     }
 
     try {
+      setIsLoading(true);
+
       const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
-      const text = await response.text();
-      let data;
-      try {
-        data = JSON.parse(text);
-      } catch {
-        throw new Error("The server returned invalid JSON.");
-      }
+      if (!response.ok) throw new Error(data.message || "Error en el login");
 
-      if (!response.ok) throw new Error(data.message || "Error logging in");
+      const { accessToken } = await response.json();
 
-      sessionStorage.setItem("accessToken", data.accessToken);
-      syncUserFromToken?.();
-      setMessage("Login successful. Redirecting to the dashboard...");
-      navigate("/");
+      login(accessToken);
+
+      setMessage("Login exitoso, redirigiendo a la pagina...");
     } catch (error) {
-      setMessage(error.message || "Unable to log in.");
+      setMessage(`${error.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -79,24 +72,18 @@ export function LogIn() {
             onChange={(event) => setPassword(event.target.value)}
             required
           />
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="btn btn-primary"
-          >
-            {isLoading ? "Loading..." : "Log In"}
+          <button type="submit" disabled={isLoading}>
+            {isLoading ? "Cargando..." : "Log In"}
           </button>
           <p role="alert">{message}</p>
         </form>
         <div className="linksLogIn">
           <a href="#forgot-password">Forgot your password?</a>
           <p>
-            Don't have an account? <Link to="/sign-up">Sign Up</Link>
+            Don't have an account? <Link to="/signup">Sign Up</Link>
           </p>
         </div>
       </div>
     </div>
   );
 }
-
-export default LogIn;

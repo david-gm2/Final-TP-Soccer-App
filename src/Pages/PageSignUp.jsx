@@ -2,20 +2,29 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import "../styles/SignUp.css";
+import { useAuth } from "../hooks/useAuth";
 
 const API_URL = "https://backend-exercises-production.up.railway.app";
 
 export function SignUp() {
   const navigate = useNavigate();
+  const API_URL = "https://backend-exercises-production.up.railway.app";
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const { login } = useAuth();
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
+
+    console.log(
+      "Request body:",
+      JSON.stringify({ user_name: name, email, password })
+    );
 
     if (!name || !email || !password) {
       setMessage("Please complete the required fields.");
@@ -24,32 +33,41 @@ export function SignUp() {
     }
 
     try {
+      setIsLoading(true);
+
       const response = await fetch(`${API_URL}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_name: name, email, password }),
       });
 
-      const text = await response.text();
-      let data;
-      try {
-        data = JSON.parse(text);
-      } catch {
-        throw new Error("The server returned invalid JSON.");
+      if (!response.ok) {
+        throw new Error(data.message || "Error en registro");
       }
+
+      await response.json();
+
+      const loginResponse = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
       if (!response.ok) {
-        throw new Error(data.message || "Error registering the user.");
+        throw new Error(data.message || "Error en registro");
       }
 
-      sessionStorage.setItem("accessToken", data.accessToken);
-      setMessage("User created successfully. Redirecting to the dashboard...");
+      const { accessToken } = await loginResponse.json();
 
-      setTimeout(() => {
-        navigate("/");
-      }, 1500);
+      login(accessToken);
+
+      setMessage(
+        "Usuario creado exitosamente. Redirigiendo a la pagina principal..."
+      );
+
+      navigate("/");
     } catch (error) {
-      setMessage(error.message || "Unable to sign up.");
+      setMessage(`${error.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -91,14 +109,14 @@ export function SignUp() {
             onChange={(event) => setPassword(event.target.value)}
             required
           />
-          <button type="submit" className="btn btn-primary" disabled={isLoading}>
-            {isLoading ? "Creating..." : "Sign Up"}
+          <button type="submit" disabled={isLoading}>
+            {isLoading ? "Registrando..." : "Sign Up"}
           </button>
-          <p role="alert">{message}</p>
+          <p>{message}</p>
         </form>
         <div className="linksSignUp">
           <p>
-            Already have an account? <Link to="/log-in">Log In</Link>
+            Already have an account? <Link to="/login">Log In</Link>
           </p>
         </div>
       </div>
