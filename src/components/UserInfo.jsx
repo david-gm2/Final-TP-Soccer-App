@@ -2,21 +2,17 @@ import { IconSignOut } from "../icons/IconSidebar.jsx";
 import { IconDefaultUser } from "../icons/IconsPlayer.jsx";
 import { useAuth } from "../hooks/useAuth.js";
 
-function UserInfo({ user: userProp, roleUser, onSignOut }) {
-  const { user: authUser, signOut } = useAuth() ?? {};
+function UserInfo({ user: userProp, roleUser }) {
+  const { user: authUser, signOut } = useAuth();
   const user = userProp ?? authUser;
   const isLoggedIn = Boolean(user);
 
-  const displayName = user?.name || user?.user_name || "Guest";
+  const displayName = user?.name || "Guest";
   const displayEmail = user?.email || "";
   const avatarSrc = user?.avatar || null;
 
   const handleSignOut = () => {
-    if (typeof onSignOut === "function") {
-      onSignOut();
-    } else if (typeof signOut === "function") {
-      signOut();
-    }
+    signOut();
   };
 
   return (

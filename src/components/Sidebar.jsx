@@ -11,7 +11,7 @@ import Navigation from "./Navigation.jsx";
 import UserInfo from "./UserInfo.jsx";
 import { useAuth } from "../hooks/useAuth.js";
 
-function Sidebar({ role, user, logo = "/imagen-logo.png", onSignOut }) {
+function Sidebar({ role, user, logo = "/imagen-logo.png" }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const auth = useAuth();
 
@@ -23,14 +23,6 @@ function Sidebar({ role, user, logo = "/imagen-logo.png", onSignOut }) {
       : { dot: "gray", name: "viewer" });
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
-
-  const handleSignOut = () => {
-    if (typeof onSignOut === "function") {
-      onSignOut();
-    } else {
-      auth?.signOut?.();
-    }
-  };
 
   return (
     <>
@@ -58,11 +50,7 @@ function Sidebar({ role, user, logo = "/imagen-logo.png", onSignOut }) {
           <Navigation onItemClick={toggleMenu} />
         </div>
 
-        <UserInfo
-          user={resolvedUser}
-          roleUser={resolvedRole}
-          onSignOut={handleSignOut}
-        />
+        <UserInfo user={resolvedUser} roleUser={resolvedRole} />
       </aside>
       <Outlet />
     </>

@@ -26,7 +26,7 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
 
   const syncUserFromToken = useCallback(() => {
-    const token = localStorage.getItem(ACCESS_TOKEN_KEY);
+    const token = sessionStorage.getItem(ACCESS_TOKEN_KEY);
     if (!token) {
       setUser(null);
       return;
@@ -34,9 +34,9 @@ export function AuthProvider({ children }) {
     const payload = decodeJWT(token);
     if (payload) {
       const nextUser = {
-        id: payload.sub ?? payload.id ?? null,
+        id: payload.sub ?? payload.userId ?? null,
         email: payload.email ?? payload.user_email ?? null,
-        name: payload.name ?? payload.user_name ?? null,
+        name: payload.name ?? payload.userName ?? null,
         role: payload.role ?? payload.user_role ?? "viewer",
         avatar: payload.avatar ?? null,
       };
@@ -47,7 +47,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   const signOut = useCallback(() => {
-    localStorage.removeItem(ACCESS_TOKEN_KEY);
+    sessionStorage.removeItem(ACCESS_TOKEN_KEY);
     setUser(null);
   }, []);
 

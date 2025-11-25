@@ -41,7 +41,7 @@ export function LogIn() {
 
       if (!response.ok) throw new Error(data.message || "Error logging in");
 
-      localStorage.setItem("accessToken", data.accessToken);
+      sessionStorage.setItem("accessToken", data.accessToken);
       syncUserFromToken?.();
       setMessage("Login successful. Redirecting to the dashboard...");
       navigate("/");
@@ -79,7 +79,11 @@ export function LogIn() {
             onChange={(event) => setPassword(event.target.value)}
             required
           />
-          <button type="submit" disabled={isLoading} className="btn btn-primary">
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="btn btn-primary"
+          >
             {isLoading ? "Loading..." : "Log In"}
           </button>
           <p role="alert">{message}</p>

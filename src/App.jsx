@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 
 import Sidebar from "./components/Sidebar.jsx";
 import Header from "./components/Header.jsx";
+import PrivateRoute from "./components/PrivateRoute.jsx";
 
 import Home from "./Pages/Home.jsx";
 import PageMatches from "./Pages/PageMatches.jsx";
@@ -44,16 +45,18 @@ function App() {
     <Routes>
       {/* Public routes */}
       <Route path="/sign-up" element={<PageSignUp />} />
-      <Route path="/log-in" element={<PageLogIn />} />
+      <Route path="/login" element={<PageLogIn />} />
 
-      <Route path="/" element={<Sidebar />}>
-        <Route index element={<Home />} />
-        <Route path="players" element={<PagePlayers />} />
-        <Route path="players/id/:id" element={<PagePlayerDetails />} />
-        <Route path="stats" element={<PageStats player={fallbackPlayer} />} />
-        <Route path="history" element={<PageHistory />} />
-        <Route path="matches" element={<PageMatches />} />
-        <Route path="users" element={<Users />} />
+      <Route element={<PrivateRoute />}>
+        <Route path="/" element={<Sidebar />}>
+          <Route index element={<Home />} />
+          <Route path="players" element={<PagePlayers />} />
+          <Route path="players/id/:id" element={<PagePlayerDetails />} />
+          <Route path="stats" element={<PageStats player={fallbackPlayer} />} />
+          <Route path="history" element={<PageHistory />} />
+          <Route path="matches" element={<PageMatches />} />
+          <Route path="users" element={<Users />} />
+        </Route>
       </Route>
 
       {/* 404 */}
