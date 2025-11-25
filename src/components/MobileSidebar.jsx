@@ -1,8 +1,8 @@
-import { IconMenu } from "../../public/icons/IconSidebar";
+import { IconMenu } from "../icons/IconSidebar.jsx";
 
 function MobileSidebar({
   onOpenMenu,
-  logo = "imagen-logo.png",
+  logo = "/imagen-logo.png",
   logoAlt = "Kickhub logo",
 }) {
   return (

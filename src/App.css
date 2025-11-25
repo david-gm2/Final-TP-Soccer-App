@@ -1,9 +1,8 @@
 h2 {
   font-weight: 700;
-  font-style: Bold;
-  font-size: Text Sizes/Heading 5;
-  line-height: 140%;
-  letter-spacing: 0%;
+  font-size: 1.5rem;
+  line-height: 1.4;
+  letter-spacing: 0;
 }
 
 h3 {

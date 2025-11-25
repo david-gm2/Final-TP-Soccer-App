@@ -54,31 +54,31 @@ export function LogInPage() {
           Keep the game alive.
         </p>
         <form onSubmit={handleSubmit}>
-          <label html="email">Email*</label>
+          <label htmlFor="email">Email*</label>
           <input
+            id="email"
             name="email"
             type="email"
             value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
+            onChange={(event) => setEmail(event.target.value)}
             required
           />
           <label htmlFor="password">Password*</label>
           <input
+            id="password"
             name="password"
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(event) => setPassword(event.target.value)}
             required
           />
           <button type="submit" disabled={isLoading}>
             {isLoading ? "Cargando..." : "Log In"}
           </button>
-          <p>{message}</p>
+          <p role="alert">{message}</p>
         </form>
         <div className="linksLogIn">
-          <a href="#">Forgot you password?</a>
+          <a href="#forgot-password">Forgot your password?</a>
           <p>
             Don't have an account? <Link to="/signup">Sign Up</Link>
           </p>

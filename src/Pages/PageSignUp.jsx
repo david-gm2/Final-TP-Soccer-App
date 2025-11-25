@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 import "../styles/SignUp.css";
 import { useAuth } from "../hooks/useAuth";
+
+const API_URL = "https://backend-exercises-production.up.railway.app";
 
 export function SignUp() {
   const navigate = useNavigate();
@@ -14,8 +17,9 @@ export function SignUp() {
 
   const { login } = useAuth();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setIsLoading(true);
 
     console.log(
       "Request body:",
@@ -23,7 +27,8 @@ export function SignUp() {
     );
 
     if (!name || !email || !password) {
-      setMessage("Faltan campos obligatorios.");
+      setMessage("Please complete the required fields.");
+      setIsLoading(false);
       return;
     }
 
@@ -79,27 +84,29 @@ export function SignUp() {
         <form onSubmit={handleSubmit}>
           <label htmlFor="name">Name*</label>
           <input
+            id="name"
             name="name"
             type="text"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(event) => setName(event.target.value)}
+            required
           />
           <label htmlFor="email">Email*</label>
           <input
+            id="email"
             name="email"
             type="email"
             value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
+            onChange={(event) => setEmail(event.target.value)}
             required
           />
           <label htmlFor="password">Password*</label>
           <input
+            id="password"
             name="password"
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(event) => setPassword(event.target.value)}
             required
           />
           <button type="submit" disabled={isLoading}>

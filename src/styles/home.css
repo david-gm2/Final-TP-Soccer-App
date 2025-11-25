@@ -1,15 +1,3 @@
-h1 {
-  font-weight: 700;
-  font-style: Bold;
-  line-height: 140%;
-  letter-spacing: 0%;
-}
-h2 {
-  font-weight: normal;
-  font-size: 150%;
-  line-height: 150%;
-  letter-spacing: 0%;
-}
 .stat-value {
   font-size: 24px;
   font-weight: 700;
@@ -21,7 +9,6 @@ h2 {
 .home-page {
   background-color: #ffffff;
   padding: 24px;
-  width: fit-content;
 }
 
 .welcome-section {
@@ -35,40 +22,13 @@ h2 {
   display: flex;
   gap: 1rem;
 }
-#new-match-button {
-  height: 40px;
-  gap: 12px;
-  opacity: 1;
-  padding: 8px 20px;
-  border-radius: 12px;
-  border-width: 1px;
-  background-color: #602ee1;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#add-player-button {
-  height: 40px;
-  gap: 12px;
-  opacity: 1;
-  padding: 8px 20px;
-  border-radius: 12px;
-  border-width: 1px;
-  border-color: #602ee1;
-  background-color: #ffffff;
-  color: #602ee1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 .stats-overview {
   display: flex;
   flex-direction: row;
   width: 100%;
   gap: 24px;
   width: auto;
+  overflow: auto;
 }
 
 .stats-card {
@@ -131,33 +91,6 @@ h2 {
     flex-direction: column;
     width: 100%;
     gap: 16px;
-  }
-
-  .stats-card {
-    flex-direction: row;
-    align-items: center;
-    text-align: center;
-  }
-
-  .stats-card img {
-    margin-right: 16px;
-  }
-
-  .stats-card img {
-    margin-right: 16px;
-  }
-
-  #new-match-button,
-  #add-player-button {
-    width: 100%;
-    height: 48px;
-    gap: 12px;
-    opacity: 1;
-    border-radius: 12px;
-    border-width: 1px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 
   .cards-overview {
