@@ -27,13 +27,10 @@ function UpcomingMatches({
               {match.date} - {match.time}hs
             </div>
           </div>
-          <div className="match-actions">
-            <img src="../icons/icon-eye.svg" alt="" />
-            <img src="../icons/icon-pen.svg" alt="" />
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
+
 export default UpcomingMatches;

@@ -1,15 +1,26 @@
 import { Radar } from "react-chartjs-2";
+import Header from "../components/Header";
 
 export function StatsPage({ player }) {
   if (!player) {
-    return <main>Seleccioná un jugador para ver las estadísticas.</main>;
+    return <main>Please select a player to see the stats.</main>;
   }
 
+  const labels = [
+    "Speed",
+    "Strength",
+    "Passing",
+    "Defense",
+    "Shooting",
+    "Stamina",
+    "Creativity",
+  ];
+
   const data = {
-    labels: ["Velocidad", "Fuerza", "Pases", "Defensa", "Tiro", "Resistencia", 'Azul'],
+    labels,
     datasets: [
       {
-        label: `Estadísticas de ${player.nick}`,
+        label: `${player.nick || player.name} stats`,
         data: [
           player.speed,
           player.strength,
@@ -17,7 +28,7 @@ export function StatsPage({ player }) {
           player.defense,
           player.shooting,
           player.stamina,
-          player.azul,
+          player.creativity,
         ],
         backgroundColor: "rgba(54, 162, 235, 0.2)",
         borderColor: "rgba(54, 162, 235, 1)",
@@ -33,14 +44,20 @@ export function StatsPage({ player }) {
     },
     plugins: {
       legend: { display: false },
-      title: { display: true, text: `Perfil de ${player.nick}` },
+      title: {
+        display: true,
+        text: `Profile for ${player.nick || player.name}`,
+      },
     },
   };
 
   return (
-    <main style={{ width: "400px", height: "400px" }}>
-      <Radar data={data} options={options} />
-    </main>
+    <>
+      <Header />
+      <main style={{ width: "400px", height: "400px" }}>
+        <Radar data={data} options={options} />
+      </main>
+    </>
   );
 }
 

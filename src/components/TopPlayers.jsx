@@ -22,14 +22,10 @@ function TopPlayers({ players, showTitle = true, compact = false, className = ""
                 <h3> {player.nick}</h3>
                 <p>{player.position}</p>
               </div>
+              <img className="arrow-icon" src={arrowIcon} alt="See profile" />
             </div>
-            <img
-              className="arrow-icon"
-              src="../public/icons/arrow.svg"
-              alt=""
-            />
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

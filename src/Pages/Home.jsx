@@ -29,25 +29,20 @@ function Home() {
     { local: "Team V", visitor: "Team U", date: "2023-09-15", time: "21:00" },
   ];
 
-  return (
-    <main className="home-page">
-      <div className="welcome-section">
-        <div>
-          <h1>Welcome {user}! </h1>
-          <p>
-            Here’s your weekly summary with the key stats and upcoming matches.
-          </p>
-        </div>
+const samplePlayers = [
+  { id: 1, nick: "Player 1", position: "Forward" },
+  { id: 2, nick: "Player 2", position: "Midfielder" },
+  { id: 3, nick: "Player 3", position: "Defender" },
+  { id: 4, nick: "Player 4", position: "Goalkeeper" },
+];
 
-        <div className="action-buttons">
-          <button id="new-match-button">
-            <img src="../public/icons/Vector.svg" alt="" /> New Match
-          </button>
-          <button id="add-player-button">
-            <img src="../public/icons/Plus.svg" alt="" /> Add Player
-          </button>
-        </div>
-      </div>
+function Home() {
+  return (
+    <>
+      <Header />
+
+      <main className="home-page">
+        <StatsCard {...summaryStats} />
 
       <StatsCard
         totalMatches={totalMatches}

@@ -1,62 +1,77 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 import "../styles/SignUp.css";
+import { useAuth } from "../hooks/useAuth";
+
+const API_URL = "https://backend-exercises-production.up.railway.app";
 
 export function SignUp() {
   const navigate = useNavigate();
+  const API_URL = "https://backend-exercises-production.up.railway.app";
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const { login } = useAuth();
 
-    console.log("Request body:", JSON.stringify({user_name: name, email, password }));
-    
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setIsLoading(true);
+
+    console.log(
+      "Request body:",
+      JSON.stringify({ user_name: name, email, password })
+    );
+
     if (!name || !email || !password) {
-      setMessage("Faltan campos obligatorios.");
+      setMessage("Please complete the required fields.");
+      setIsLoading(false);
       return;
     }
+
     try {
-      const response = await fetch(
-        "https://backend-exercises-production.up.railway.app/auth/register",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ user_name: name, email, password  }),
-        }
-      );
+      setIsLoading(true);
 
-      console.log(response)
+      const response = await fetch(`${API_URL}/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_name: name, email, password }),
+      });
 
-      const text = await response.text();
-
-      let data;
-      try {
-        data = JSON.parse(text);
-      } catch {
-        throw new Error("El servidor no devolvió JSON válido");
+      if (!response.ok) {
+        throw new Error(data.message || "Error en registro");
       }
 
-      sessionStorage.setItem("accessToken", data.accessToken);
+      await response.json();
+
+      const loginResponse = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error(data.message || "Error en registro");
+      }
+
+      const { accessToken } = await loginResponse.json();
+
+      login(accessToken);
+
       setMessage(
         "Usuario creado exitosamente. Redirigiendo a la pagina principal..."
       );
 
-      if (!response.ok) {
-        console.log(response);
-        throw new Error(data.message || "Error en registro");
-      }
-
-      setTimeout(() => {
-        navigate("/");
-      }, 1500);
+      navigate("/");
     } catch (error) {
       setMessage(`${error.message}`);
+    } finally {
+      setIsLoading(false);
     }
   };
-  // * preventivo hasta aca
 
   return (
     <div className="signupContainer">
@@ -69,35 +84,39 @@ export function SignUp() {
         <form onSubmit={handleSubmit}>
           <label htmlFor="name">Name*</label>
           <input
+            id="name"
             name="name"
             type="text"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(event) => setName(event.target.value)}
+            required
           />
           <label htmlFor="email">Email*</label>
           <input
+            id="email"
             name="email"
             type="email"
             value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
+            onChange={(event) => setEmail(event.target.value)}
             required
           />
           <label htmlFor="password">Password*</label>
           <input
+            id="password"
             name="password"
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(event) => setPassword(event.target.value)}
             required
           />
-          <button type="submit">Sign Up</button>
+          <button type="submit" disabled={isLoading}>
+            {isLoading ? "Registrando..." : "Sign Up"}
+          </button>
           <p>{message}</p>
         </form>
         <div className="linksSignUp">
           <p>
-            Already have an account? <Link to="/log-in">Log In</Link>
+            Already have an account? <Link to="/login">Log In</Link>
           </p>
         </div>
       </div>

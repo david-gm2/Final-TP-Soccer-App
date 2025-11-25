@@ -1,10 +1,28 @@
-export function filterPlayers(players, active) {
-  if (!active || active.length === 0) return players;
+export function filterPlayers(players = [], active = [], search = "") {
+  const normalizedSearch = (search || "").trim().toLowerCase();
   const useBest = active.includes("best-performance");
-  const pos = active.filter(f => f !== "best-performance" && f !== "all");
-  return players.filter(p => {
-    if (pos.length && !pos.includes((p.position || "").toLowerCase())) return false;
-    if (useBest && p.bestPerformance !== true) return false;
-    return true;
+  const positions = active.filter(
+    (f) => f !== "best-performance" && f !== "all"
+  );
+
+  if (!positions.length && !useBest && !normalizedSearch) {
+    return players;
+  }
+
+  const matchesSearch = (player) => {
+    if (!normalizedSearch) return true;
+    const text = `${player.nick ?? ""} ${player.name ?? ""} ${
+      player.position ?? ""
+    } ${player.number ?? ""} ${player.bio ?? ""}`
+      .toLowerCase()
+      .trim();
+    return text.includes(normalizedSearch);
+  };
+
+  return players.filter((player) => {
+    const playerPos = (player.position || "").toLowerCase();
+    if (positions.length && !positions.includes(playerPos)) return false;
+    if (useBest && player.bestPerformance !== true) return false;
+    return matchesSearch(player);
   });
 }
