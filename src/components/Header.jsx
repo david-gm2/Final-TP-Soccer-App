@@ -1,6 +1,7 @@
-import { useLocation, Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+
 import "../styles/header.css";
-import { IconDelete } from "../../public/icons/IconsPlayer.jsx";
+import { IconDelete } from "../icons/IconsPlayer.jsx";
 
 function Header({
   handleToggleModal,
@@ -10,6 +11,8 @@ function Header({
   onDeletePlayer,
 }) {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+
   const user = "Gm2dev";
   const player = playerTitle || "Lionel Messi";
 
@@ -17,11 +20,11 @@ function Header({
     home: {
       title: `Welcome ${user}`,
       subtitle:
-        "Here’s your weekly summary with the key stats and upcoming matches.",
+        "Here's your weekly summary with the key stats and upcoming matches.",
       features: [],
       buttons: [
         {
-          text: "New Match",
+          text: "New match",
           className: "btn btn-primary",
           onClick: () => navigate("/matches"),
         },
@@ -39,7 +42,7 @@ function Header({
       buttons: [],
     },
     matches: {
-      title: "New Match",
+      title: "New match",
       subtitle: "Select players and customize match details.",
       features: [],
       buttons: [],
@@ -61,7 +64,7 @@ function Header({
     },
     history: {
       title: "History",
-      subtitle: "Review the complete match history",
+      subtitle: "Review the complete match history.",
       features: [],
       buttons: [],
     },
@@ -88,30 +91,18 @@ function Header({
     },
   };
 
-  const { pathname } = useLocation();
-
-  // función para mapear la ruta a una "sección" del header
   const getSectionKeyFromPath = (path) => {
     const [, first, second] = path.split("/");
-    // path = "/"         → first = ""
-    // path = "/players"  → first = "players"
-    // path = "/players/3"→ first = "players", second = "3"
-    // path = "/stats"    → first = "stats"
-    // path = "/history"  → first = "history"
-
     if (!first) return "home";
     if (first === "players" && second) return "playersDetails";
     if (first === "players") return "players";
     if (first === "stats") return "statistics";
     if (first === "matches") return "matches";
     if (first === "history") return "history";
-
-    // por defecto
     return "home";
   };
 
-  const sectionKey = getSectionKeyFromPath(pathname);
-  const content = headerContent[sectionKey] ?? headerContent.home;
+  const content = headerContent[getSectionKeyFromPath(pathname)] ?? headerContent.home;
 
   return (
     <>
@@ -120,6 +111,7 @@ function Header({
           <h1>{content.title}</h1>
           <h3>{content.subtitle}</h3>
         </div>
+
         {content.features.length > 0 && (
           <div className="header-features">
             {content.features.map((feature, index) => (

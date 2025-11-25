@@ -4,7 +4,7 @@ import {
     IconMatches,
     IconPlayer,
     IconHistory,
-} from "../../public/icons/IconSidebar.jsx";
+} from "../icons/IconSidebar.jsx";
 
 export const navigationItems = [
     {
@@ -35,6 +35,12 @@ export const navigationItems = [
         path: "/history",
         label: "History",
         icon: IconHistory,
+        end: false,
+    },
+    {
+        path: "/users",
+        label: "Users",
+        icon: IconPlayer,
         end: false,
     },
 ];

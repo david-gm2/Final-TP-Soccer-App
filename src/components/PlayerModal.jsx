@@ -1,4 +1,6 @@
-import { IconClose } from "../../public/icons/IconSidebar";
+import { useState } from "react";
+
+import { IconClose } from "../icons/IconSidebar.jsx";
 import "../styles/PlayerModal.css";
 
 function PlayerModal({
@@ -9,6 +11,8 @@ function PlayerModal({
   mode = "create",
 }) {
   const isEditMode = mode === "edit";
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const formDefaults = {
     nick: initialPlayer?.nick ?? "",
     position: initialPlayer?.position ?? "",
@@ -22,25 +26,28 @@ function PlayerModal({
         : initialPlayer.rating,
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const data = new FormData(event.target);
     const playerData = {
-      profilePicture: formData.get("profilePicture"),
-      nick: formData.get("name"),
-      position: formData.get("position"),
-      number: formData.get("number"),
-      rating: formData.get("rating"),
+      profilePicture: data.get("profilePicture"),
+      nick: data.get("name"),
+      position: data.get("position"),
+      number: data.get("number"),
+      rating: data.get("rating"),
     };
 
-    if (onSubmit) {
-      onSubmit(playerData);
+    try {
+      setIsSubmitting(true);
+      await onSubmit?.(playerData);
+      onClose();
+    } finally {
+      setIsSubmitting(false);
     }
-    onClose();
   };
 
-  const handleOverlayClick = (e) => {
-    if (e.target === e.currentTarget) {
+  const handleOverlayClick = (event) => {
+    if (event.target === event.currentTarget) {
       onClose();
     }
   };
@@ -59,7 +66,7 @@ function PlayerModal({
             type="button"
             className="modal-close-btn"
             onClick={onClose}
-            aria-label="Cerrar modal"
+            aria-label="Close modal"
           >
             <IconClose />
           </button>
@@ -68,7 +75,7 @@ function PlayerModal({
         <form className="modal-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="profile-picture" className="form-label">
-              Profile Picture
+              Profile picture
             </label>
             <input
               type="file"
@@ -151,13 +158,14 @@ function PlayerModal({
           </div>
 
           <div className="modal-actions">
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
               {isEditMode ? "Save changes" : "Add"}
             </button>
             <button
               type="button"
               className="btn btn-secondary"
               onClick={onClose}
+              disabled={isSubmitting}
             >
               Cancel
             </button>

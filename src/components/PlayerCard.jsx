@@ -2,10 +2,15 @@ import {
   IconEye,
   IconDefaultUser,
   IconDelete,
-} from "../../public/icons/IconsPlayer.jsx";
+} from "../icons/IconsPlayer.jsx";
+
 import "../styles/PlayersCard.css";
 
 export function PlayerCard({ player, onView, onEdit, onOpenDeleteModal }) {
+  const positionLabel = player.position || "Unknown position";
+  const jerseyNumber =
+    player.number !== undefined && player.number !== null ? ` #${player.number}` : "";
+
   return (
     <div
       className="player-card"
@@ -22,7 +27,8 @@ export function PlayerCard({ player, onView, onEdit, onOpenDeleteModal }) {
           <div className="player-card-profile-text">
             <h4>{player.nick}</h4>
             <p>
-              {player.position} ● #{player.number}
+              {positionLabel}
+              {jerseyNumber}
             </p>
           </div>
         </div>
@@ -30,6 +36,7 @@ export function PlayerCard({ player, onView, onEdit, onOpenDeleteModal }) {
           type="button"
           className="btn-icon"
           onClick={() => onView(player)}
+          aria-label="View player"
         >
           <IconEye />
         </button>
@@ -38,6 +45,7 @@ export function PlayerCard({ player, onView, onEdit, onOpenDeleteModal }) {
       {player.bio && <p>{player.bio}</p>}
 
       <button
+        type="button"
         className="btn btn-secondary"
         onClick={() => onOpenDeleteModal(player)}
       >
@@ -46,3 +54,5 @@ export function PlayerCard({ player, onView, onEdit, onOpenDeleteModal }) {
     </div>
   );
 }
+
+export default PlayerCard;
