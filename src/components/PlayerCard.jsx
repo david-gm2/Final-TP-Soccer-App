@@ -1,15 +1,15 @@
-import {
-  IconEye,
-  IconDefaultUser,
-  IconDelete,
-} from "../icons/IconsPlayer.jsx";
-
+import { IconEye, IconDefaultUser, IconDelete } from "../icons/IconsPlayer.jsx";
+import { useAuth } from "../hooks/useAuth.js";
 import "../styles/PlayersCard.css";
 
 export function PlayerCard({ player, onView, onEdit, onOpenDeleteModal }) {
   const positionLabel = player.position || "Unknown position";
   const jerseyNumber =
-    player.number !== undefined && player.number !== null ? ` #${player.number}` : "";
+    player.number !== undefined && player.number !== null
+      ? ` #${player.number}`
+      : "";
+
+  const { isAdmin } = useAuth();
 
   return (
     <div
@@ -43,14 +43,15 @@ export function PlayerCard({ player, onView, onEdit, onOpenDeleteModal }) {
       </div>
 
       {player.bio && <p>{player.bio}</p>}
-
-      <button
-        type="button"
-        className="btn btn-secondary"
-        onClick={() => onOpenDeleteModal(player)}
-      >
-        <IconDelete /> Delete
-      </button>
+      {isAdmin && (
+        <button
+          type="button"
+          className="btn btn-secondary"
+          onClick={() => onOpenDeleteModal(player)}
+        >
+          <IconDelete /> Delete
+        </button>
+      )}
     </div>
   );
 }
