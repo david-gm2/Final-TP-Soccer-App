@@ -32,9 +32,14 @@
   background-color: #4c1d95;
 }
 
-.btn-primary:active {
+.btn-primary:active:not(:disabled) {
   transform: scale(0.98);
   background-color: #5b21b6;
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .btn-secondary {
