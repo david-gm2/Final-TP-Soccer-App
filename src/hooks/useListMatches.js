@@ -1,13 +1,13 @@
 import { useEffect } from "react";
-import { API_BACKEND_URL } from "../constants/API_CONSTANTS";
-import { usePlayers } from "./usePlayers.js";
+import { API_BACKEND_URL } from "../constants/API_CONSTANTS.js";
+import { useMatches } from "./useMatches.js";
 import { useAuth } from "../hooks/useAuth.js";
 
-const CACHE_KEY = "players-cache";
+const CACHE_KEY = "matches-cache";
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
-export function useListPlayer(setIsLoading) {
-  const { players, setPlayers, lastFetched, setLastFetched } = usePlayers();
+export function useListMatches(setIsLoading) {
+  const { matches, setMatches, lastFetched, setLastFetched } = useMatches();
   const { accessToken } = useAuth();
 
   useEffect(() => {
@@ -21,14 +21,14 @@ export function useListPlayer(setIsLoading) {
         if (!Array.isArray(parsed?.data)) return null;
         return parsed;
       } catch (err) {
-        console.warn("useListPlayer: unable to parse cache", err);
+        console.warn("useListMatches: unable to parse cache", err);
         return null;
       }
     };
 
     const cached = readCache();
-    if (cached && Array.isArray(cached.data) && !players.length) {
-      setPlayers(cached.data);
+    if (cached && Array.isArray(cached.data) && !matches.length) {
+      setMatches?.(cached.data);
     }
 
     const shouldFetch =
@@ -37,35 +37,33 @@ export function useListPlayer(setIsLoading) {
       Date.now() - cached.timestamp > CACHE_TTL_MS ||
       !cached.data?.length;
 
-    console.log(accessToken)
-
-    const fetchPlayers = async () => {
+    const fetchMatches = async () => {
       if (typeof setIsLoading === "function") setIsLoading(true);
       try {
-        const res = await fetch(`${API_BACKEND_URL}/players`, {
+        const res = await fetch(`${API_BACKEND_URL}/matches`, {
           headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' }
         });
-        if (!res.ok) throw new Error(`Failed to fetch players: ${res.status}`);
+        if (!res.ok) throw new Error(`Failed to fetch matches: ${res.status}`);
         const data = await res.json();
-        if (mounted && typeof setPlayers === "function") {
-          setPlayers(data);
+        if (mounted && typeof setMatches === "function") {
+          setMatches(data);
           if (typeof setLastFetched === "function") setLastFetched(Date.now());
         }
       } catch (err) {
-        console.error("useListPlayer: Error fetching players:", err);
+        console.error("useListMatches: Error fetching matches:", err);
       } finally {
         if (typeof setIsLoading === "function") setIsLoading(false);
       }
     };
 
     if (shouldFetch) {
-      fetchPlayers();
+      fetchMatches();
     }
 
     return () => {
       mounted = false;
     };
-  }, [players.length, setPlayers, setIsLoading, setLastFetched, lastFetched]);
+  }, [matches.length, setIsLoading, setMatches, setLastFetched, lastFetched, accessToken]);
 
-  return players;
+  return matches;
 }

@@ -27,28 +27,38 @@
   text-align: center;
 }
 
-.player-details-home {
+.player-details-card {
+  margin-left: 15px;
   text-align: left;
-  margin-left: 10px;
+  font-size: 16px;
+  font-weight: 100;
 }
 
-.player-details-home {
-  padding: 24px;
+.player-details-card-name {
+  display: flex;
+  text-overflow: ellipsis;
+  text-wrap: nowrap;
+  gap: 4px;
+  align-items: center;
 }
 
+.player-details-card-name h4 {
+  font-weight: 100;
+}
 
-.player-details-home {
-display: flex;
+.player-details-card p {
+  opacity: 0.6;
 }
 
 .player-index {
   color: #602ee1;
-  margin-bottom: 5px;
 }
+
 .player-info {
   display: flex;
   align-items: center;
 }
+
 .arrow-icon {
   display: flex;
   width: 20px;

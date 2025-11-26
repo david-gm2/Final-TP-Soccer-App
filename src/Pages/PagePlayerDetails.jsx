@@ -3,11 +3,13 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Radar } from "react-chartjs-2";
 
 import { API_BACKEND_URL } from "../constants/API_CONSTANTS.js";
-import { IconDefaultUser } from "../icons/IconsPlayer.jsx";
+import { IconDefaultUser, IconDelete } from "../icons/IconsPlayer.jsx";
 import Header from "../components/Header.jsx";
 import PlayerModal from "../components/PlayerModal.jsx";
 import DeletePlayerModal from "../components/DeletePlayerModal.jsx";
 import { usePlayers } from "../hooks/usePlayers.js";
+
+import { useAuth } from "../hooks/useAuth.js";
 
 import "../styles/PlayerDetails.css";
 
@@ -60,14 +62,19 @@ function PagePlayerDetails() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const { accessToken } = useAuth();
+
   const rowsPerPage = 6;
 
   useEffect(() => {
     const fetchPlayerDetails = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${API_BACKEND_URL}/players/id/${id}`);
-
+        const response = await fetch(`${API_BACKEND_URL}/players/id/${id}`, {
+          headers: accessToken
+            ? { Authorization: `Bearer ${accessToken}` }
+            : undefined,
+        });
         if (!response.ok) {
           throw new Error(`Failed to fetch player: ${response.statusText}`);
         }
@@ -95,6 +102,9 @@ function PagePlayerDetails() {
         `${API_BACKEND_URL}/players/${player.player_id}`,
         {
           method: "DELETE",
+          headers: accessToken
+            ? { Authorization: `Bearer ${accessToken}` }
+            : undefined,
         }
       );
       if (!response.ok) {
@@ -139,7 +149,10 @@ function PagePlayerDetails() {
         `${API_BACKEND_URL}/players/${player.player_id}`,
         {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
           body: JSON.stringify(payload),
         }
       );
@@ -196,7 +209,7 @@ function PagePlayerDetails() {
   if (loading) {
     return (
       <>
-        <Header playerTitle="Loading player" />
+        <Header title="Loading player" subtitle="Fetching player details..." />
         <main className="player-details-page">
           <div className="loading">Loading player details...</div>
         </main>
@@ -207,7 +220,7 @@ function PagePlayerDetails() {
   if (error || !player) {
     return (
       <>
-        <Header playerTitle="Player details" />
+        <Header title="Player details" subtitle="Unable to load player" />
         <main className="player-details-page">
           <div className="error">
             <p>{error || "Player not found"}</p>
@@ -276,6 +289,7 @@ function PagePlayerDetails() {
     : playerLevel;
   const formattedPosition = formatLabel(player.position, "Player");
   const jerseyNumber = player.number ?? "--";
+  const headerSubtitle = `${formattedPosition} · #${jerseyNumber}`;
 
   const summaryChips = [
     { id: "status", label: "Ready to play", tone: "success" },
@@ -315,9 +329,24 @@ function PagePlayerDetails() {
   return (
     <>
       <Header
-        playerTitle={player.nick}
-        onEditPlayer={openEditModal}
-        onDeletePlayer={openDeleteModal}
+        title={player.nick}
+        subtitle={headerSubtitle}
+        actions={[
+          {
+            key: "delete",
+            text: "Delete player",
+            className: "btn btn-icon btn-danger",
+            icon: <IconDelete width="17" height="19" />,
+            onClick: openDeleteModal,
+          },
+          {
+            key: "edit",
+            text: "Edit",
+            className: "btn btn-secondary",
+            icon: "pen",
+            onClick: openEditModal,
+          },
+        ]}
       />
       <main className="player-details-page">
         <section className="player-summary-card">

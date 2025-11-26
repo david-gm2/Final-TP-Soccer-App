@@ -1,8 +1,4 @@
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-} from "@hello-pangea/dnd";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
 export function MatchPreview({
   teams,
@@ -18,6 +14,8 @@ export function MatchPreview({
   awayTeamName = "Team B",
   onDragPlayers,
   enableDrag,
+  onClose,
+  isClosable = false,
 }) {
   const formatLabel = selectedFormat || "Format";
   const requiredPlayers = playerPerTeam || "--";
@@ -39,6 +37,16 @@ export function MatchPreview({
             Shuffle
           </button>
           <span className="preview-format">{formatLabel}</span>
+          {isClosable && (
+            <button
+              type="button"
+              className="preview-close"
+              onClick={onClose}
+              aria-label="Close preview"
+            >
+              X
+            </button>
+          )}
         </div>
       </div>
 

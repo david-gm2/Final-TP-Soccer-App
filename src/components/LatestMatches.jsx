@@ -1,4 +1,4 @@
-import "../styles/UpcomingMatches.css";
+import "../styles/upcomingMatches.css";
 
 function LatestMatches({
   matches,
@@ -10,8 +10,6 @@ function LatestMatches({
     .filter(Boolean)
     .join(" ");
 
-  const arrowIcon = "/icons/arrow.svg";
-
   return (
     <div className={rootClass}>
       {showTitle && <h2>Latest Matches</h2>}
@@ -19,19 +17,18 @@ function LatestMatches({
         <div className="match-card feed-card" key={index}>
           <div>
             <p>
-              {match.homeTeam} vs {match.awayTeam}
+              {match.local} vs {match.visitor}
             </p>
-            <div className="home-match-info">
+            <div className="match-info">
               Date: {match.date} | Time: {match.time}
             </div>
           </div>
-          <div className="home-match-actions">
-            <img src={arrowIcon} alt="View match details" />
+          <div className="match-actions">
+            <img src="../public/icons/arrow.svg" alt="" />
           </div>
         </div>
       ))}
     </div>
   );
 }
-
 export default LatestMatches;

@@ -12,6 +12,7 @@ import { useURLFilters } from "../hooks/useURLFilters.js";
 import { useURLSearch } from "../hooks/useURLSearch.js";
 import { filterPlayers } from "../utils/filterPlayers.js";
 import { API_BACKEND_URL } from "../constants/API_CONSTANTS.js";
+import { useAuth } from "../hooks/useAuth.js";
 
 import Header from "../components/Header";
 
@@ -51,7 +52,7 @@ const FORM_FIELDS = [
     name: "matchName",
     type: "text",
     label: "Match name (Optional)",
-    placeholder: "Match name",
+    placeholder: "Semifinal Team A vs Team B",
   },
 ];
 
@@ -86,12 +87,16 @@ function PageMatches() {
   const [isLoading, setIsLoading] = useState(false);
   const [autoBalance, setAutoBalance] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [payloadMessage, setPayloadMessage] = useState("");
+  // const [payloadMessage, setPayloadMessage] = useState("");
   const [teamAssignments, setTeamAssignments] = useState({
     teamA: [],
     teamB: [],
   });
+  const [previewOpen, setPreviewOpen] = useState(false);
   const wasAutoBalance = useRef(autoBalance);
+  const prevSelectedCount = useRef(0);
+
+  const { accessToken } = useAuth();
 
   useListPlayer(setIsLoading);
   const { players } = usePlayers();
@@ -136,9 +141,7 @@ function PageMatches() {
 
   const manualTeams = useMemo(() => {
     const mapIdsToPlayers = (ids = []) =>
-      ids
-        .map((id) => playerMap.get(id))
-        .filter(Boolean);
+      ids.map((id) => playerMap.get(id)).filter(Boolean);
     return {
       teamA: mapIdsToPlayers(teamAssignments.teamA),
       teamB: mapIdsToPlayers(teamAssignments.teamB),
@@ -167,6 +170,15 @@ function PageMatches() {
         : [...prev, playerId]
     );
   };
+
+  useEffect(() => {
+    if (selectedPlayers.length === 0) {
+      setPreviewOpen(false);
+    } else if (prevSelectedCount.current === 0 && selectedPlayers.length > 0) {
+      setPreviewOpen(true);
+    }
+    prevSelectedCount.current = selectedPlayers.length;
+  }, [selectedPlayers.length]);
 
   const shuffleTeams = () => {
     setSelectedPlayers((prev) => [...prev].sort(() => Math.random() - 0.5));
@@ -242,7 +254,10 @@ function PageMatches() {
     try {
       const response = await fetch(`${API_BACKEND_URL}/matches`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(matchToCreate),
       });
 
@@ -261,12 +276,8 @@ function PageMatches() {
 
   useEffect(() => {
     setTeamAssignments((prev) => {
-      const filteredA = prev.teamA.filter((id) =>
-        selectedPlayers.includes(id)
-      );
-      const filteredB = prev.teamB.filter((id) =>
-        selectedPlayers.includes(id)
-      );
+      const filteredA = prev.teamA.filter((id) => selectedPlayers.includes(id));
+      const filteredB = prev.teamB.filter((id) => selectedPlayers.includes(id));
       const assigned = new Set([...filteredA, ...filteredB]);
       const remaining = selectedPlayers.filter((id) => !assigned.has(id));
       const nextA = [...filteredA];
@@ -315,9 +326,20 @@ function PageMatches() {
 
   return (
     <>
-      <Header />
+      <Header
+        title="New match"
+        subtitle="Select players and customize match details."
+        actions={[
+          {
+            text: "Create match",
+            className: "btn btn-primary",
+            icon: "scoreboard",
+            onClick: handleSubmit(onSubmit),
+          },
+        ]}
+      />
       <main className="matches-page">
-        <div className="match-layout">
+        <div className={`match-layout ${previewOpen ? "preview-open" : ""}`}>
           <div className="match-form-column">
             <MatchForm
               matchFormats={MATCH_FORMATS}
@@ -356,35 +378,49 @@ function PageMatches() {
               levelLabel={levelLabel}
               formatPosition={formatPosition}
             />
-          </div>
 
-          <div className="match-sidebar-column">
-          <MatchPreview
-            teams={teams}
-            playerPerTeam={playerPerTeam}
-            selectedFormat={selectedFormat}
-            autoBalance={autoBalance}
-            onToggleAutoBalance={setAutoBalance}
-            onShuffle={shuffleTeams}
-            avgRating={avgRating}
-            rateBalance={rateBalance}
-            levelLabel={levelLabel}
-            homeTeamName={matchToCreate.homeTeam.name}
-            awayTeamName={matchToCreate.awayTeam.name}
-            onDragPlayers={handleDragEnd}
-            enableDrag={!autoBalance}
-          />
-
-            <MatchSummary
-              match={matchToCreate}
-              onCopy={(message) => setPayloadMessage(message)}
-            />
-            {payloadMessage && (
-              <p className="payload-feedback" role="status">
-                {payloadMessage}
-              </p>
+            {!previewOpen && selectedPlayers.length > 0 && (
+              <button
+                type="button"
+                className="btn btn-secondary preview-open-btn"
+                onClick={() => setPreviewOpen(true)}
+              >
+                Preview
+              </button>
             )}
           </div>
+
+          {previewOpen && (
+            <div className="match-sidebar-column">
+              <MatchPreview
+                teams={teams}
+                playerPerTeam={playerPerTeam}
+                selectedFormat={selectedFormat}
+                autoBalance={autoBalance}
+                onToggleAutoBalance={setAutoBalance}
+                onShuffle={shuffleTeams}
+                avgRating={avgRating}
+                rateBalance={rateBalance}
+                levelLabel={levelLabel}
+                homeTeamName={matchToCreate.homeTeam.name}
+                awayTeamName={matchToCreate.awayTeam.name}
+                onDragPlayers={handleDragEnd}
+                enableDrag={!autoBalance}
+                onClose={() => setPreviewOpen(false)}
+                isClosable
+              />
+
+              {/* <MatchSummary
+                match={matchToCreate}
+                onCopy={(message) => setPayloadMessage(message)}
+              />
+              {payloadMessage && (
+                <p className="payload-feedback" role="status">
+                  {payloadMessage}
+                </p>
+              )} */}
+            </div>
+          )}
         </div>
       </main>
     </>

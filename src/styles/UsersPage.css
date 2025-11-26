@@ -1,0 +1,242 @@
+.users-page {
+  padding: 16px;
+}
+
+.users-section {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.users-section__header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #e6e9f4;
+  border-radius: 14px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.users-section__header:hover {
+  background: #f9fbff;
+  border-color: #d9def0;
+}
+
+.users-section__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.users-section__header h2 {
+  margin: 0;
+  font-size: 1rem;
+  color: #0f172a;
+}
+
+.arrow {
+  transition: transform 0.2s ease-in;
+}
+
+.arrow.open {
+  transform: rotate(90deg);
+}
+
+.pill-count {
+  background: #eef2ff;
+  color: #4338ca;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-weight: 700;
+}
+
+.users-list-wrapper {
+  overflow: hidden;
+  transition:
+    max-height 0.25s ease,
+    opacity 0.25s ease;
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.users-list-wrapper.closed {
+  max-height: 0;
+  opacity: 0;
+}
+
+.users-list-wrapper.open {
+  max-height: 1200px;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.users-list-panel {
+  transform: translateY(-10px);
+  opacity: 0;
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
+}
+
+.users-list-wrapper.open .users-list-panel {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.users-grid {
+  display: grid;
+  gap: 16px;
+  animation: fadeSlide 0.25s ease;
+}
+
+.user-card {
+  background: #fff;
+  border: 1px solid #e6e9f4;
+  border-radius: 18px;
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.user-card:hover {
+  transform: translateY(-2px);
+  border-color: #d9def0;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f0f4ff;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.user-card h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #0f172a;
+}
+
+.user-card p {
+  margin: 2px 0 0;
+  color: #6b7280;
+}
+
+.user-roles {
+  display: flex;
+  gap: 8px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4b5563;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.badge-admin {
+  background: #ede9fe;
+  color: #5b21b6;
+}
+
+.user-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.users-error {
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+.users-loading {
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.users-empty {
+  color: #6b7280;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  max-width: 420px;
+  width: 90%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.modal h3 {
+  margin: 0 0 8px;
+}
+
+.modal p {
+  margin: 0 0 16px;
+  color: #475569;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 720px) {
+  .users-page {
+    padding: 24px;
+  }
+  .users-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+}

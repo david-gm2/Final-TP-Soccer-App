@@ -5,7 +5,7 @@ const StatsCard = ({ stats = [] }) => {
     <div className="stats-overview">
       {stats.map((stat, index) => (
         <div className="stats-card" key={stat.title ?? index}>
-          <div>
+          <div className="stats-card-text">
             <h2>{stat.title}</h2>
             <p className="stat-value">{stat.value}</p>
           </div>

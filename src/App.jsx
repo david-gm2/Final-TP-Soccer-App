@@ -11,8 +11,8 @@ import PagePlayers from "./Pages/PagePlayers.jsx";
 import PagePlayerDetails from "./Pages/PagePlayerDetails.jsx";
 import PageStats from "./Pages/PageStats.jsx";
 import PageHistory from "./Pages/PageHistory.jsx";
-import PageSignUp from "./Pages/PageSignUp.jsx";
 import PageUsers from "./Pages/PageUsers.jsx";
+import PageSignUp from "./Pages/PageSignUp.jsx";
 import { LogInPage } from "./Pages/LogInPage.jsx";
 import NotFoundPage from "./Pages/PageNotFound.jsx";
 
@@ -36,7 +36,7 @@ function App() {
   return (
     <Routes>
       {/* Public routes */}
-      <Route path="/sign-up" element={<PageSignUp />} />
+      <Route path="/signup" element={<PageSignUp />} />
       <Route path="/login" element={<LogInPage />} />
 
       <Route element={<PrivateRoute />}>
