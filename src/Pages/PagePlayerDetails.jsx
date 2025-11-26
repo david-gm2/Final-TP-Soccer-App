@@ -9,6 +9,8 @@ import PlayerModal from "../components/PlayerModal.jsx";
 import DeletePlayerModal from "../components/DeletePlayerModal.jsx";
 import { usePlayers } from "../hooks/usePlayers.js";
 
+import { useAuth } from "../hooks/useAuth.js";
+
 import "../styles/PlayerDetails.css";
 
 const DEFAULT_MATCHES = [
@@ -60,14 +62,19 @@ function PagePlayerDetails() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const { accessToken } = useAuth();
+
   const rowsPerPage = 6;
 
   useEffect(() => {
     const fetchPlayerDetails = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${API_BACKEND_URL}/players/id/${id}`);
-
+        const response = await fetch(`${API_BACKEND_URL}/players/id/${id}`, {
+          headers: accessToken
+            ? { Authorization: `Bearer ${accessToken}` }
+            : undefined,
+        });
         if (!response.ok) {
           throw new Error(`Failed to fetch player: ${response.statusText}`);
         }
@@ -95,6 +102,9 @@ function PagePlayerDetails() {
         `${API_BACKEND_URL}/players/${player.player_id}`,
         {
           method: "DELETE",
+          headers: accessToken
+            ? { Authorization: `Bearer ${accessToken}` }
+            : undefined,
         }
       );
       if (!response.ok) {
@@ -139,7 +149,10 @@ function PagePlayerDetails() {
         `${API_BACKEND_URL}/players/${player.player_id}`,
         {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
           body: JSON.stringify(payload),
         }
       );

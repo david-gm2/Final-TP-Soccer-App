@@ -1,12 +1,14 @@
 import { useEffect } from "react";
 import { API_BACKEND_URL } from "../constants/API_CONSTANTS.js";
 import { useMatches } from "./useMatches.js";
+import { useAuth } from "../hooks/useAuth.js";
 
 const CACHE_KEY = "matches-cache";
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
 export function useListMatches(setIsLoading) {
   const { matches, setMatches, lastFetched, setLastFetched } = useMatches();
+  const { accessToken } = useAuth();
 
   useEffect(() => {
     let mounted = true;
@@ -38,7 +40,9 @@ export function useListMatches(setIsLoading) {
     const fetchMatches = async () => {
       if (typeof setIsLoading === "function") setIsLoading(true);
       try {
-        const res = await fetch(`${API_BACKEND_URL}/matches`);
+        const res = await fetch(`${API_BACKEND_URL}/matches`, {
+          headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' }
+        });
         if (!res.ok) throw new Error(`Failed to fetch matches: ${res.status}`);
         const data = await res.json();
         if (mounted && typeof setMatches === "function") {
@@ -59,7 +63,7 @@ export function useListMatches(setIsLoading) {
     return () => {
       mounted = false;
     };
-  }, [matches.length, setIsLoading, setMatches, setLastFetched, lastFetched]);
+  }, [matches.length, setIsLoading, setMatches, setLastFetched, lastFetched, accessToken]);
 
   return matches;
 }

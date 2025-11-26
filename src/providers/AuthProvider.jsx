@@ -8,18 +8,18 @@ const TOKEN_KEY = "accessToken";
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
-  const initialState = localStorage.getItem(TOKEN_KEY);
+  const initialState = sessionStorage.getItem(TOKEN_KEY);
 
   const [accessToken, setAccessToken] = useState(initialState);
 
   const login = (token) => {
-    localStorage.setItem(TOKEN_KEY, token);
+    sessionStorage.setItem(TOKEN_KEY, token);
     setAccessToken(token);
     navigate("/");
   };
 
   const logout = () => {
-    localStorage.removeItem(TOKEN_KEY);
+    sessionStorage.removeItem(TOKEN_KEY);
     setAccessToken(null);
     navigate("/login", { replace: true });
   };
