@@ -36,22 +36,22 @@ function mapStats(stats) {
       switch (key) {
         case "activePlayers":
           title = "Active Players";
-          icon = "../public/icons/person.svg";
+          icon = "/icons/person.svg";
           priority = 1;
           break;
         case "totalGoals":
           title = "Total Goals";
-          icon = "../public/icons/sports_soccer.svg";
+          icon = "/icons/sports_soccer.svg";
           priority = 2;
           break;
         case "totalAssists":
           title = "Total Assists";
-          icon = "../public/icons/circule.svg";
+          icon = "/icons/circule.svg";
           priority = 3;
           break;
         case "averageRating":
           title = "Average Rating";
-          icon = "../public/icons/star.svg";
+          icon = "/icons/star.svg";
           priority = 4;
           break;
         default:
