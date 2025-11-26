@@ -5,7 +5,6 @@ import { API_BACKEND_URL } from "../constants/API_CONSTANTS.js";
 
 import "../styles/UsersPage.css";
 
-// admin es roleId = 2
 const ADMIN_ROLE_ID = 2;
 
 const normalizeUsers = (list = []) =>
@@ -172,7 +171,6 @@ function UsersPage() {
         {error && <p className="users-error">{error}</p>}
         {loading && <p className="users-loading">Loading users...</p>}
 
-        {/* ADMINS SECTION */}
         <section className="users-section">
           <button
             type="button"
@@ -215,7 +213,6 @@ function UsersPage() {
                 </article>
               ))}
 
-              {/* fallback si no hay admins */}
               {!admins.length && !loading && (
                 <>
                   {fallbackAdmins.length ? (
@@ -232,8 +229,7 @@ function UsersPage() {
                         </div>
 
                         <div className="user-actions">
-                          {/* 👇 NO mostrar el botón si ya es admin */}
-                          {!isAdmin(user) && ( // 👈
+                          {!isAdmin(user) && (
                             <button
                               type="button"
                               className="btn btn-primary"
@@ -254,7 +250,6 @@ function UsersPage() {
           </div>
         </section>
 
-        {/* USERS SECTION */}
         <section className="users-section">
           <button
             type="button"
@@ -283,8 +278,7 @@ function UsersPage() {
                     </div>
                   </div>
                   <div className="user-actions">
-                    {/* 👇 por las dudas, también evitamos botón si ya es admin */}
-                    {!isAdmin(user) && ( // 👈
+                    {!isAdmin(user) && (
                       <button
                         type="button"
                         className="btn btn-primary"
