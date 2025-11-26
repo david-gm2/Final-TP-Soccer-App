@@ -223,7 +223,7 @@ function PlayersPage() {
         subtitle="Manage your team of players"
         actions={[
           {
-            text: "+ Add player",
+            text: "Add player",
             className: "btn btn-primary",
             icon: "plus",
             onClick: openCreateModal,

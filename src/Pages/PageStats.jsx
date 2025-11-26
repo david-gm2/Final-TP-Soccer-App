@@ -7,16 +7,20 @@ import StatsCard from "../components/StatsCard.jsx";
 import PlayerFilter from "../components/PlayerFilter.jsx";
 import ListPlayers from "../components/ListPlayers.jsx";
 import { useGlobalStats } from "../hooks/useGlobalStasts.js";
+import Header from "../components/Header.jsx";
 
 function StatsPage() {
   const stats = useGlobalStats();
 
   return (
-    <div className="stats-page">
-      <StatsCard stats={mapStats(stats)} />
-      <PlayerFilter />
-      <ListPlayers />
-    </div>
+    <>
+      <Header title="Statistics" subtitle="Player rankings and performance" />
+      <div className="stats-page">
+        <StatsCard stats={mapStats(stats)} />
+        <PlayerFilter />
+        <ListPlayers />
+      </div>
+    </>
   );
 }
 
