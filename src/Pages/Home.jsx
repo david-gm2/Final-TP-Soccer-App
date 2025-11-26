@@ -7,6 +7,7 @@ import TopPlayers from "../components/TopPlayers.jsx";
 import StatsCard from "../components/StatsCard.jsx";
 import { useAuth } from "../hooks/useAuth.js";
 import { useNavigate } from "react-router-dom";
+import { useMatchesStats } from "../hooks/useMatchesStats.js";
 
 function Home() {
   const { user } = useAuth();
@@ -27,15 +28,12 @@ function Home() {
       text: "Add player",
       className: "btn btn-secondary",
       icon: "plus",
-      onClick: () =>
-        navigate("/players", { state: { openCreateModal: true } }),
+      onClick: () => navigate("/players", { state: { openCreateModal: true } }),
     },
   ];
 
-  let totalMatches = 5;
-  let totalGoals = 44;
-  let totalAssists = 13;
-  let activePlayers = 20;
+  const matchesStats = useMatchesStats();
+
   let latestMatches = [
     { local: "Team Z", visitor: "Team Y", date: "2023-09-20", time: "18:00" },
     { local: "Team X", visitor: "Team W", date: "2023-09-18", time: "20:00" },
@@ -51,30 +49,32 @@ function Home() {
       />
 
       <main className="home-page">
-        <StatsCard
-          stats={[
-            {
-              title: "Total Matches",
-              value: totalMatches,
-              icon: "/icons/scoreboard.svg",
-            },
-            {
-              title: "Total Goals",
-              value: totalGoals,
-              icon: "/icons/sports_soccer.svg",
-            },
-            {
-              title: "Total Assists",
-              value: totalAssists,
-              icon: "/icons/star.svg",
-            },
-            {
-              title: "Active Players",
-              value: activePlayers,
-              icon: "/icons/person.svg",
-            },
-          ]}
-        />
+        {matchesStats && (
+          <StatsCard
+            stats={[
+              {
+                title: "Total Matches",
+                value: matchesStats.totalMatches,
+                icon: "/icons/scoreboard.svg",
+              },
+              {
+                title: "Total Goals",
+                value: matchesStats.totalGoals,
+                icon: "/icons/sports_soccer.svg",
+              },
+              {
+                title: "Total Assists",
+                value: matchesStats.totalAssists,
+                icon: "/icons/star.svg",
+              },
+              {
+                title: "Active Players",
+                value: matchesStats.activePlayers,
+                icon: "/icons/person.svg",
+              },
+            ]}
+          />
+        )}
 
         <div className="cards-section flat-feed">
           <HighlightsList
@@ -82,9 +82,7 @@ function Home() {
               {
                 key: "upcoming",
                 title: "Upcoming Matches",
-                content: (
-                  <UpcomingMatches showTitle={false} compact />
-                ),
+                content: <UpcomingMatches showTitle={false} compact />,
               },
               {
                 key: "topPlayers",
