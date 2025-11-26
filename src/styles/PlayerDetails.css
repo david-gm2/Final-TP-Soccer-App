@@ -392,6 +392,10 @@
   cursor: pointer;
 }
 
+.btn-icon :hover {
+  transform: scale(1.1);
+}
+
 .loading,
 .error {
   text-align: center;

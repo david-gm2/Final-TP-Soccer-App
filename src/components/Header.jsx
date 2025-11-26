@@ -2,6 +2,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import "../styles/header.css";
 import { IconDelete } from "../icons/IconsPlayer.jsx";
+import { useAuth } from "../hooks/useAuth.js";
 
 function Header({
   handleToggleModal,
@@ -10,6 +11,8 @@ function Header({
   onEditPlayer,
   onDeletePlayer,
 }) {
+  const { isAdmin } = useAuth();
+
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
@@ -27,11 +30,13 @@ function Header({
           text: "New match",
           className: "btn btn-primary",
           onClick: () => navigate("/matches"),
+          admin: true,
         },
         {
           text: "Add player",
           className: "btn btn-secondary",
           onClick: () => navigate("/players"),
+          admin: true,
         },
       ],
     },
@@ -58,6 +63,7 @@ function Header({
                 text: "+ Add player",
                 className: "btn btn-primary",
                 onClick: handleToggleModal,
+                admin: true,
               },
             ]
           : [],
@@ -81,11 +87,13 @@ function Header({
           ),
           className: "btn btn-icon btn-danger",
           onClick: onDeletePlayer,
+          admin: true,
         },
         typeof onEditPlayer === "function" && {
           text: "Edit",
           className: "btn btn-secondary",
           onClick: onEditPlayer,
+          admin: true,
         },
       ].filter(Boolean),
     },
@@ -102,7 +110,12 @@ function Header({
     return "home";
   };
 
-  const content = headerContent[getSectionKeyFromPath(pathname)] ?? headerContent.home;
+  const content =
+    headerContent[getSectionKeyFromPath(pathname)] ?? headerContent.home;
+
+  const filteredButtons = isAdmin
+    ? content.buttons
+    : content.buttons.filter((btn) => btn.admin === false);
 
   return (
     <>
@@ -122,9 +135,9 @@ function Header({
           </div>
         )}
 
-        {content.buttons.length > 0 && (
+        {filteredButtons.length > 0 && (
           <div className="header-actions">
-            {content.buttons.map((button, index) => (
+            {filteredButtons.map((button, index) => (
               <button
                 key={index}
                 className={button.className}
