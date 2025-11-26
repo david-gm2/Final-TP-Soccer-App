@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { API_BACKEND_URL } from "../constants/API_CONSTANTS.js";
 import { useURLFilters } from "../hooks/useURLFilters.js";
@@ -25,6 +25,7 @@ function PlayersPage() {
   const [playerToDelete, setPlayerToDelete] = useState(null);
   const [editingPlayer, setEditingPlayer] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const hasOpenedFromState = useRef(false);
 
   // Fetch players on mount (setIsLoading keeps the loading indicator in sync)
   useListPlayer(setIsLoading);
@@ -46,10 +47,19 @@ function PlayersPage() {
     : "No players available yet. Add your first player or try adjusting your filters.";
 
   const navigate = useNavigate();
+  const location = useLocation();
   const handleView = (player) => {
     if (!player?.player_id) return;
     navigate(`/players/id/${player.player_id}`);
   };
+
+  useEffect(() => {
+    if (hasOpenedFromState.current) return;
+    if (location.state?.openCreateModal) {
+      hasOpenedFromState.current = true;
+      openCreateModal();
+    }
+  }, [location.state]);
 
   const createPlayer = async (newPlayer) => {
     setIsLoading(true);
@@ -157,7 +167,6 @@ function PlayersPage() {
         setPlayers((prev) => [createdPlayer, ...prev]);
         setLastFetched?.(Date.now());
       }
-      console.log(`Player with id ${playerId} deleted successfully from API.`);
     }
 
     closeModal();
@@ -209,7 +218,18 @@ function PlayersPage() {
 
   return (
     <>
-      <Header handleToggleModal={openCreateModal} />
+      <Header
+        title="Players"
+        subtitle="Manage your team of players"
+        actions={[
+          {
+            text: "+ Add player",
+            className: "btn btn-primary",
+            icon: "plus",
+            onClick: openCreateModal,
+          },
+        ]}
+      />
 
       <main className="players-page">
         <PlayerFilter />

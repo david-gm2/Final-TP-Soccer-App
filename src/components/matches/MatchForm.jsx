@@ -6,10 +6,10 @@ export function MatchForm({
   register,
   errors,
   onSubmit,
-  isSubmitting = false,
 }) {
   return (
-    <section className="match-card">
+    <section className="match-formad-card">
+      <h3 className="match-format-title">Match format</h3>
       <div className="match-format">
         {matchFormats.map((format) => (
           <button
@@ -49,14 +49,6 @@ export function MatchForm({
             </div>
           );
         })}
-
-        <button
-          type="submit"
-          className="btn btn-primary"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? "Saving..." : "Create match"}
-        </button>
       </form>
     </section>
   );

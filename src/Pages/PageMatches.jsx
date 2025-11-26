@@ -51,7 +51,7 @@ const FORM_FIELDS = [
     name: "matchName",
     type: "text",
     label: "Match name (Optional)",
-    placeholder: "Match name",
+    placeholder: "Semifinal Team A vs Team B",
   },
 ];
 
@@ -91,7 +91,9 @@ function PageMatches() {
     teamA: [],
     teamB: [],
   });
+  const [previewOpen, setPreviewOpen] = useState(false);
   const wasAutoBalance = useRef(autoBalance);
+  const prevSelectedCount = useRef(0);
 
   useListPlayer(setIsLoading);
   const { players } = usePlayers();
@@ -167,6 +169,15 @@ function PageMatches() {
         : [...prev, playerId]
     );
   };
+
+  useEffect(() => {
+    if (selectedPlayers.length === 0) {
+      setPreviewOpen(false);
+    } else if (prevSelectedCount.current === 0 && selectedPlayers.length > 0) {
+      setPreviewOpen(true);
+    }
+    prevSelectedCount.current = selectedPlayers.length;
+  }, [selectedPlayers.length]);
 
   const shuffleTeams = () => {
     setSelectedPlayers((prev) => [...prev].sort(() => Math.random() - 0.5));
@@ -369,35 +380,49 @@ function PageMatches() {
               levelLabel={levelLabel}
               formatPosition={formatPosition}
             />
-          </div>
 
-          <div className="match-sidebar-column">
-          <MatchPreview
-            teams={teams}
-            playerPerTeam={playerPerTeam}
-            selectedFormat={selectedFormat}
-            autoBalance={autoBalance}
-            onToggleAutoBalance={setAutoBalance}
-            onShuffle={shuffleTeams}
-            avgRating={avgRating}
-            rateBalance={rateBalance}
-            levelLabel={levelLabel}
-            homeTeamName={matchToCreate.homeTeam.name}
-            awayTeamName={matchToCreate.awayTeam.name}
-            onDragPlayers={handleDragEnd}
-            enableDrag={!autoBalance}
-          />
-
-            <MatchSummary
-              match={matchToCreate}
-              onCopy={(message) => setPayloadMessage(message)}
-            />
-            {payloadMessage && (
-              <p className="payload-feedback" role="status">
-                {payloadMessage}
-              </p>
+            {!previewOpen && selectedPlayers.length > 0 && (
+              <button
+                type="button"
+                className="btn btn-secondary preview-open-btn"
+                onClick={() => setPreviewOpen(true)}
+              >
+                Preview
+              </button>
             )}
           </div>
+
+          {previewOpen && (
+            <div className="match-sidebar-column">
+              <MatchPreview
+                teams={teams}
+                playerPerTeam={playerPerTeam}
+                selectedFormat={selectedFormat}
+                autoBalance={autoBalance}
+                onToggleAutoBalance={setAutoBalance}
+                onShuffle={shuffleTeams}
+                avgRating={avgRating}
+                rateBalance={rateBalance}
+                levelLabel={levelLabel}
+                homeTeamName={matchToCreate.homeTeam.name}
+                awayTeamName={matchToCreate.awayTeam.name}
+                onDragPlayers={handleDragEnd}
+                enableDrag={!autoBalance}
+                onClose={() => setPreviewOpen(false)}
+                isClosable
+              />
+
+              <MatchSummary
+                match={matchToCreate}
+                onCopy={(message) => setPayloadMessage(message)}
+              />
+              {payloadMessage && (
+                <p className="payload-feedback" role="status">
+                  {payloadMessage}
+                </p>
+              )}
+            </div>
+          )}
         </div>
       </main>
     </>
