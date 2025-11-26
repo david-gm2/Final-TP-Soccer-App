@@ -1,4 +1,4 @@
-import "../styles/upcomingMatches.css";
+import "../styles/UpcomingMatches.css";
 
 function LatestMatches({
   matches,
@@ -24,7 +24,7 @@ function LatestMatches({
             </div>
           </div>
           <div className="match-actions">
-            <img src="../public/icons/arrow.svg" alt="" />
+            <img src="/icons/arrow.svg" alt="" />
           </div>
         </div>
       ))}

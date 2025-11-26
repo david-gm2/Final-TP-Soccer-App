@@ -49,7 +49,7 @@ function TopPlayers({
             return (
               <div className="players-card feed-card" key={key}>
                 <div className="player-info">
-                  <img src="../public/icons/Player1.svg" alt={player.nick} />
+                  <img src="/icons/Player1.svg" alt={player.nick} />
                   <div className="player-details-card">
                     <div className="player-details-card-name">
                       <strong className="player-index"> #{indexLabel} </strong>
@@ -58,11 +58,7 @@ function TopPlayers({
                     <p>{player.position}</p>
                   </div>
                 </div>
-                <img
-                  className="arrow-icon"
-                  src="../public/icons/arrow.svg"
-                  alt=""
-                />
+                <img className="arrow-icon" src="/icons/arrow.svg" alt="" />
               </div>
             );
           })

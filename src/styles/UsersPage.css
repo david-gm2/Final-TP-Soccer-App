@@ -73,7 +73,6 @@
 }
 
 .users-list-wrapper.open {
-  max-height: 1200px;
   opacity: 1;
   pointer-events: auto;
 }

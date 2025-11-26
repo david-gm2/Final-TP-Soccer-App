@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import Header from "../components/Header.jsx";
+import UserCard from "../components/UserCard.jsx";
 import { useAuth } from "../hooks/useAuth.js";
 import { API_BACKEND_URL } from "../constants/API_CONSTANTS.js";
 import { authFetch } from "../utils/authFetch.js";
@@ -10,7 +11,7 @@ const ADMIN_ROLE_ID = 2;
 
 const normalizeUsers = (list = []) =>
   list.map((user) => ({
-    id: user.id ?? user.user_id ?? user._id,
+    id: user.userId ?? user.user_id ?? user._id,
     name: user.name ?? user.userName ?? user.username ?? "Unknown",
     email: user.email ?? "No email",
     roles: user.roles ?? [],
@@ -32,16 +33,25 @@ function UsersPage() {
   const [fallbackAdmins, setFallbackAdmins] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // MODAL STATE → ahora también guarda la acción
   const [confirmModal, setConfirmModal] = useState({
     open: false,
     userId: null,
+    makeAdmin: null,
   });
+
   const [showAdmins, setShowAdmins] = useState(true);
   const [showUsers, setShowUsers] = useState(true);
 
   const admins = useMemo(() => users.filter((u) => isAdmin(u)), [users]);
   const regularUsers = useMemo(() => users.filter((u) => !isAdmin(u)), [users]);
 
+  const [refreshCount, setRefreshCount] = useState(0);
+
+  const [isProcesing, setIsProcessing] = useState(false);
+
+  // Fetch users
   useEffect(() => {
     let mounted = true;
 
@@ -69,7 +79,10 @@ function UsersPage() {
         const dataRole1 = await resRole1.json();
         const dataRole2 = await resRole2.json();
 
-        if (!mounted) return;
+        if (!mounted) {
+          console.log("monted=true");
+          return;
+        }
 
         setUsers(normalizeUsers(dataRole1));
         setFallbackAdmins(normalizeUsers(dataRole2));
@@ -105,8 +118,9 @@ function UsersPage() {
     return () => {
       mounted = false;
     };
-  }, [accessToken]);
+  }, [accessToken, refreshCount]);
 
+  // LOCAL update
   const toggleAdminLocal = (userId, makeAdmin) => {
     setUsers((prev) =>
       prev.map((u) => {
@@ -131,19 +145,19 @@ function UsersPage() {
     );
   };
 
+  // API update
   const updateAdmin = async (userId, makeAdmin) => {
     toggleAdminLocal(userId, makeAdmin);
 
     try {
       await authFetch(
-        `${API_BACKEND_URL}/users-roles/${userId}`,
-        {
+        `${API_BACKEND_URL}/users-roles/${userId}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            roles_ids: makeAdmin ? [ADMIN_ROLE_ID] : [],
+            roles_ids: makeAdmin ? [2] : [1],
           }),
         },
         accessToken
@@ -151,26 +165,34 @@ function UsersPage() {
     } catch (err) {
       console.error("PageUsers: failed to update admin", err);
       setError("Could not update role. Please try again.");
+    } finally {
+      setIsProcessing(false);
     }
   };
 
-  const handleToggle = (user) => {
-    const makeAdmin = !isAdmin(user);
-    if (makeAdmin) {
-      setConfirmModal({ open: true, userId: user.id });
-    } else {
-      updateAdmin(user.id, false);
-    }
+  // HANDLE TOGGLE → ahora SIEMPRE abre modal
+  const handleToggle = (user, isAdmin) => {
+    setConfirmModal({
+      open: true,
+      userId: user.id,
+      makeAdmin: !isAdmin,
+    });
   };
 
-  const confirmGrant = () => {
+  // Confirmación del modal
+  const confirmGrant = async () => {
     if (!confirmModal.userId) return;
-    updateAdmin(confirmModal.userId, true);
-    setConfirmModal({ open: false, userId: null });
+
+    await updateAdmin(confirmModal.userId, confirmModal.makeAdmin);
+
+    setRefreshCount((c) => c + 1);
+
+    setConfirmModal({ open: false, userId: null, makeAdmin: null });
   };
 
-  const closeModal = () => setConfirmModal({ open: false, userId: null });
-
+  const closeModal = () =>
+    setConfirmModal({ open: false, userId: null, makeAdmin: null });
+  console.log(regularUsers);
   return (
     <>
       <Header title="Users" subtitle="Manage roles and admin access" />
@@ -179,6 +201,7 @@ function UsersPage() {
         {error && <p className="users-error">{error}</p>}
         {loading && <p className="users-loading">Loading users...</p>}
 
+        {/* ADMIN SECTION */}
         <section className="users-section">
           <button
             type="button"
@@ -198,56 +221,24 @@ function UsersPage() {
           >
             <div className="users-grid">
               {admins.map((user) => (
-                <article className="user-card" key={user.id}>
-                  <div className="user-info">
-                    <div className="user-avatar">{user.name[0] ?? "U"}</div>
-                    <div>
-                      <h3>{user.name}</h3>
-                      <p>{user.email}</p>
-                    </div>
-                  </div>
-                  <div className="user-roles">
-                    <span className="badge badge-admin">Admin</span>
-                  </div>
-                  <div className="user-actions">
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      onClick={() => handleToggle(user)}
-                    >
-                      Remove admin
-                    </button>
-                  </div>
-                </article>
+                <UserCard
+                  key={user.id}
+                  user={user}
+                  isAdmin={true}
+                  onToggle={() => handleToggle(user, true)}
+                />
               ))}
 
               {!admins.length && !loading && (
                 <>
                   {fallbackAdmins.length ? (
                     fallbackAdmins.map((user) => (
-                      <article className="user-card" key={user.id}>
-                        <div className="user-info">
-                          <div className="user-avatar">
-                            {user.name[0] ?? "U"}
-                          </div>
-                          <div>
-                            <h3>{user.name}</h3>
-                            <p>{user.email}</p>
-                          </div>
-                        </div>
-
-                        <div className="user-actions">
-                          {!isAdmin(user) && (
-                            <button
-                              type="button"
-                              className="btn btn-primary"
-                              onClick={() => handleToggle(user)}
-                            >
-                              Give admin
-                            </button>
-                          )}
-                        </div>
-                      </article>
+                      <UserCard
+                        key={user.id}
+                        user={user}
+                        isAdmin={true}
+                        onToggle={() => handleToggle(user, true)}
+                      />
                     ))
                   ) : (
                     <p className="users-empty">No admins yet.</p>
@@ -258,6 +249,7 @@ function UsersPage() {
           </div>
         </section>
 
+        {/* USERS SECTION */}
         <section className="users-section">
           <button
             type="button"
@@ -277,27 +269,14 @@ function UsersPage() {
           >
             <div className="users-grid">
               {regularUsers.map((user) => (
-                <article className="user-card" key={user.id}>
-                  <div className="user-info">
-                    <div className="user-avatar">{user.name[0] ?? "U"}</div>
-                    <div>
-                      <h3>{user.name}</h3>
-                      <p>{user.email}</p>
-                    </div>
-                  </div>
-                  <div className="user-actions">
-                    {!isAdmin(user) && (
-                      <button
-                        type="button"
-                        className="btn btn-primary"
-                        onClick={() => handleToggle(user)}
-                      >
-                        Give admin
-                      </button>
-                    )}
-                  </div>
-                </article>
+                <UserCard
+                  key={user.id}
+                  user={user}
+                  isAdmin={false}
+                  onToggle={() => handleToggle(user, false)}
+                />
               ))}
+
               {!regularUsers.length && !loading && (
                 <p className="users-empty">No regular users.</p>
               )}
@@ -306,14 +285,22 @@ function UsersPage() {
         </section>
       </main>
 
+      {/* MODAL */}
       {confirmModal.open && (
         <div className="modal-backdrop" role="dialog" aria-modal="true">
           <div className="modal users-modal">
-            <h3>Grant admin access</h3>
+            <h3>
+              {confirmModal.makeAdmin
+                ? "Grant admin access"
+                : "Remove admin access"}
+            </h3>
+
             <p>
-              Are you sure you want to grant admin permissions to this user?
-              This action gives full access.
+              {confirmModal.makeAdmin
+                ? "Are you sure you want to grant admin permissions to this user?"
+                : "Are you sure you want to remove admin permissions from this user?"}
             </p>
+
             <div className="modal-actions">
               <button
                 type="button"
@@ -322,10 +309,12 @@ function UsersPage() {
               >
                 Cancel
               </button>
+
               <button
                 type="button"
                 className="btn btn-primary"
                 onClick={confirmGrant}
+                disabled={isProcesing}
               >
                 Confirm
               </button>
