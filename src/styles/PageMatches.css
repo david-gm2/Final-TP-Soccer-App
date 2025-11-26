@@ -1,6 +1,6 @@
 .matches-page {
   min-height: calc(100vh - 64px);
-  padding: 16px 12px 32px;
+  padding: 4px;
 }
 
 .match-layout {
@@ -475,12 +475,8 @@
 }
 
 @media (min-width: 900px) {
-  .matches-page {
-    padding: 24px 24px 48px;
-  }
-
   .match-layout.preview-open {
-    grid-template-columns: minmax(0, 640px) minmax(320px, 1fr);
+    grid-template-columns: 1fr 1fr;
     gap: 32px;
   }
 

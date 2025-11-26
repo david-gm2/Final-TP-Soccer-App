@@ -12,6 +12,7 @@ import { useURLFilters } from "../hooks/useURLFilters.js";
 import { useURLSearch } from "../hooks/useURLSearch.js";
 import { filterPlayers } from "../utils/filterPlayers.js";
 import { API_BACKEND_URL } from "../constants/API_CONSTANTS.js";
+import { useAuth } from "../hooks/useAuth.js";
 
 import Header from "../components/Header";
 
@@ -86,7 +87,7 @@ function PageMatches() {
   const [isLoading, setIsLoading] = useState(false);
   const [autoBalance, setAutoBalance] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [payloadMessage, setPayloadMessage] = useState("");
+  // const [payloadMessage, setPayloadMessage] = useState("");
   const [teamAssignments, setTeamAssignments] = useState({
     teamA: [],
     teamB: [],
@@ -94,6 +95,8 @@ function PageMatches() {
   const [previewOpen, setPreviewOpen] = useState(false);
   const wasAutoBalance = useRef(autoBalance);
   const prevSelectedCount = useRef(0);
+
+  const { accessToken } = useAuth();
 
   useListPlayer(setIsLoading);
   const { players } = usePlayers();
@@ -138,9 +141,7 @@ function PageMatches() {
 
   const manualTeams = useMemo(() => {
     const mapIdsToPlayers = (ids = []) =>
-      ids
-        .map((id) => playerMap.get(id))
-        .filter(Boolean);
+      ids.map((id) => playerMap.get(id)).filter(Boolean);
     return {
       teamA: mapIdsToPlayers(teamAssignments.teamA),
       teamB: mapIdsToPlayers(teamAssignments.teamB),
@@ -253,7 +254,10 @@ function PageMatches() {
     try {
       const response = await fetch(`${API_BACKEND_URL}/matches`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(matchToCreate),
       });
 
@@ -272,12 +276,8 @@ function PageMatches() {
 
   useEffect(() => {
     setTeamAssignments((prev) => {
-      const filteredA = prev.teamA.filter((id) =>
-        selectedPlayers.includes(id)
-      );
-      const filteredB = prev.teamB.filter((id) =>
-        selectedPlayers.includes(id)
-      );
+      const filteredA = prev.teamA.filter((id) => selectedPlayers.includes(id));
+      const filteredB = prev.teamB.filter((id) => selectedPlayers.includes(id));
       const assigned = new Set([...filteredA, ...filteredB]);
       const remaining = selectedPlayers.filter((id) => !assigned.has(id));
       const nextA = [...filteredA];
@@ -339,9 +339,7 @@ function PageMatches() {
         ]}
       />
       <main className="matches-page">
-        <div
-          className={`match-layout ${previewOpen ? "preview-open" : ""}`}
-        >
+        <div className={`match-layout ${previewOpen ? "preview-open" : ""}`}>
           <div className="match-form-column">
             <MatchForm
               matchFormats={MATCH_FORMATS}
@@ -412,7 +410,7 @@ function PageMatches() {
                 isClosable
               />
 
-              <MatchSummary
+              {/* <MatchSummary
                 match={matchToCreate}
                 onCopy={(message) => setPayloadMessage(message)}
               />
@@ -420,7 +418,7 @@ function PageMatches() {
                 <p className="payload-feedback" role="status">
                   {payloadMessage}
                 </p>
-              )}
+              )} */}
             </div>
           )}
         </div>
