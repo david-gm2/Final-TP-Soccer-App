@@ -1,12 +1,11 @@
 .list-players {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  overflow-y: auto;
-  scrollbar-width: none;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow-y: auto;
+    overflow: scroll;
 }
-
 .list-players table {
   width: 100%;
   height: auto;

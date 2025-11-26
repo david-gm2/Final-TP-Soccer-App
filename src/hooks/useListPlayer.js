@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { API_BACKEND_URL } from "../constants/API_CONSTANTS";
 import { usePlayers } from "./usePlayers.js";
 import { useAuth } from "../hooks/useAuth.js";
+import { authFetch } from "../utils/authFetch.js";
 
 const CACHE_KEY = "players-cache";
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
@@ -37,14 +38,14 @@ export function useListPlayer(setIsLoading) {
       Date.now() - cached.timestamp > CACHE_TTL_MS ||
       !cached.data?.length;
 
-    console.log(accessToken)
-
     const fetchPlayers = async () => {
       if (typeof setIsLoading === "function") setIsLoading(true);
       try {
-        const res = await fetch(`${API_BACKEND_URL}/players`, {
-          headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' }
-        });
+        const res = await authFetch(
+          `${API_BACKEND_URL}/players`,
+          undefined,
+          accessToken
+        );
         if (!res.ok) throw new Error(`Failed to fetch players: ${res.status}`);
         const data = await res.json();
         if (mounted && typeof setPlayers === "function") {
@@ -65,7 +66,14 @@ export function useListPlayer(setIsLoading) {
     return () => {
       mounted = false;
     };
-  }, [players.length, setPlayers, setIsLoading, setLastFetched, lastFetched]);
+  }, [
+    players.length,
+    setPlayers,
+    setIsLoading,
+    setLastFetched,
+    lastFetched,
+    accessToken,
+  ]);
 
   return players;
 }

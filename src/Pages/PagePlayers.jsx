@@ -14,6 +14,7 @@ import { PlayerGrid } from "../components/PlayerGrid.jsx";
 import PlayerModal from "../components/PlayerModal.jsx";
 import DeletePlayerModal from "../components/DeletePlayerModal.jsx";
 import { useAuth } from "../hooks/useAuth.js";
+import { authFetch } from "../utils/authFetch.js";
 
 import "../styles/PlayersPage.css";
 import "../styles/PlayerFiltrer.css";
@@ -66,13 +67,16 @@ function PlayersPage() {
   const createPlayer = async (newPlayer) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_BACKEND_URL}/players`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newPlayer),
-      });
+      const response = await authFetch(
+        `${API_BACKEND_URL}/players`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newPlayer),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Failed to create player: ${response.statusText}`);
@@ -91,13 +95,16 @@ function PlayersPage() {
   const updatePlayer = async (playerId, updates) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_BACKEND_URL}/players/${playerId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updates),
-      });
+      const response = await authFetch(
+        `${API_BACKEND_URL}/players/${playerId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updates),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Failed to update player: ${response.statusText}`);
@@ -116,9 +123,12 @@ function PlayersPage() {
   const deletePlayer = async (playerId) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_BACKEND_URL}/players/${playerId}`, {
-        method: "DELETE",
-      });
+      const response = await authFetch(
+        `${API_BACKEND_URL}/players/${playerId}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Failed to delete player: ${response.statusText}`);

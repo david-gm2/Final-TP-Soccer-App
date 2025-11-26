@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 
 import "../styles/header.css";
 import { IconPen, IconPlus, IconScoreboard } from "../icons/IconsHeader.jsx";
+import { useAuth } from "../hooks/useAuth.js";
 
 function Header({
   title = "Welcome",
@@ -12,6 +13,8 @@ function Header({
 }) {
   const safeActions = actions.filter(Boolean);
   const safeFeatures = features.filter(Boolean);
+
+  const { isAdmin } = useAuth();
 
   const renderIcon = (icon, alt) => {
     if (!icon) return null;
@@ -52,7 +55,7 @@ function Header({
           </div>
         )}
 
-        {safeActions.length > 0 && (
+        {isAdmin && safeActions.length > 0 && (
           <div className="header-actions">
             {safeActions.map((action, index) => (
               <button
