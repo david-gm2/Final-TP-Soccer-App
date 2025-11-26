@@ -5,8 +5,33 @@ import LatestMatches from "../components/LatestMatches.jsx";
 import UpcomingMatches from "../components/UpcomingMatches.jsx";
 import TopPlayers from "../components/TopPlayers.jsx";
 import StatsCard from "../components/StatsCard.jsx";
+import { useAuth } from "../hooks/useAuth.js";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const title = user?.userName
+    ? `Welcome ${user.userName}`
+    : "Welcome to Soccer App";
+
+  const headerActions = [
+    {
+      text: "New match",
+      className: "btn btn-primary",
+      icon: "scoreboard",
+      onClick: () => navigate("/matches"),
+    },
+    {
+      text: "Add player",
+      className: "btn btn-secondary",
+      icon: "plus",
+      onClick: () =>
+        navigate("/players", { state: { openCreateModal: true } }),
+    },
+  ];
+
   let totalMatches = 5;
   let totalGoals = 44;
   let totalAssists = 13;
@@ -19,7 +44,11 @@ function Home() {
 
   return (
     <>
-      <Header />
+      <Header
+        title={title}
+        subtitle="Here's your weekly summary with the key stats and upcoming matches."
+        actions={headerActions}
+      />
 
       <main className="home-page">
         <StatsCard

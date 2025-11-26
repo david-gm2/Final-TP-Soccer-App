@@ -315,9 +315,22 @@ function PageMatches() {
 
   return (
     <>
-      <Header />
+      <Header
+        title="New match"
+        subtitle="Select players and customize match details."
+        actions={[
+          {
+            text: "Create match",
+            className: "btn btn-primary",
+            icon: "scoreboard",
+            onClick: handleSubmit(onSubmit),
+          },
+        ]}
+      />
       <main className="matches-page">
-        <div className="match-layout">
+        <div
+          className={`match-layout ${previewOpen ? "preview-open" : ""}`}
+        >
           <div className="match-form-column">
             <MatchForm
               matchFormats={MATCH_FORMATS}

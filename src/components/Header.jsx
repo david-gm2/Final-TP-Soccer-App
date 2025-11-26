@@ -1,120 +1,50 @@
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 import "../styles/header.css";
-import { IconDelete } from "../icons/IconsPlayer.jsx";
+import { IconPen, IconPlus, IconScoreboard } from "../icons/IconsHeader.jsx";
 
 function Header({
-  handleToggleModal,
-  playerTitle,
-  playerSubtitle = "Manage your user profile",
-  onEditPlayer,
-  onDeletePlayer,
+  title = "Welcome",
+  subtitle = "",
+  features = [],
+  actions = [],
+  afterHeader = null,
 }) {
-  const navigate = useNavigate();
-  const { pathname } = useLocation();
+  const safeActions = actions.filter(Boolean);
+  const safeFeatures = features.filter(Boolean);
 
-  const user = "Gm2dev";
-  const player = playerTitle || "Lionel Messi";
-
-  const headerContent = {
-    home: {
-      title: `Welcome ${user}`,
-      subtitle:
-        "Here's your weekly summary with the key stats and upcoming matches.",
-      features: [],
-      buttons: [
-        {
-          text: "New match",
-          className: "btn btn-primary",
-          onClick: () => navigate("/matches"),
-        },
-        {
-          text: "Add player",
-          className: "btn btn-secondary",
-          onClick: () => navigate("/players"),
-        },
-      ],
-    },
-    statistics: {
-      title: "Statistics",
-      subtitle: "Player rankings and performance",
-      features: [],
-      buttons: [],
-    },
-    matches: {
-      title: "New match",
-      subtitle: "Select players and customize match details.",
-      features: [],
-      buttons: [],
-    },
-    players: {
-      title: "Players",
-      subtitle: "Manage your team of players",
-      features: [],
-      buttons:
-        typeof handleToggleModal === "function"
-          ? [
-              {
-                text: "+ Add player",
-                className: "btn btn-primary",
-                onClick: handleToggleModal,
-              },
-            ]
-          : [],
-    },
-    history: {
-      title: "History",
-      subtitle: "Review the complete match history.",
-      features: [],
-      buttons: [],
-    },
-    playersDetails: {
-      title: player,
-      subtitle: playerSubtitle,
-      features: [],
-      buttons: [
-        typeof onDeletePlayer === "function" && {
-          text: (
-            <>
-              <IconDelete width="17" height="19" /> <p>Delete player</p>
-            </>
-          ),
-          className: "btn btn-icon btn-danger",
-          onClick: onDeletePlayer,
-        },
-        typeof onEditPlayer === "function" && {
-          text: "Edit",
-          className: "btn btn-secondary",
-          onClick: onEditPlayer,
-        },
-      ].filter(Boolean),
-    },
+  const renderIcon = (icon, alt) => {
+    if (!icon) return null;
+    if (typeof icon === "string") {
+      const map = {
+        plus: <IconPlus />,
+        scoreboard: <IconScoreboard />,
+        pen: <IconPen />,
+      };
+      if (map[icon]) return map[icon];
+      return (
+        <img
+          src={icon}
+          alt={alt ?? ""}
+          className="header-action-icon"
+          aria-hidden={alt ? undefined : true}
+        />
+      );
+    }
+    return icon;
   };
-
-  const getSectionKeyFromPath = (path) => {
-    const [, first, second] = path.split("/");
-    if (!first) return "home";
-    if (first === "players" && second) return "playersDetails";
-    if (first === "players") return "players";
-    if (first === "stats") return "statistics";
-    if (first === "matches") return "matches";
-    if (first === "history") return "history";
-    return "home";
-  };
-
-  const content = headerContent[getSectionKeyFromPath(pathname)] ?? headerContent.home;
 
   return (
     <>
       <header className="header">
         <div className="header-copy">
-          <h1>{content.title}</h1>
-          <h3>{content.subtitle}</h3>
+          <h1>{title}</h1>
+          {subtitle && <h3>{subtitle}</h3>}
         </div>
 
-        {content.features.length > 0 && (
+        {safeFeatures.length > 0 && (
           <div className="header-features">
-            {content.features.map((feature, index) => (
+            {safeFeatures.map((feature, index) => (
               <div key={index} className="header-feature">
                 {feature}
               </div>
@@ -122,21 +52,23 @@ function Header({
           </div>
         )}
 
-        {content.buttons.length > 0 && (
+        {safeActions.length > 0 && (
           <div className="header-actions">
-            {content.buttons.map((button, index) => (
+            {safeActions.map((action, index) => (
               <button
-                key={index}
-                className={button.className}
-                onClick={() => button.onClick?.()}
+                key={action.key ?? index}
+                className={action.className}
+                onClick={() => action.onClick?.()}
                 type="button"
               >
-                {button.text}
+                {renderIcon(action.icon, action.alt)}
+                <span className="header-action-label">{action.text}</span>
               </button>
             ))}
           </div>
         )}
       </header>
+      {afterHeader}
       <Outlet />
     </>
   );
