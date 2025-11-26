@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import Header from "../components/Header.jsx";
 import { useAuth } from "../hooks/useAuth.js";
 import { API_BACKEND_URL } from "../constants/API_CONSTANTS.js";
+import { authFetch } from "../utils/authFetch.js";
 
 import "../styles/UsersPage.css";
 
@@ -49,13 +50,17 @@ function UsersPage() {
       setError(null);
 
       try {
-        const headers = accessToken
-          ? { Authorization: `Bearer ${accessToken}` }
-          : undefined;
-
         const [resRole1, resRole2] = await Promise.all([
-          fetch(`${API_BACKEND_URL}/users-roles/users/1`, { headers }),
-          fetch(`${API_BACKEND_URL}/users-roles/users/2`, { headers }),
+          authFetch(
+            `${API_BACKEND_URL}/users-roles/users/1`,
+            undefined,
+            accessToken
+          ),
+          authFetch(
+            `${API_BACKEND_URL}/users-roles/users/2`,
+            undefined,
+            accessToken
+          ),
         ]);
 
         if (!resRole1.ok) throw new Error("Failed fetching role 1 users");
@@ -130,16 +135,19 @@ function UsersPage() {
     toggleAdminLocal(userId, makeAdmin);
 
     try {
-      await fetch(`${API_BACKEND_URL}/users-roles/${userId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+      await authFetch(
+        `${API_BACKEND_URL}/users-roles/${userId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            roles_ids: makeAdmin ? [ADMIN_ROLE_ID] : [],
+          }),
         },
-        body: JSON.stringify({
-          roles_ids: makeAdmin ? [ADMIN_ROLE_ID] : [],
-        }),
-      });
+        accessToken
+      );
     } catch (err) {
       console.error("PageUsers: failed to update admin", err);
       setError("Could not update role. Please try again.");

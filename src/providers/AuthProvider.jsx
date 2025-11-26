@@ -2,24 +2,23 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { AuthContext } from "../context/AuthContext";
-
-const TOKEN_KEY = "accessToken";
+import { ACCESS_TOKEN_KEY } from "../constants/auth.js";
 
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
-  const initialState = sessionStorage.getItem(TOKEN_KEY);
+  const initialState = sessionStorage.getItem(ACCESS_TOKEN_KEY);
 
   const [accessToken, setAccessToken] = useState(initialState);
 
   const login = (token) => {
-    sessionStorage.setItem(TOKEN_KEY, token);
+    sessionStorage.setItem(ACCESS_TOKEN_KEY, token);
     setAccessToken(token);
     navigate("/");
   };
 
   const logout = () => {
-    sessionStorage.removeItem(TOKEN_KEY);
+    sessionStorage.removeItem(ACCESS_TOKEN_KEY);
     setAccessToken(null);
     navigate("/login", { replace: true });
   };

@@ -8,8 +8,7 @@ import Header from "../components/Header.jsx";
 import PlayerModal from "../components/PlayerModal.jsx";
 import DeletePlayerModal from "../components/DeletePlayerModal.jsx";
 import { usePlayers } from "../hooks/usePlayers.js";
-
-import { useAuth } from "../hooks/useAuth.js";
+import { authFetch } from "../utils/authFetch.js";
 
 import "../styles/PlayerDetails.css";
 
@@ -62,19 +61,15 @@ function PagePlayerDetails() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { accessToken } = useAuth();
-
   const rowsPerPage = 6;
 
   useEffect(() => {
     const fetchPlayerDetails = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${API_BACKEND_URL}/players/id/${id}`, {
-          headers: accessToken
-            ? { Authorization: `Bearer ${accessToken}` }
-            : undefined,
-        });
+        const response = await authFetch(
+          `${API_BACKEND_URL}/players/id/${id}`
+        );
         if (!response.ok) {
           throw new Error(`Failed to fetch player: ${response.statusText}`);
         }
@@ -98,13 +93,10 @@ function PagePlayerDetails() {
   const handleDeletePlayer = async () => {
     if (!player?.player_id) return;
     try {
-      const response = await fetch(
+      const response = await authFetch(
         `${API_BACKEND_URL}/players/${player.player_id}`,
         {
           method: "DELETE",
-          headers: accessToken
-            ? { Authorization: `Bearer ${accessToken}` }
-            : undefined,
         }
       );
       if (!response.ok) {
@@ -145,13 +137,12 @@ function PagePlayerDetails() {
     if (jerseyNumber !== undefined) payload.number = jerseyNumber;
 
     try {
-      const response = await fetch(
+      const response = await authFetch(
         `${API_BACKEND_URL}/players/${player.player_id}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify(payload),
         }

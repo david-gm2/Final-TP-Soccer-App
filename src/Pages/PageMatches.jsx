@@ -13,6 +13,7 @@ import { useURLSearch } from "../hooks/useURLSearch.js";
 import { filterPlayers } from "../utils/filterPlayers.js";
 import { API_BACKEND_URL } from "../constants/API_CONSTANTS.js";
 import { useAuth } from "../hooks/useAuth.js";
+import { authFetch } from "../utils/authFetch.js";
 
 import Header from "../components/Header";
 
@@ -252,14 +253,17 @@ function PageMatches() {
 
     setIsSubmitting(true);
     try {
-      const response = await fetch(`${API_BACKEND_URL}/matches`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
+      const response = await authFetch(
+        `${API_BACKEND_URL}/matches`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(matchToCreate),
         },
-        body: JSON.stringify(matchToCreate),
-      });
+        accessToken
+      );
 
       if (!response.ok) {
         throw new Error(`Failed to create match: ${response.statusText}`);
