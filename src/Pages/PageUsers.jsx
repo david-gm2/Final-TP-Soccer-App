@@ -5,7 +5,8 @@ import { API_BACKEND_URL } from "../constants/API_CONSTANTS.js";
 
 import "../styles/UsersPage.css";
 
-const ADMIN_ROLE_ID = 1;
+// admin es roleId = 2
+const ADMIN_ROLE_ID = 2;
 
 const normalizeUsers = (list = []) =>
   list.map((user) => ({
@@ -26,7 +27,9 @@ const isAdmin = (user) =>
 
 function UsersPage() {
   const { accessToken } = useAuth();
+
   const [users, setUsers] = useState([]);
+  const [fallbackAdmins, setFallbackAdmins] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [confirmModal, setConfirmModal] = useState({
@@ -41,38 +44,53 @@ function UsersPage() {
 
   useEffect(() => {
     let mounted = true;
+
     const fetchUsers = async () => {
       setLoading(true);
       setError(null);
+
       try {
-        const res = await fetch(`${API_BACKEND_URL}/users-roles/users/1`, {
-          headers: accessToken
-            ? { Authorization: `Bearer ${accessToken}` }
-            : undefined,
-        });
-        if (!res.ok) throw new Error(`Failed to fetch users: ${res.status}`);
-        const data = await res.json();
-        if (mounted) setUsers(normalizeUsers(data));
+        const headers = accessToken
+          ? { Authorization: `Bearer ${accessToken}` }
+          : undefined;
+
+        const [resRole1, resRole2] = await Promise.all([
+          fetch(`${API_BACKEND_URL}/users-roles/users/1`, { headers }),
+          fetch(`${API_BACKEND_URL}/users-roles/users/2`, { headers }),
+        ]);
+
+        if (!resRole1.ok) throw new Error("Failed fetching role 1 users");
+        if (!resRole2.ok) throw new Error("Failed fetching role 2 users");
+
+        const dataRole1 = await resRole1.json();
+        const dataRole2 = await resRole2.json();
+
+        if (!mounted) return;
+
+        setUsers(normalizeUsers(dataRole1));
+        setFallbackAdmins(normalizeUsers(dataRole2));
       } catch (err) {
         console.error("PageUsers: unable to fetch users", err);
+
         if (mounted) {
           setError("Unable to load users. Showing sample data.");
           setUsers(
             normalizeUsers([
               {
                 id: "demo-1",
-                name: "Demo User",
-                email: "demo@example.com",
+                name: "Demo Admin",
+                email: "demo-admin@example.com",
                 roles: [{ roleName: "admin" }],
               },
               {
                 id: "demo-2",
-                name: "Guest User",
-                email: "guest@example.com",
+                name: "Demo User",
+                email: "demo-user@example.com",
                 roles: [],
               },
             ])
           );
+          setFallbackAdmins([]);
         }
       } finally {
         if (mounted) setLoading(false);
@@ -111,9 +129,10 @@ function UsersPage() {
 
   const updateAdmin = async (userId, makeAdmin) => {
     toggleAdminLocal(userId, makeAdmin);
+
     try {
-      await fetch(`${API_BACKEND_URL}/user-roles/${userId}`, {
-        method: "PATCH",
+      await fetch(`${API_BACKEND_URL}/users-roles/${userId}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
@@ -153,6 +172,7 @@ function UsersPage() {
         {error && <p className="users-error">{error}</p>}
         {loading && <p className="users-loading">Loading users...</p>}
 
+        {/* ADMINS SECTION */}
         <section className="users-section">
           <button
             type="button"
@@ -170,39 +190,71 @@ function UsersPage() {
             className={`users-list-wrapper ${showAdmins ? "open" : "closed"}`}
             aria-hidden={!showAdmins}
           >
-            <div className="users-list-panel">
-              <div className="users-grid">
-                {admins.map((user) => (
-                  <article className="user-card" key={user.id}>
-                    <div className="user-info">
-                      <div className="user-avatar">{user.name[0] ?? "U"}</div>
-                      <div>
-                        <h3>{user.name}</h3>
-                        <p>{user.email}</p>
-                      </div>
+            <div className="users-grid">
+              {admins.map((user) => (
+                <article className="user-card" key={user.id}>
+                  <div className="user-info">
+                    <div className="user-avatar">{user.name[0] ?? "U"}</div>
+                    <div>
+                      <h3>{user.name}</h3>
+                      <p>{user.email}</p>
                     </div>
-                    <div className="user-roles">
-                      <span className="badge badge-admin">Admin</span>
-                    </div>
-                    <div className="user-actions">
-                      <button
-                        type="button"
-                        className="btn btn-secondary"
-                        onClick={() => handleToggle(user)}
-                      >
-                        Remove admin
-                      </button>
-                    </div>
-                  </article>
-                ))}
-                {!admins.length && !loading && (
-                  <p className="users-empty">No admins yet.</p>
-                )}
-              </div>
+                  </div>
+                  <div className="user-roles">
+                    <span className="badge badge-admin">Admin</span>
+                  </div>
+                  <div className="user-actions">
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      onClick={() => handleToggle(user)}
+                    >
+                      Remove admin
+                    </button>
+                  </div>
+                </article>
+              ))}
+
+              {/* fallback si no hay admins */}
+              {!admins.length && !loading && (
+                <>
+                  {fallbackAdmins.length ? (
+                    fallbackAdmins.map((user) => (
+                      <article className="user-card" key={user.id}>
+                        <div className="user-info">
+                          <div className="user-avatar">
+                            {user.name[0] ?? "U"}
+                          </div>
+                          <div>
+                            <h3>{user.name}</h3>
+                            <p>{user.email}</p>
+                          </div>
+                        </div>
+
+                        <div className="user-actions">
+                          {/* 👇 NO mostrar el botón si ya es admin */}
+                          {!isAdmin(user) && ( // 👈
+                            <button
+                              type="button"
+                              className="btn btn-primary"
+                              onClick={() => handleToggle(user)}
+                            >
+                              Give admin
+                            </button>
+                          )}
+                        </div>
+                      </article>
+                    ))
+                  ) : (
+                    <p className="users-empty">No admins yet.</p>
+                  )}
+                </>
+              )}
             </div>
           </div>
         </section>
 
+        {/* USERS SECTION */}
         <section className="users-section">
           <button
             type="button"
@@ -220,18 +272,19 @@ function UsersPage() {
             className={`users-list-wrapper ${showUsers ? "open" : "closed"}`}
             aria-hidden={!showUsers}
           >
-            <div className="users-list-panel">
-              <div className="users-grid">
-                {regularUsers.map((user) => (
-                  <article className="user-card" key={user.id}>
-                    <div className="user-info">
-                      <div className="user-avatar">{user.name[0] ?? "U"}</div>
-                      <div>
-                        <h3>{user.name}</h3>
-                        <p>{user.email}</p>
-                      </div>
+            <div className="users-grid">
+              {regularUsers.map((user) => (
+                <article className="user-card" key={user.id}>
+                  <div className="user-info">
+                    <div className="user-avatar">{user.name[0] ?? "U"}</div>
+                    <div>
+                      <h3>{user.name}</h3>
+                      <p>{user.email}</p>
                     </div>
-                    <div className="user-actions">
+                  </div>
+                  <div className="user-actions">
+                    {/* 👇 por las dudas, también evitamos botón si ya es admin */}
+                    {!isAdmin(user) && ( // 👈
                       <button
                         type="button"
                         className="btn btn-primary"
@@ -239,13 +292,13 @@ function UsersPage() {
                       >
                         Give admin
                       </button>
-                    </div>
-                  </article>
-                ))}
-                {!regularUsers.length && !loading && (
-                  <p className="users-empty">No regular users.</p>
-                )}
-              </div>
+                    )}
+                  </div>
+                </article>
+              ))}
+              {!regularUsers.length && !loading && (
+                <p className="users-empty">No regular users.</p>
+              )}
             </div>
           </div>
         </section>
