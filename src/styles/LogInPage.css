@@ -3,7 +3,7 @@
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  background-image: url("/public/images/auth-background.webp");
+  background-image: url("/images/auth-background.webp");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
