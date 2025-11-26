@@ -80,7 +80,7 @@ export function LogInPage() {
         <div className="linksLogIn">
           <a href="#forgot-password">Forgot your password?</a>
           <p>
-            Don't have an account? <Link to="/signup">Sign Up</Link>
+            Don't have an account? <Link to="/sign-up">Sign Up</Link>
           </p>
         </div>
       </div>

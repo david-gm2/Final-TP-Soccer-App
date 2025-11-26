@@ -13,12 +13,14 @@ import { PlayerFilter } from "../components/PlayerFilter.jsx";
 import { PlayerGrid } from "../components/PlayerGrid.jsx";
 import PlayerModal from "../components/PlayerModal.jsx";
 import DeletePlayerModal from "../components/DeletePlayerModal.jsx";
+import { useAuth } from "../hooks/useAuth.js";
 
 import "../styles/PlayersPage.css";
 import "../styles/PlayerFiltrer.css";
 import "../styles/PlayerModal.css";
 
 function PlayersPage() {
+  const { isAdmin } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState("create");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -230,7 +232,6 @@ function PlayersPage() {
           },
         ]}
       />
-
       <main className="players-page">
         <PlayerFilter />
 
@@ -243,21 +244,25 @@ function PlayersPage() {
           emptyMessage={emptyMessage}
         />
       </main>
-
-      <PlayerModal
-        isOpen={isModalOpen}
-        mode={modalMode}
-        initialPlayer={editingPlayer}
-        onClose={closeModal}
-        onSubmit={handleUpsertPlayer}
-      />
-
-      <DeletePlayerModal
-        isOpen={isDeleteModalOpen}
-        onClose={closeDeleteModal}
-        onConfirm={confirmDelete}
-        player={playerToDelete}
-      />
+      (
+      {isAdmin && (
+        <PlayerModal
+          isOpen={isModalOpen}
+          mode={modalMode}
+          initialPlayer={editingPlayer}
+          onClose={closeModal}
+          onSubmit={handleUpsertPlayer}
+        />
+      )}
+      )
+      {isAdmin && (
+        <DeletePlayerModal
+          isOpen={isDeleteModalOpen}
+          onClose={closeDeleteModal}
+          onConfirm={confirmDelete}
+          player={playerToDelete}
+        />
+      )}
     </>
   );
 }

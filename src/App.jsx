@@ -1,8 +1,9 @@
 import { Route, Routes } from "react-router-dom";
 
 import Sidebar from "./components/Sidebar.jsx";
-import Header from "./components/Header.jsx";
+
 import PrivateRoute from "./components/PrivateRoute.jsx";
+import { useAuth } from "../src/hooks/useAuth.js";
 
 import Home from "./Pages/Home.jsx";
 import PageMatches from "./Pages/PageMatches.jsx";
@@ -31,6 +32,7 @@ const fallbackPlayer = {
 };
 
 function App() {
+  const { isAdmin } = useAuth();
   return (
     <Routes>
       {/* Public routes */}
@@ -44,8 +46,8 @@ function App() {
           <Route path="players/id/:id" element={<PagePlayerDetails />} />
           <Route path="stats" element={<PageStats player={fallbackPlayer} />} />
           <Route path="history" element={<PageHistory />} />
-          <Route path="matches" element={<PageMatches />} />
-          <Route path="users" element={<PageUsers />} />
+          {isAdmin && <Route path="matches" element={<PageMatches />} />}
+          {isAdmin && <Route path="users" element={<PageUsers />} />}
         </Route>
       </Route>
 
