@@ -24,7 +24,7 @@ function LatestMatches({
             </div>
           </div>
           <div className="match-actions">
-            <img src="../public/icons/arrow.svg" alt="" />
+            <img src="/icons/arrow.svg" alt="" />
           </div>
         </div>
       ))}
