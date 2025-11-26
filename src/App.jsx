@@ -10,6 +10,7 @@ import PagePlayers from "./Pages/PagePlayers.jsx";
 import PagePlayerDetails from "./Pages/PagePlayerDetails.jsx";
 import PageStats from "./Pages/PageStats.jsx";
 import PageHistory from "./Pages/PageHistory.jsx";
+import PageUsers from "./Pages/PageUsers.jsx";
 import PageSignUp from "./Pages/PageSignUp.jsx";
 import { LogInPage } from "./Pages/LogInPage.jsx";
 import NotFoundPage from "./Pages/PageNotFound.jsx";
@@ -29,17 +30,6 @@ const fallbackPlayer = {
   creativity: 50,
 };
 
-function Users() {
-  return (
-    <>
-      <Header />
-      <main>
-        <p>User list will be available soon for ADMINS.</p>
-      </main>
-    </>
-  );
-}
-
 function App() {
   return (
     <Routes>
@@ -55,7 +45,7 @@ function App() {
           <Route path="stats" element={<PageStats player={fallbackPlayer} />} />
           <Route path="history" element={<PageHistory />} />
           <Route path="matches" element={<PageMatches />} />
-          <Route path="users" element={<Users />} />
+          <Route path="users" element={<PageUsers />} />
         </Route>
       </Route>
 
