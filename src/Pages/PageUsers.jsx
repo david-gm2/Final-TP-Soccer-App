@@ -45,7 +45,7 @@ function UsersPage() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`${API_BACKEND_URL}/users`, {
+        const res = await fetch(`${API_BACKEND_URL}/users-roles/users/1`, {
           headers: accessToken
             ? { Authorization: `Bearer ${accessToken}` }
             : undefined,
