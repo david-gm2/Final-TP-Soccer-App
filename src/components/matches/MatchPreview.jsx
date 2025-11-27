@@ -33,9 +33,6 @@ export function MatchPreview({
             />
             Auto-balance
           </label>
-          <button type="button" className="chip-btn" onClick={onShuffle}>
-            Shuffle
-          </button>
           <span className="preview-format">{formatLabel}</span>
           {isClosable && (
             <button
