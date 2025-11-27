@@ -53,6 +53,14 @@
   margin: 0;
 }
 
+.header-copy {
+  margin-left: 12px;
+}
+
+.header-features {
+  margin-top: 16px;
+}
+
 @media (min-width: 769px) {
   .header {
     flex-direction: row;

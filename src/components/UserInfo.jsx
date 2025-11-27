@@ -30,10 +30,6 @@ function UserInfo() {
           <IconSignOut />
         </button>
       </div>
-
-      {!isAdmin && (
-        <button className="request-admin-access">Request Admin Access</button>
-      )}
     </div>
   );
 }
