@@ -215,13 +215,15 @@
   color: #602ee1;
   padding: 8px 33px;
   margin: 0 12px;
-  width: 100%;
+  width: calc(100% - 24px);
   border-radius: 6px;
   background: white;
   border: 1px #602ee1 solid;
   display: flex;
   justify-content: center;
   align-items: center;
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 @media (min-width: 769px) {

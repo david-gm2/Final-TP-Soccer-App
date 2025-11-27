@@ -26,6 +26,13 @@
   flex-direction: column;
 }
 
+.header-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
 .header-actions .btn,
 .header-actions .btn-secondary,
 .header-actions .btn-primary,
@@ -46,6 +53,14 @@
   margin: 0;
 }
 
+.header-copy {
+  margin-left: 12px;
+}
+
+.header-features {
+  margin-top: 16px;
+}
+
 @media (min-width: 769px) {
   .header {
     flex-direction: row;
@@ -61,6 +76,9 @@
   }
   .header-actions {
     flex-direction: row;
+  }
+  .header-features {
+    justify-content: flex-start;
   }
 }
 

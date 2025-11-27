@@ -9,38 +9,11 @@ import PlayerModal from "../components/PlayerModal.jsx";
 import DeletePlayerModal from "../components/DeletePlayerModal.jsx";
 import { usePlayers } from "../hooks/usePlayers.js";
 import { authFetch } from "../utils/authFetch.js";
+import StatsCard from "../components/StatsCard.jsx";
+import { useMatches } from "../hooks/useMatches.js";
+import { useListMatches } from "../hooks/useListMatches.js";
 
 import "../styles/PlayerDetails.css";
-
-const DEFAULT_MATCHES = [
-  {
-    id: 1,
-    result: "9-10",
-    location: "Fulbito Arena",
-    winner: "Team A",
-    date: "Jan 11, 2050",
-    playerRate: 7.2,
-    matchRate: 7.2,
-  },
-  {
-    id: 2,
-    result: "11-8",
-    location: "Fulbito Arena",
-    winner: "Team B",
-    date: "Jan 11, 2050",
-    playerRate: 7.2,
-    matchRate: 1.4,
-  },
-  {
-    id: 3,
-    result: "11-13",
-    location: "Fulbito Arena",
-    winner: "Team A",
-    date: "Jan 11, 2050",
-    playerRate: 7.2,
-    matchRate: 10,
-  },
-];
 
 const DEFAULT_NOTES = [
   { id: 8, text: "Shows high adaptability across multiple positions." },
@@ -59,17 +32,21 @@ function PagePlayerDetails() {
   const [error, setError] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const rowsPerPage = 6;
+  const [isMatchesLoading, setIsMatchesLoading] = useState(false);
+  const { matches } = useMatches();
+  const [matchesPlayed, setMatchesPlayed] = useState(0);
+  const [totalGoals, setTotalGoals] = useState(0);
+  const [totalAssists, setTotalAssists] = useState(0);
+  const [wins, setWins] = useState(0);
+  const [winRate, setWinRate] = useState(0);
+  const [goalsPerMatch, setGoalsPerMatch] = useState(0);
+  useListMatches(setIsMatchesLoading);
 
   useEffect(() => {
     const fetchPlayerDetails = async () => {
       try {
         setLoading(true);
-        const response = await authFetch(
-          `${API_BACKEND_URL}/players/id/${id}`
-        );
+        const response = await authFetch(`${API_BACKEND_URL}/players/id/${id}`);
         if (!response.ok) {
           throw new Error(`Failed to fetch player: ${response.statusText}`);
         }
@@ -167,35 +144,113 @@ function PagePlayerDetails() {
     }
   };
 
-  const recentMatches = useMemo(
-    () => player?.recentMatches ?? DEFAULT_MATCHES,
-    [player?.recentMatches]
-  );
+  const playerMatchRows = useMemo(() => {
+    const playerId = player?.player_id ?? player?.id;
+    if (!playerId || !Array.isArray(matches)) return [];
+
+    const extractIds = (team) => {
+      if (!team) return [];
+      if (Array.isArray(team.playersIds)) return team.playersIds;
+      if (Array.isArray(team.players)) {
+        return team.players
+          .map((p) => p.id ?? p.player_id)
+          .filter((val) => val !== undefined && val !== null);
+      }
+      return [];
+    };
+
+    let goalsSum = 0;
+    let assistsSum = 0;
+    let winsCount = 0;
+    let matchesPlayed = 0;
+
+    matches.forEach((match) => {
+      const homePlayers = match.homeTeam?.players || [];
+      const awayPlayers = match.awayTeam?.players || [];
+      const allPlayers = [...homePlayers, ...awayPlayers];
+      const playerInMatch = allPlayers.find((p) => p.id === playerId);
+
+      if (playerInMatch) {
+        matchesPlayed += 1;
+        goalsSum += playerInMatch.goals || 0;
+        assistsSum += playerInMatch.assists || 0;
+
+        // Determine if player's team won
+        const isHomeTeam = homePlayers.some((p) => p.id === playerId);
+        const homeScore = match.score?.home || 0;
+        const awayScore = match.score?.away || 0;
+
+        if (
+          (isHomeTeam && homeScore > awayScore) ||
+          (!isHomeTeam && awayScore > homeScore)
+        ) {
+          winsCount += 1;
+        }
+      }
+    });
+
+    setMatchesPlayed(matchesPlayed);
+    setTotalGoals(goalsSum);
+    setTotalAssists(assistsSum);
+    setWins(winsCount);
+    setWinRate(
+      matchesPlayed > 0 ? Math.round((winsCount / matchesPlayed) * 100) : 0
+    );
+    setGoalsPerMatch(
+      matchesPlayed > 0 ? (goalsSum / matchesPlayed).toFixed(2) : 0
+    );
+
+    return matches
+      .filter((match) => {
+        const homeIds =
+          extractIds(match.homeTeam) || extractIds(match.home_team);
+        const awayIds =
+          extractIds(match.awayTeam) || extractIds(match.away_team);
+        return homeIds.includes(playerId) || awayIds.includes(playerId);
+      })
+      .map((match) => {
+        const dateValue = match.match_date ?? match.date;
+        const dateObj = dateValue ? new Date(dateValue) : null;
+        const dateLabel = dateObj
+          ? dateObj.toLocaleDateString(undefined, {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })
+          : (match.date ?? "TBD");
+
+        const label =
+          match.name ??
+          `${match.homeTeam?.name ?? match.home_team?.name ?? "Home"} vs ${match.awayTeam?.name ?? match.away_team?.name ?? "Away"}`;
+
+        return {
+          id: match.match_id ?? match.id ?? label,
+          result: match.result ?? label,
+          location: match.location ?? "--",
+          winner: match.winner ?? "--",
+          date: dateLabel,
+          playerRate: match.playerRate ?? "--",
+          matchRate: match.matchRate ?? "--",
+          label,
+        };
+      })
+      .sort((a, b) => {
+        const da = new Date(a.date).getTime();
+        const db = new Date(b.date).getTime();
+        return Number.isNaN(db) - Number.isNaN(da) || db - da;
+      });
+  }, [matches, player?.id, player?.player_id]);
+
+  const recentMatches = playerMatchRows;
+
+  useEffect(() => {
+    setMatchesPlayed(playerMatchRows.length);
+  }, [playerMatchRows.length]);
+
   const playerNotes = useMemo(
     () => player?.notes ?? DEFAULT_NOTES,
     [player?.notes]
   );
-
-  const totalPages = useMemo(
-    () => Math.max(1, Math.ceil(recentMatches.length / rowsPerPage)),
-    [recentMatches.length]
-  );
-
-  useEffect(() => {
-    setCurrentPage((prev) => Math.min(prev, totalPages));
-  }, [totalPages]);
-
-  const paginatedMatches = useMemo(() => {
-    const start = (currentPage - 1) * rowsPerPage;
-    return recentMatches.slice(start, start + rowsPerPage);
-  }, [recentMatches, currentPage]);
-
-  const handleChangePage = (page) => {
-    setCurrentPage((prev) => {
-      const nextPage = Math.max(1, Math.min(page, totalPages));
-      return nextPage === prev ? prev : nextPage;
-    });
-  };
 
   if (loading) {
     return (
@@ -280,7 +335,7 @@ function PagePlayerDetails() {
     : playerLevel;
   const formattedPosition = formatLabel(player.position, "Player");
   const jerseyNumber = player.number ?? "--";
-  const headerSubtitle = `${formattedPosition} · #${jerseyNumber}`;
+  const headerSubtitle = "";
 
   const summaryChips = [
     { id: "status", label: "Ready to play", tone: "success" },
@@ -290,30 +345,37 @@ function PagePlayerDetails() {
     { id: "number", label: `#${jerseyNumber}`, tone: "outline" },
   ];
 
+  const summaryChipsContent = (
+    <div className="player-summary__chips">
+      {summaryChips.map((chip) => (
+        <span key={chip.id} className={`player-pill ${chip.tone}`}>
+          {chip.tone === "success" && <span className="status-dot ready" />}
+          {chip.label}
+        </span>
+      ))}
+    </div>
+  );
+
   const statCards = [
     {
-      id: "wins",
-      label: "Wins rate",
-      value: `${player.winsRate ?? 75}%`,
-      icon: "chart",
+      title: "Wins rate",
+      value: `${winRate ?? 75}%`,
+      icon: "/icons/scoreboard.svg",
     },
     {
-      id: "assists",
-      label: "Total assists",
-      value: player.assists ?? 7,
-      icon: "star",
+      title: "Total assists",
+      value: totalAssists ?? 7,
+      icon: "/icons/star.svg",
     },
     {
-      id: "goals",
-      label: "Total goals",
-      value: player.goals ?? 18,
-      icon: "ball",
+      title: "Total goals",
+      value: totalGoals ?? 18,
+      icon: "/icons/sports_soccer.svg",
     },
     {
-      id: "matches",
-      label: "Total matches",
-      value: player.totalMatches ?? 24,
-      icon: "calendar",
+      title: "Total matches",
+      value: matchesPlayed,
+      icon: "/icons/person.svg",
     },
   ];
 
@@ -322,49 +384,26 @@ function PagePlayerDetails() {
       <Header
         title={player.nick}
         subtitle={headerSubtitle}
+        features={[summaryChipsContent]}
         actions={[
           {
             key: "delete",
             text: "Delete player",
-            className: "btn btn-icon btn-danger",
+            className: "btn btn-danger",
             icon: <IconDelete width="17" height="19" />,
             onClick: openDeleteModal,
           },
           {
             key: "edit",
             text: "Edit",
-            className: "btn btn-secondary",
+            className: "btn btn-primary",
             icon: "pen",
             onClick: openEditModal,
           },
         ]}
       />
       <main className="player-details-page">
-        <section className="player-summary-card">
-          //TODO poner esto en el header pasarlo como porp
-          <div className="player-summary__chips">
-            {summaryChips.map((chip) => (
-              <span key={chip.id} className={`player-pill ${chip.tone}`}>
-                {chip.tone === "success" && (
-                  <span className="status-dot ready" />
-                )}
-                {chip.label}
-              </span>
-            ))}
-          </div>
-        </section>
-
-        <div className="stats-row">
-          {statCards.map((card) => (
-            <article key={card.id} className="stat-item">
-              <div className="stat-item__header">
-                <p>{card.label}</p>
-                <span aria-hidden="true">{card.icon}</span>
-              </div>
-              <strong className="stat-value">{card.value}</strong>
-            </article>
-          ))}
-        </div>
+        <StatsCard stats={statCards} />
 
         <div className="content-row">
           <div className="player-card-details">
@@ -428,7 +467,7 @@ function PagePlayerDetails() {
               </div>
               <div className="perf-stat">
                 <label>GOAL PER MATCH</label>
-                <div className="perf-value">{player.goalPerMatch || 0.8}</div>
+                <div className="perf-value">{goalsPerMatch}</div>
               </div>
             </div>
           </div>
@@ -454,53 +493,28 @@ function PagePlayerDetails() {
                 </tr>
               </thead>
               <tbody>
-                {paginatedMatches.map((match) => (
-                  <tr key={match.id}>
-                    <td>{match.result}</td>
-                    <td>{match.location}</td>
-                    <td>{match.winner}</td>
-                    <td>{match.date}</td>
-                    <td>{match.playerRate}</td>
-                    <td>{match.matchRate}</td>
+                {isMatchesLoading ? (
+                  <tr>
+                    <td colSpan="6">Loading matches...</td>
                   </tr>
-                ))}
+                ) : !recentMatches.length ? (
+                  <tr>
+                    <td colSpan="6">No matches found for this player.</td>
+                  </tr>
+                ) : (
+                  recentMatches.map((match) => (
+                    <tr key={match.id}>
+                      <td>{match.result}</td>
+                      <td>{match.location}</td>
+                      <td>{match.winner}</td>
+                      <td>{match.date}</td>
+                      <td>{match.playerRate}</td>
+                      <td>{match.matchRate}</td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
-          </div>
-          <div className="table-footer">
-            <button
-              type="button"
-              className="link-button"
-              onClick={() => handleChangePage(currentPage - 1)}
-              disabled={currentPage <= 1}
-              aria-label="Go to previous page"
-            >
-              &lt; Prev
-            </button>
-            <div className="table-pagination">
-              {Array.from({ length: totalPages }, (_, index) => {
-                const page = index + 1;
-                return (
-                  <button
-                    key={page}
-                    type="button"
-                    className={`btn ${page === currentPage ? "btn-primary" : "btn-secondary"}`}
-                    onClick={() => handleChangePage(page)}
-                  >
-                    {page}
-                  </button>
-                );
-              })}
-            </div>
-            <button
-              type="button"
-              className="link-button"
-              onClick={() => handleChangePage(currentPage + 1)}
-              disabled={currentPage >= totalPages}
-              aria-label="Go to next page"
-            >
-              Next &gt;
-            </button>
           </div>
         </section>
         <section className="player-notes">

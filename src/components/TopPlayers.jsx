@@ -1,20 +1,18 @@
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { usePlayers } from "../hooks/usePlayers.js";
 import { useListPlayer } from "../hooks/useListPlayer.js";
+import { IconDefaultUser } from "../icons/IconsPlayer.jsx";
 import "../styles/TopPlayers.css";
 
-function TopPlayers({
-  players: propPlayers,
-  showTitle = true,
-  compact = false,
-  className = "",
-}) {
+function TopPlayers({ players: propPlayers }) {
   const [isLoading, setIsLoading] = useState(false);
   useListPlayer(setIsLoading);
   const { players: ctxPlayers } = usePlayers();
+  const navigate = useNavigate();
 
-  const sourcePlayers = propPlayers ?? ctxPlayers ?? [];
   const topPlayers = useMemo(() => {
+    const sourcePlayers = propPlayers ?? ctxPlayers ?? [];
     if (!Array.isArray(sourcePlayers)) return [];
     const sorted = [...sourcePlayers].sort(
       (a, b) => (b.rating ?? 0) - (a.rating ?? 0)
@@ -23,15 +21,10 @@ function TopPlayers({
       ...player,
       index: player.index ?? idx + 1,
     }));
-  }, [sourcePlayers]);
-
-  const rootClass = ["top-players", compact ? "compact" : "", className]
-    .filter(Boolean)
-    .join(" ");
+  }, [ctxPlayers, propPlayers]);
 
   return (
-    <div className={rootClass}>
-      {showTitle && <h2>Top Players</h2>}
+    <div className="top-players">
       <div className="players-list">
         {isLoading ? (
           <p className="players-empty">Loading top players...</p>
@@ -46,13 +39,33 @@ function TopPlayers({
               player.name ??
               idx;
             const indexLabel = player.index ?? idx + 1;
+            const playerId = player.player_id ?? player.id;
+            const canNavigate = Boolean(playerId);
+            const goToPlayerProfile = () => {
+              if (!canNavigate) return;
+              navigate(`/players/id/${playerId}`, { state: { player } });
+            };
             return (
-              <div className="players-card feed-card" key={key}>
+              <div
+                className="players-card feed-card"
+                key={key}
+                role={canNavigate ? "button" : undefined}
+                tabIndex={canNavigate ? 0 : -1}
+                onClick={goToPlayerProfile}
+                onKeyDown={(event) => {
+                  if (!canNavigate) return;
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    goToPlayerProfile();
+                  }
+                }}
+              >
                 <div className="player-info">
-                  <img
-                    src="/icons/iconUserDefault.svg"
-                    alt={player.nick}
-                    className="player-icon"
+                  <IconDefaultUser
+                    className="player-avatar"
+                    role="img"
+                    aria-label={player.nick ?? "Jugador"}
+                    fill="black"
                   />
                   <div className="player-details-card">
                     <div className="player-details-card-name">

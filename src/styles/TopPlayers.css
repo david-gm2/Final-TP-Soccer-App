@@ -10,10 +10,6 @@
   font-weight: 700;
 }
 
-.top-players.compact h2 {
-  display: none;
-}
-
 .players-list {
   display: flex;
   flex-wrap: wrap;
@@ -25,6 +21,16 @@
   display: flex;
   justify-content: space-between;
   text-align: center;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.players-card:focus-visible,
+.players-card:hover {
+  background-color: #f4f0ff;
+  transform: translateY(-2px);
 }
 
 .player-details-card {
@@ -59,10 +65,11 @@
   align-items: center;
 }
 
-.player-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+.player-avatar {
+  width: 48px;
+  height: 48px;
+  color: #602ee1;
+  flex-shrink: 0;
 }
 
 .arrow-icon {

@@ -4,6 +4,7 @@ import UserCard from "../components/UserCard.jsx";
 import { useAuth } from "../hooks/useAuth.js";
 import { API_BACKEND_URL } from "../constants/API_CONSTANTS.js";
 import { authFetch } from "../utils/authFetch.js";
+import { useURLSearch } from "../hooks/useURLSearch.js";
 
 import "../styles/UsersPage.css";
 
@@ -28,6 +29,7 @@ const isAdmin = (user) =>
 
 function UsersPage() {
   const { accessToken } = useAuth();
+  const { value: search, setValue: setSearch } = useURLSearch("q");
 
   const [users, setUsers] = useState([]);
   const [fallbackAdmins, setFallbackAdmins] = useState([]);
@@ -44,8 +46,30 @@ function UsersPage() {
   const [showAdmins, setShowAdmins] = useState(true);
   const [showUsers, setShowUsers] = useState(true);
 
-  const admins = useMemo(() => users.filter((u) => isAdmin(u)), [users]);
-  const regularUsers = useMemo(() => users.filter((u) => !isAdmin(u)), [users]);
+  const matchesSearch = (user) => {
+    const query = search?.trim().toLowerCase();
+    if (!query) return true;
+    const text = `${user.name ?? ""} ${user.email ?? ""}`.toLowerCase();
+    return text.includes(query);
+  };
+
+  const filteredUsers = useMemo(
+    () => users.filter(matchesSearch),
+    [users, search]
+  );
+  const filteredFallbackAdmins = useMemo(
+    () => fallbackAdmins.filter(matchesSearch),
+    [fallbackAdmins, search]
+  );
+
+  const admins = useMemo(
+    () => filteredUsers.filter((u) => isAdmin(u)),
+    [filteredUsers]
+  );
+  const regularUsers = useMemo(
+    () => filteredUsers.filter((u) => !isAdmin(u)),
+    [filteredUsers]
+  );
 
   const [refreshCount, setRefreshCount] = useState(0);
 
@@ -151,7 +175,8 @@ function UsersPage() {
 
     try {
       await authFetch(
-        `${API_BACKEND_URL}/users-roles/${userId}`, {
+        `${API_BACKEND_URL}/users-roles/${userId}`,
+        {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -198,6 +223,20 @@ function UsersPage() {
       <Header title="Users" subtitle="Manage roles and admin access" />
 
       <main className="users-page">
+        <div className="search-player-box users-search">
+          <label htmlFor="users-search">
+            <span aria-hidden="true"></span>
+          </label>
+          <input
+            type="search"
+            id="users-search"
+            placeholder="Search by name or email..."
+            value={search}
+            aria-label="Search users"
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+
         {error && <p className="users-error">{error}</p>}
         {loading && <p className="users-loading">Loading users...</p>}
 
@@ -231,8 +270,8 @@ function UsersPage() {
 
               {!admins.length && !loading && (
                 <>
-                  {fallbackAdmins.length ? (
-                    fallbackAdmins.map((user) => (
+                  {filteredFallbackAdmins.length ? (
+                    filteredFallbackAdmins.map((user) => (
                       <UserCard
                         key={user.id}
                         user={user}
@@ -327,3 +366,4 @@ function UsersPage() {
 }
 
 export default UsersPage;
+

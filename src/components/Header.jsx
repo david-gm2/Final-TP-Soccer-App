@@ -43,17 +43,16 @@ function Header({
         <div className="header-copy">
           <h1>{title}</h1>
           {subtitle && <h3>{subtitle}</h3>}
+          {safeFeatures.length > 0 && (
+            <div className="header-features">
+              {safeFeatures.map((feature, index) => (
+                <div key={index} className="header-feature">
+                  {feature}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-
-        {safeFeatures.length > 0 && (
-          <div className="header-features">
-            {safeFeatures.map((feature, index) => (
-              <div key={index} className="header-feature">
-                {feature}
-              </div>
-            ))}
-          </div>
-        )}
 
         {isAdmin && safeActions.length > 0 && (
           <div className="header-actions">
