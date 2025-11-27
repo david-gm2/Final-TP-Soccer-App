@@ -19,26 +19,25 @@ function LatestMatches() {
       })
       .filter((match) => match._date && !Number.isNaN(match._date.getTime()));
 
-    return normalized
-      .sort((a, b) => b._date - a._date)
-      .slice(0, 3);
+    return normalized.sort((a, b) => b._date - a._date).slice(0, 3);
   }, [ctxMatches]);
 
   const rootClass = "latest-matches-list";
 
   const formatDateTime = (dateObj) => {
     if (!dateObj) return "Date TBA";
-    return dateObj.toLocaleString(undefined, {
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+    const day = String(dateObj.getDate()).padStart(2, "0");
+    const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+    const year = dateObj.getFullYear();
+    const hours = String(dateObj.getHours()).padStart(2, "0");
+    const minutes = String(dateObj.getMinutes()).padStart(2, "0");
+    return `${day}/${month}/${year} - ${hours}.${minutes}hs`;
   };
 
   const resolveLabel = (match) => {
     if (match.name) return match.name;
-    if (match.local && match.visitor) return `${match.local} vs ${match.visitor}`;
+    if (match.local && match.visitor)
+      return `${match.local} vs ${match.visitor}`;
     if (match.homeTeam?.name || match.awayTeam?.name) {
       return `${match.homeTeam?.name ?? "Home"} vs ${match.awayTeam?.name ?? "Away"}`;
     }
@@ -65,9 +64,6 @@ function LatestMatches() {
                 {formatDateTime(match._date)}
                 {match.location ? ` - ${match.location}` : ""}
               </div>
-            </div>
-            <div className="match-actions">
-              <img src="/icons/arrow.svg" alt="" />
             </div>
           </div>
         ))
