@@ -78,7 +78,6 @@ export function LogInPage() {
           <p role="alert">{message}</p>
         </form>
         <div className="linksLogIn">
-          <a href="#forgot-password">Forgot your password?</a>
           <p>
             Don't have an account? <Link to="/signup">Sign Up</Link>
           </p>

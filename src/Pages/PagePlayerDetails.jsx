@@ -34,6 +34,11 @@ function PagePlayerDetails() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isMatchesLoading, setIsMatchesLoading] = useState(false);
   const { matches } = useMatches();
+  const [matchesPlayed, setMatchesPlayed] = useState(0);
+  const [totalGoals, setTotalGoals] = useState(0);
+  const [totalAssists, setTotalAssists] = useState(0);
+  const [wins, setWins] = useState(0);
+  const [winRate, setWinRate] = useState(0);
   useListMatches(setIsMatchesLoading);
 
   useEffect(() => {
@@ -153,14 +158,47 @@ function PagePlayerDetails() {
       return [];
     };
 
+    let goalsSum = 0;
+    let assistsSum = 0;
+    let winsCount = 0;
+
+    matches.forEach((match) => {
+      const homePlayers = match.homeTeam?.players || [];
+      const awayPlayers = match.awayTeam?.players || [];
+      const allPlayers = [...homePlayers, ...awayPlayers];
+      const playerInMatch = allPlayers.find((p) => p.id === playerId);
+
+      if (playerInMatch) {
+        goalsSum += playerInMatch.goals || 0;
+        assistsSum += playerInMatch.assists || 0;
+
+        // Determine if player's team won
+        const isHomeTeam = homePlayers.some((p) => p.id === playerId);
+        const homeScore = match.score?.home || 0;
+        const awayScore = match.score?.away || 0;
+
+        if (
+          (isHomeTeam && homeScore > awayScore) ||
+          (!isHomeTeam && awayScore > homeScore)
+        ) {
+          winsCount += 1;
+        }
+      }
+    });
+
+    setTotalGoals(goalsSum);
+    setTotalAssists(assistsSum);
+    setWins(winsCount);
+    setWinRate(
+      matchesPlayed > 0 ? Math.round((winsCount / matchesPlayed) * 100) : 0
+    );
+
     return matches
       .filter((match) => {
         const homeIds =
-          extractIds(match.homeTeam) ||
-          extractIds(match.home_team);
+          extractIds(match.homeTeam) || extractIds(match.home_team);
         const awayIds =
-          extractIds(match.awayTeam) ||
-          extractIds(match.away_team);
+          extractIds(match.awayTeam) || extractIds(match.away_team);
         return homeIds.includes(playerId) || awayIds.includes(playerId);
       })
       .map((match) => {
@@ -172,7 +210,7 @@ function PagePlayerDetails() {
               day: "numeric",
               year: "numeric",
             })
-          : match.date ?? "TBD";
+          : (match.date ?? "TBD");
 
         const label =
           match.name ??
@@ -197,6 +235,11 @@ function PagePlayerDetails() {
   }, [matches, player?.id, player?.player_id]);
 
   const recentMatches = playerMatchRows;
+
+  useEffect(() => {
+    setMatchesPlayed(playerMatchRows.length);
+  }, [playerMatchRows.length]);
+
   const playerNotes = useMemo(
     () => player?.notes ?? DEFAULT_NOTES,
     [player?.notes]
@@ -309,22 +352,22 @@ function PagePlayerDetails() {
   const statCards = [
     {
       title: "Wins rate",
-      value: `${player.winsRate ?? 75}%`,
+      value: `${winRate ?? 75}%`,
       icon: "/icons/scoreboard.svg",
     },
     {
       title: "Total assists",
-      value: player.assists ?? 7,
+      value: totalAssists ?? 7,
       icon: "/icons/star.svg",
     },
     {
       title: "Total goals",
-      value: player.goals ?? 18,
+      value: totalGoals ?? 18,
       icon: "/icons/sports_soccer.svg",
     },
     {
       title: "Total matches",
-      value: player.totalMatches ?? 24,
+      value: matchesPlayed,
       icon: "/icons/person.svg",
     },
   ];
@@ -437,35 +480,35 @@ function PagePlayerDetails() {
                   <th>Result</th>
                   <th>Location</th>
                   <th>Winner Team</th>
-              <th>Date</th>
-              <th>Rate player</th>
-              <th>Match Rate</th>
-            </tr>
-          </thead>
-          <tbody>
-            {isMatchesLoading ? (
-              <tr>
-                <td colSpan="6">Loading matches...</td>
-              </tr>
-            ) : !recentMatches.length ? (
-              <tr>
-                <td colSpan="6">No matches found for this player.</td>
-              </tr>
-            ) : (
-              recentMatches.map((match) => (
-                <tr key={match.id}>
-                  <td>{match.result}</td>
-                  <td>{match.location}</td>
-                  <td>{match.winner}</td>
-                  <td>{match.date}</td>
-                  <td>{match.playerRate}</td>
-                  <td>{match.matchRate}</td>
+                  <th>Date</th>
+                  <th>Rate player</th>
+                  <th>Match Rate</th>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+              </thead>
+              <tbody>
+                {isMatchesLoading ? (
+                  <tr>
+                    <td colSpan="6">Loading matches...</td>
+                  </tr>
+                ) : !recentMatches.length ? (
+                  <tr>
+                    <td colSpan="6">No matches found for this player.</td>
+                  </tr>
+                ) : (
+                  recentMatches.map((match) => (
+                    <tr key={match.id}>
+                      <td>{match.result}</td>
+                      <td>{match.location}</td>
+                      <td>{match.winner}</td>
+                      <td>{match.date}</td>
+                      <td>{match.playerRate}</td>
+                      <td>{match.matchRate}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </section>
         <section className="player-notes">
           <div className="section-header">
