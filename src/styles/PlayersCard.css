@@ -1,6 +1,5 @@
 .player-card {
   flex: 1 1 300px;
-  min-width: 300px;
   max-width: 550px;
   border-radius: 12px;
   padding: 16px;
@@ -24,7 +23,6 @@
 }
 
 .player-card-profile-text {
-  width: 170px;
   display: flex;
   flex-direction: column;
   align-items: center;

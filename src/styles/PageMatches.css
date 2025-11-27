@@ -38,9 +38,9 @@
 
 .matches-page .match-card h2,
 .matches-page .player-selection__header h2 {
-  margin: 0;
-  font-size: 1.6rem;
-  color: #161827;
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 8px;
 }
 
 .matches-page .match-card p,
@@ -118,7 +118,7 @@
 
 .player-selection__counter {
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 100;
   color: #6b7095;
 }
 

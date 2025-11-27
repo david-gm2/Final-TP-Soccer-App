@@ -215,7 +215,7 @@
   color: #602ee1;
   padding: 8px 33px;
   margin: 0 12px;
-  width: 100%;
+  width: calc(100% - 24px);
   border-radius: 6px;
   background: white;
   border: 1px #602ee1 solid;
