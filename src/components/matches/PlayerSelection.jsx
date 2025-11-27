@@ -16,14 +16,12 @@ export function PlayerSelection({
 }) {
   const renderList = () => {
     if (isLoading) return <p className="players-empty">Loading players...</p>;
-    if (!players.length) return <p className="players-empty">No players found.</p>;
+    if (!players.length)
+      return <p className="players-empty">No players found.</p>;
 
     return players.map((player) => {
       const selectionIndex = selectedPlayers.indexOf(player.player_id);
-      const displayNumber =
-        selectionIndex >= 0
-          ? `#${selectionIndex + 1}`
-          : `#${player.number ?? "--"}`;
+      const displayNumber = `#${player.number ?? "--"}`;
 
       return (
         <label
@@ -63,10 +61,10 @@ export function PlayerSelection({
   };
 
   return (
-    <section className="player-selection-card">
+    <section className="player-selection-card match-formad-card">
       <div className="player-selection__header">
         <div>
-          <h2>Player selection</h2>
+          <h2 className="match-format-title">Player selection</h2>
           <p>Choose who will play the next match.</p>
         </div>
         <span className="player-selection__counter">

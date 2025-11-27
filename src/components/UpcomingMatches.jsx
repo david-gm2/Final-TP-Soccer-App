@@ -3,19 +3,13 @@ import { useMatches } from "../hooks/useMatches.js";
 import { useListMatches } from "../hooks/useListMatches.js";
 import "../styles/UpcomingMatches.css";
 
-function UpcomingMatches({
-  matches: propMatches,
-  showTitle = true,
-  compact = false,
-  className = "",
-}) {
+function UpcomingMatches({ matches: propMatches }) {
   const [isLoading, setIsLoading] = useState(false);
   useListMatches(setIsLoading);
   const { matches: ctxMatches } = useMatches();
 
-  const sourceMatches = propMatches ?? ctxMatches ?? [];
-
   const upcoming = useMemo(() => {
+    const sourceMatches = propMatches ?? ctxMatches ?? [];
     if (!Array.isArray(sourceMatches)) return [];
     const normalized = sourceMatches
       .map((match) => {
@@ -25,18 +19,10 @@ function UpcomingMatches({
       })
       .filter((match) => match._date && !Number.isNaN(match._date.getTime()));
 
-    return normalized
-      .sort((a, b) => a._date - b._date)
-      .slice(0, 3);
-  }, [sourceMatches]);
+    return normalized.sort((a, b) => a._date - b._date).slice(0, 3);
+  }, [ctxMatches, propMatches]);
 
-  const rootClass = [
-    "upcoming-matches-list",
-    compact ? "compact" : "",
-    className,
-  ]
-    .filter(Boolean)
-    .join(" ");
+  const rootClass = "upcoming-matches-list";
 
   const formatDateTime = (dateObj) => {
     if (!dateObj) return "Date TBA";
@@ -50,7 +36,8 @@ function UpcomingMatches({
 
   const resolveLabel = (match) => {
     if (match.name) return match.name;
-    if (match.local && match.visitor) return `${match.local} vs ${match.visitor}`;
+    if (match.local && match.visitor)
+      return `${match.local} vs ${match.visitor}`;
     if (match.homeTeam?.name || match.awayTeam?.name) {
       return `${match.homeTeam?.name ?? "Home"} vs ${match.awayTeam?.name ?? "Away"}`;
     }
@@ -59,7 +46,6 @@ function UpcomingMatches({
 
   return (
     <div className={rootClass}>
-      {showTitle && <h2>Upcoming Matches</h2>}
       {isLoading ? (
         <p className="matches-empty">Loading matches...</p>
       ) : !upcoming.length ? (
@@ -69,22 +55,15 @@ function UpcomingMatches({
           <div
             className="match-card feed-card"
             key={
-              match.match_id ??
-              match.id ??
-              match.name ??
-              match._date?.getTime()
+              match.match_id ?? match.id ?? match.name ?? match._date?.getTime()
             }
           >
             <div>
               <p>{resolveLabel(match)}</p>
               <div className="match-info">
                 {formatDateTime(match._date)}
-                {match.location ? ` · ${match.location}` : ""}
+                {match.location ? ` - ${match.location}` : ""}
               </div>
-            </div>
-            <div className="match-actions">
-              <img src="../icons/icon-eye.svg" alt="" />
-              <img src="../icons/icon-pen.svg" alt="" />
             </div>
           </div>
         ))
@@ -92,4 +71,5 @@ function UpcomingMatches({
     </div>
   );
 }
+
 export default UpcomingMatches;

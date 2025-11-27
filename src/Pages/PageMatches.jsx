@@ -209,6 +209,13 @@ function PageMatches() {
     const sanitizeName = (value, fallback) =>
       value?.trim().length ? value.trim() : fallback;
 
+    const adjustTeamSize = (team) => {
+      if (!playerPerTeam) return team;
+      const exactly = team.slice(0, playerPerTeam);
+      if (exactly.length < playerPerTeam) return null;
+      return exactly;
+    };
+
     return {
       name: matchName?.trim() || undefined,
       location: locationInput?.trim() || "",
@@ -218,15 +225,11 @@ function PageMatches() {
         : null,
       homeTeam: {
         name: sanitizeName(teamAName, "Team A"),
-        playersIds: teams.teamA
-          .slice(0, playerPerTeam || teams.teamA.length)
-          .map((player) => player.player_id),
+        playersIds: adjustTeamSize(teams.teamA)?.map((player) => player.player_id),
       },
       awayTeam: {
         name: sanitizeName(teamBName, "Team B"),
-        playersIds: teams.teamB
-          .slice(0, playerPerTeam || teams.teamB.length)
-          .map((player) => player.player_id),
+        playersIds: adjustTeamSize(teams.teamB)?.map((player) => player.player_id),
       },
     };
   }, [
@@ -248,6 +251,12 @@ function PageMatches() {
       alert(
         `Select at least ${playerPerTeam * 2 || "the required"} players to form both teams.`
       );
+      return;
+    }
+
+    // enforce exact team sizes
+    if (!matchToCreate.homeTeam.playersIds || !matchToCreate.awayTeam.playersIds) {
+      alert(`Each team must have exactly ${playerPerTeam} players for ${selectedFormat}.`);
       return;
     }
 

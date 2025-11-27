@@ -35,13 +35,13 @@ export const navigationItems = [
     end: false,
     admin: false,
   },
-  {
-    path: "/history",
-    label: "History",
-    icon: IconHistory,
-    end: false,
-    admin: false,
-  },
+  // {
+  //   path: "/history",
+  //   label: "History",
+  //   icon: IconHistory,
+  //   end: false,
+  //   admin: false,
+  // },
   {
     path: "/users",
     label: "Users",

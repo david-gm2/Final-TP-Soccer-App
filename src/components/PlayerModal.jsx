@@ -73,18 +73,6 @@ function PlayerModal({
         </div>
 
         <form className="modal-form" onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="profile-picture" className="form-label">
-              Profile picture
-            </label>
-            <input
-              type="file"
-              id="profile-picture"
-              name="profilePicture"
-              accept="image/*"
-              className="form-input form-input-file"
-            />
-          </div>
 
           <div className="form-group">
             <label htmlFor="name" className="form-label">

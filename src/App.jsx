@@ -45,7 +45,7 @@ function App() {
           <Route path="players" element={<PagePlayers />} />
           <Route path="players/id/:id" element={<PagePlayerDetails />} />
           <Route path="stats" element={<PageStats player={fallbackPlayer} />} />
-          <Route path="history" element={<PageHistory />} />
+          {/* <Route path="history" element={<PageHistory />} /> */}
           {isAdmin && <Route path="matches" element={<PageMatches />} />}
           {isAdmin && <Route path="users" element={<PageUsers />} />}
         </Route>

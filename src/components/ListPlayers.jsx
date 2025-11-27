@@ -1,7 +1,16 @@
+import { useMemo } from "react";
 import { usePlayersStats } from "../hooks/usePlayersStats.js";
+import { useURLSearch } from "../hooks/useURLSearch.js";
+import { filterPlayers } from "../utils/filterPlayers.js";
 
 function ListPlayers() {
   const playersStats = usePlayersStats();
+  const { value: search } = useURLSearch("q");
+
+  const filteredPlayers = useMemo(
+    () => filterPlayers(playersStats, [], search),
+    [playersStats, search]
+  );
 
   return (
     <div className="list-players">
@@ -19,7 +28,7 @@ function ListPlayers() {
           </tr>
         </thead>
         <tbody>
-          {playersStats.map((player) => (
+          {filteredPlayers.map((player) => (
             <tr key={player.player_id}>
               <td>{player.nick}</td>
               <td>{player.matches}</td>

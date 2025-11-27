@@ -34,12 +34,6 @@ function Home() {
 
   const matchesStats = useMatchesStats();
 
-  let latestMatches = [
-    { local: "Team Z", visitor: "Team Y", date: "2023-09-20", time: "18:00" },
-    { local: "Team X", visitor: "Team W", date: "2023-09-18", time: "20:00" },
-    { local: "Team V", visitor: "Team U", date: "2023-09-15", time: "21:00" },
-  ];
-
   return (
     <>
       <Header
@@ -82,23 +76,17 @@ function Home() {
               {
                 key: "upcoming",
                 title: "Upcoming Matches",
-                content: <UpcomingMatches showTitle={false} compact />,
+                content: <UpcomingMatches />,
               },
               {
                 key: "topPlayers",
                 title: "Top Players",
-                content: <TopPlayers showTitle={false} compact />,
+                content: <TopPlayers />,
               },
               {
                 key: "latest",
                 title: "Latest Matches",
-                content: (
-                  <LatestMatches
-                    matches={latestMatches}
-                    showTitle={false}
-                    compact
-                  />
-                ),
+                content: <LatestMatches />,
               },
             ]}
           />
