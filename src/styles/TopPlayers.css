@@ -59,6 +59,12 @@
   align-items: center;
 }
 
+.player-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
 .arrow-icon {
   display: flex;
   width: 20px;
