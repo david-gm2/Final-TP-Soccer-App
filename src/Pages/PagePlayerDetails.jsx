@@ -39,6 +39,7 @@ function PagePlayerDetails() {
   const [totalAssists, setTotalAssists] = useState(0);
   const [wins, setWins] = useState(0);
   const [winRate, setWinRate] = useState(0);
+  const [goalsPerMatch, setGoalsPerMatch] = useState(0);
   useListMatches(setIsMatchesLoading);
 
   useEffect(() => {
@@ -161,6 +162,7 @@ function PagePlayerDetails() {
     let goalsSum = 0;
     let assistsSum = 0;
     let winsCount = 0;
+    let matchesPlayed = 0;
 
     matches.forEach((match) => {
       const homePlayers = match.homeTeam?.players || [];
@@ -169,6 +171,7 @@ function PagePlayerDetails() {
       const playerInMatch = allPlayers.find((p) => p.id === playerId);
 
       if (playerInMatch) {
+        matchesPlayed += 1;
         goalsSum += playerInMatch.goals || 0;
         assistsSum += playerInMatch.assists || 0;
 
@@ -186,11 +189,15 @@ function PagePlayerDetails() {
       }
     });
 
+    setMatchesPlayed(matchesPlayed);
     setTotalGoals(goalsSum);
     setTotalAssists(assistsSum);
     setWins(winsCount);
     setWinRate(
       matchesPlayed > 0 ? Math.round((winsCount / matchesPlayed) * 100) : 0
+    );
+    setGoalsPerMatch(
+      matchesPlayed > 0 ? (goalsSum / matchesPlayed).toFixed(2) : 0
     );
 
     return matches
@@ -460,7 +467,7 @@ function PagePlayerDetails() {
               </div>
               <div className="perf-stat">
                 <label>GOAL PER MATCH</label>
-                <div className="perf-value">{player.goalPerMatch || 0.8}</div>
+                <div className="perf-value">{goalsPerMatch}</div>
               </div>
             </div>
           </div>
